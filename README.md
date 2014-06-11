@@ -1,2 +1,35 @@
-NotaryChainDocs
-===============
+NotaryChains
+============
+*A Highly Sophisticated Notary Service Secured by the Bitcoin Blockchain*
+
+Using Bitcoin to prove the existence of a document (really any digital asset, like a tweet, a web page, a spreadsheet, a security video, a photo, etc.) is a concept that is well known.  (See the references at the end of this document).  And some have even suggested that a service could be created to take a list of signatures, compute a merkle root, place that in the Bitcoin Blockchain.  This not only provides the same security, but limits the “Blockchain Pollution” of pushing a hash into the blockchain for every signed document.  There are at least a couple of online websites that provide these services.
+
+NotaryChain Servers provide for simple “proof of existence” entries.  In addition, NotaryChain Servers implement validation scripts that allow for chains of notarized entries, thus the name NotaryChains.  NotaryChains can be used to implement token systems, asset trading systems, smart contracts, and more.   A federated set of NotaryChains provides for real time audits, easy transfer from one NotaryChain server to another, reduced blockchain pollution, and other benefits.
+
+Bitcoin implements a strict, distributed method for the validation of transactions, where anyone can validate each transaction, and the validity of every input into a transaction can be verified.  Because each transaction is authorized via cryptographic signatures, no transaction can be arbitrarily reversed.  Furthermore, the meaning of each transaction is defined as a validation of the input values (amounts of bitcoin) for each transaction.
+
+The Bitcoin protocol is transactionally complete.  In other words, the creation and distribution of Bitcoins through transactions is completely defined within the Bitcoin protocol.  Transactions (which specify movement of bitcoin) and block discovery (which move bitcoin via mining fees and provide block rewards) are the only inputs into the Bitcoin Protocol, and nothing leaves the Bitcoin Protocol.  In other words, the 21 million Bitcoin that will ultimately exist will always and forever exist within the protocol.  (Well, at least until side chains are implemented, which will provide additional movement of Bitcoin in and out of side chains. )
+
+Many different groups are looking to find ways to leverage the Bitcoin approach for managing other sorts of transactions besides tracking bitcoin balances.  For example, the trading of assets such as houses or cars can be done digitally using Bitcoin.  Even the trading of Commodities such as precious metals, futures, or securities might be done via clever encoding and inserting of information into the Bitcoin blockchain.  
+
+Efforts to expand Bitcoin to cover these kinds of trades include Colored Coins and Mastercoin.  Others seek to build their own cryptocurrency with a more flexible protocol that can handle trades beyond currency.  These include Ripple, Etherium, BitShares, NXT, and others.  And of course Open Transactions uses Cryptographic signatures and signed receipts and proof of balance for users (i.e. a user doesn’t need the transaction history to prove their balance, just the last receipt). 
+
+A NotaryChain seeks to gain these abilities while securing the advantage Bitcoin’s security via Bitcoin Blockchain.  Instead of inserting transactions into the Blockchain (viewed as “Blockchain Pollution” by many), NotaryChains keep most information off blockchain.  Furthermore, the NotaryChain provides a record keeping system that minimizes the information any actor has to maintain to validate their NotaryChain of interest.  In short,   NotaryChains utilize a combination of mathematical proofs and hashes inserted into Bitcoin Blockchain to create audit trails over each NotaryChain.  
+
+A user only needs the artifacts of the NotaryChain of interest rather than the full set of NotaryChains maintained by the NotaryChain servers.
+
+Of course, the NotaryChain can notarize documents, providing proof of their existence at a point in time, and validating their construction (any modification will be detected).  In addition, a NotaryChain provides a provable history, a chain of time stamped events, i.e. a series of entries (i.e. a NotaryChain) that proves a series of events occurred.   This allows a NotaryChain to implement smart contracts and even alternate currencies.  All of which can clear instantly (assuming trust in the NotaryChain servers), and within minutes once a notary entry is secured via the Bitcoin Blockchain.
+
+The NotaryChains are maintained on a set of federated, independently controlled but centralized NotaryChain servers.  NotaryChains borrows from the concept of Private Chains, and allows for reactive security by limiting the ability of any NotaryChain server to fail to log entries without immediate detection by not only the other NotaryChain servers, but by the users themselves.  And like Open Transactions, all links in a chain are secured with cryptographic signatures; there is no opportunity for a NotaryChain server to insert a bogus transaction. 
+
+Furthermore, a NotaryChain is largely left ignorant of the significance of any transaction.  The management and backing of any NotaryChain is left to the users of the service.  The NotaryChain is an automated, powerless, and disinterested party to transactions on a NotaryChain.
+
+The NotaryChain concept is designed to allow many different protocols and rules to be run in parallel within data structures secured with the Bitcoin BlockChain.  Yet at the same time limit the amount of “pollution” to the blockchain that would result if the same data and information were encoded into Bitcoin Transactions.  Additionally, the NotaryChain seeks to reduce the overhead of a single blockchain for sets of transactions that have little to do with one another.  In other words, while Bitcoin benefits from thousands of computers holding the full blockchain, many applications simply need to be auditable, with far fewer systems holding the entire Notary History.  Thus NotaryChains significantly reduce the resources required to process transactions while providing nearly instant transaction clearing.  Federated NotaryChain Servers provide for distributing NotaryChain processing, load balancing, real time audits to insure honesty, and redundancy to insure availability.
+
+Initially, NotaryChain servers will provide APIs to query information from the NotaryChain as needed.  Tools for analyzing the NotaryChain and torrents for distributing the NotaryChain will also be provided.  As technologies such as MaidSafe and the Safe Network come online, then NotaryChain data can be published there in a way that insures all the Notary Blocks are available going forward, despite the fate of any particular NotaryChain Server.
+
+Yet even if the data in NotaryChain servers expand to many terabytes in size, the validity of Notary Entries and particular Notary Chains are only going to require a small portion of that data.
+
+# How NotaryChains Work
+
+
