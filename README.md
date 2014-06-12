@@ -44,7 +44,7 @@ A Notary Block is created after the previous Notary Block has had its last Hash 
 
 *Figure 2:  Internal structure of a Notary Block.*
 
-As each Notary Entry is submitted, it is added to the Notary Block, and every so often, all the current Notary Entries are combined into a Merkle tree, and the current root is added to the block.  This prevents any modification of Notary Entries once added to the Notary Block, since any modification of a Notary Entry would break the hash. 
+As each Notary Entry is submitted, it is added to the Notary Block, and every so often, a running hash is computed that combindes the hash of the new entry with the previous entries, and that hash is added to the Notary Block.  This prevents any modification of Notary Entries once added to the Notary Block, since any modification of a Notary Entry would break the hash of that entry, and all the hashes that follow. 
 
 For Example, Suppose we ad4 8 Entries (A-D).  The Notary Block would look like this:
 
