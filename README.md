@@ -28,7 +28,7 @@ The layers in this stack would be:
 
 **The Notary Layer**
 
-Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
+The Notary layer implements proof of existence for an digital artifiact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
 
 NotaryChains collect sets of such hashes into a notary block.  The notary block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since NotaryChains can be maintained more cheaply in terms of resources, the cost of entries into the notary layer will be much cheaper than transactions in the Bitcoin block chain.
 
