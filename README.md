@@ -2,6 +2,83 @@ NotaryChains
 ============
 *A Highly Sophisticated Notary Service Secured by the Bitcoin Block Chain*
 
+Bitcoin addresses the issue of how a unit of currency can be traded worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
+
+NotaryChains seeks to simplify how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seeks to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events.
+
+Consider what any Bitcoin 2.0 application requires of a system recording and validating events:
+
+* Structured events that include additional information.
+* An ordered, cryptographically secured public ledger recording each event 
+* Unambiguously defined sequences of events
+* Unambiguously defined rules governing sequences of events
+* Auditable events, and event sequences, either publicly or privately
+
+NotaryChains provide for exactly these requirements.  And like any good protocol, NotaryChains do very little in addition.  The idea is to create something that acts like a Protocol Stack for Bitcoin 2.0 Applications.
+
+The layers in this stack would be:
+
+1. Notary Layer 
+2. Event Structure
+3. Event Sequences
+ 1. Enforced event sequences
+ 2. Public enforced sequences
+ 3. Private enforced sequences
+4. Applications
+
+**The Notary Layer**
+
+Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
+
+NotaryChains collect sets of such hashes into a notary block.  The notary block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since NotaryChains can be maintained more cheaply in terms of resources, the cost of entries into the notary layer will be much cheaper than transactions in the Bitcoin block chain.
+
+**Event Structure**
+
+Bitcoin 2.0 applications will need to record a varied range of information with the event itself.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some entries may need to be part of the event itself rather than be held off chain.   Thus NotaryChains allow the application to define the event structure.
+
+**Event Sequences**
+
+Event sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  NotaryChains support three levels of event sequences (i.e. NotaryChains):
+
+*Enforced sequences*
+
+These are first level NotaryChains.  As development on the NotaryChains technology continues, the set of enforced sequence types will be expanded.  
+
+Bitcoin is an example of a protocol that implements a particular server enforced sequence.  Any transaction that does not validate against the Bitcoin Blockchain is excluded. With NotaryChains, any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected and not allowed to be part of the NotaryChain. 
+
+Initially NotaryChains will implement these sequence types:
+
+* Account -- maintains a balance, which is decremented as used
+* Ticket -- allows for issuing, transferring, and consuming tickets until a particular date and time
+* Coin -- allows for the issuing and trading of coins
+* Notes -- a sequence that allows information to be recorded about another event. 
+* Log -- a sequence restricting entry to a set of signatures
+
+*Independent but public enforced sequences*
+
+The first event beginning a chain will provide a hash of a human readable list of rules for the NotaryChain. The first event will also provide a hash of a script or an application that can be run to validate entries in the sequence.  The description of the event will provide a link to these rules, scripts, and applications.
+
+An enforced sequence can be specified.  Entries that cannot meet the requirements of the specified enforced sequence will be rejected.  However, entries that might be rejected by the script or the app will still be recorded.  Thus users of such chains will need to run the app or script to validate a chain sequence of this type. The NotaryChain servers will not validate using the script or app.
+
+As new public enforced sequences become popular, they can be added to the set of enforced sequences.
+
+*Private enforced sequences*
+
+These sequences are identical to the public enforced sequences, only the readable list of rules, scripts, and applications are only provided as hashes.  Users with access to the rules, scripts and applications can validate them via the first event in such a NotaryChain, but the links to them are not provided by the NotaryChain.
+
+This is useful for testing, or for documenting and driving private transactions. 
+Applications
+Using these operators and facilities, Distributed Autonomous Applications (DAPPs) and Distributed Autonomous Organizations (DAOs) can be constructed.  But even everyday sorts of uses can be facilitated as well, like simple movie tickets or arcade tokens.  Notary Chains can support:
+
+* Crowd sourcing loans
+* Issuing securities and paying dividends 
+* Powerful scripted chains with functionality like Ethereum, Darkcoin, etc.
+* Smart Contracts
+* Smart Properties
+* Event ticketing
+
+#Discussion
+
 Using Bitcoin to prove the existence of a document (really any digital asset, like a tweet, a web page, a spreadsheet, a security video, a photo, etc.) is a concept that is well known.  (See the references at the end of this document).  And some have even suggested that a service could be created to take a list of signatures, compute a merkle root, place that in the Bitcoin block chain.  This not only provides the same security, but limits the “block chain Pollution” of pushing a hash into the blockchain for every signed document.  There are at least a couple of online websites that provide these services.
 
 NotaryChains provide for simple “proof of existence” entries.  In addition, NotaryChains provide proof of transform.  NotaryChains implement validation scripts that allow for chains of notarized entries.   NotaryChains can be used to implement token systems, asset trading systems, smart contracts, and more.   A federated set of NotaryChain servers provide for real time audits, easy transfer from one NotaryChain server to another, reduced blockchain pollution, and other benefits.
@@ -30,7 +107,7 @@ Initially, NotaryChain servers will provide APIs to query information from the N
 
 Yet even if the data in NotaryChain servers expand to many terabytes in size, the validity of Notary Entries and particular Notary Chains are only going to require a small portion of that data.
 
-# How NotaryChains Work
+#How NotaryChains Work
 
 ![Figure 1](images/fig1.png)
 
