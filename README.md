@@ -2,7 +2,7 @@ NotaryChains
 ============
 *A Highly Sophisticated Notary Service Secured by the Bitcoin Block Chain*
 
-Bitcoin addresses the issue of how a unit of currency can be traded worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
+Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
 NotaryChains seeks to simplify how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seeks to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events.
 
