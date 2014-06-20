@@ -18,11 +18,11 @@ NotaryChains is designed to meet these requirements.  NotaryChains implements a 
 
 4) Applications
 
-3) Event Sequences
+3) Notary chains
 
-2) Event Structure
+2) Event structure
 
-1) Notary Layer 
+1) Notary layer 
 
 **The Notary Layer**
 
@@ -34,15 +34,15 @@ NotaryChains collects sets of such hashes into a notary block.  The notary block
 
 Bitcoin 2.0 applications will need to record a varied range of information with the event itself.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some entries may need to be part of the event itself rather than be held off chain.   NotaryChains allow the application to define the event structure, and manage that structure in the notary chains. 
 
-**Event Sequences**
+**Notary Chains**
 
-Event sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  NotaryChains support three levels of event sequences (i.e. notary chains, i.e. sequences of entries):
+Notary chains are chains of entries that define sequences of events.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Notary chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  NotaryChains support three levels of notary chains (i.e. notary chains, i.e. sequences of entries):
 
-*Enforced sequences*
+*Enforced Notary Chains*
 
-These are first level NotaryChains.  As development on the NotaryChains technology continues, the set of enforced sequence types will be expanded.  
+Some sorts of event sequences are very coommon.  These common sorts of sequences are defined as part of the NotaryChain servers, such that these notary chains are enforced directly.  As development on the NotaryChains technology continues, the set of enforced sequence types will be expanded.  
 
-Bitcoin is an example of a protocol that implements a particular server enforced sequence.  Any transaction that does not validate against the Bitcoin block chain is excluded. Any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected by the NotaryChains servers, and not added as an entry, and thus bared from being part of the notary chain. 
+Bitcoin is an example of a protocol that implements a particular server enforced event sequence.  Any transaction that does not validate against the Bitcoin block chain is excluded. NotaryChains provides that same sort of enforcement of enforced notary chains.  Any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected by the NotaryChains servers, and is not added as an entry, and thus bared from being part of the notary chain. 
 
 Initially NotaryChains will implement these sequence types:
 
