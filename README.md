@@ -4,7 +4,7 @@ NotaryChains
 
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
-NotaryChains seeks to simplify how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seeks to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events.
+NotaryChains simplifies how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seek to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in NotaryChains), and chains of such events (sequences of entries referred to as notary chains).
 
 Consider what any Bitcoin 2.0 application requires:
 
@@ -14,37 +14,35 @@ Consider what any Bitcoin 2.0 application requires:
 * Unambiguously defined rules governing sequences of events
 * Auditable events, and event sequences, either publicly or privately
 
-NotaryChains provide for exactly these requirements.  And like any good protocol, NotaryChains do very little in addition.  The idea is to create something that acts like a Protocol Stack for Bitcoin 2.0 Applications.
+NotaryChains is designed to meet these requirements.  NotaryChains implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
-The layers in this stack would be:
+4) Applications
 
-1. Notary Layer 
-2. Event Structure
-3. Event Sequences
- 1. Enforced event sequences
- 2. Public enforced sequences
- 3. Private enforced sequences
-4. Applications
+3) Event Sequences
+
+2) Event Structure
+
+1) Notary Layer 
 
 **The Notary Layer**
 
 The Notary layer implements proof of existence for an digital artifiact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
 
-NotaryChains collect sets of such hashes into a notary block.  The notary block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since NotaryChains can be maintained more cheaply in terms of resources, the cost of entries into the notary layer will be much cheaper than transactions in the Bitcoin block chain.
+NotaryChains collects sets of such hashes into a notary block.  The notary block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since NotaryChains can be maintained more cheaply in terms of resources, the cost of entries into the notary layer will be much cheaper than transactions in the Bitcoin block chain.
 
 **Event Structure**
 
-Bitcoin 2.0 applications will need to record a varied range of information with the event itself.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some entries may need to be part of the event itself rather than be held off chain.   Thus NotaryChains allow the application to define the event structure.
+Bitcoin 2.0 applications will need to record a varied range of information with the event itself.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some entries may need to be part of the event itself rather than be held off chain.   NotaryChains allow the application to define the event structure, and manage that structure in the notary chains. 
 
 **Event Sequences**
 
-Event sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  NotaryChains support three levels of event sequences (i.e. NotaryChains):
+Event sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  NotaryChains support three levels of event sequences (i.e. notary chains, i.e. sequences of entries):
 
 *Enforced sequences*
 
 These are first level NotaryChains.  As development on the NotaryChains technology continues, the set of enforced sequence types will be expanded.  
 
-Bitcoin is an example of a protocol that implements a particular server enforced sequence.  Any transaction that does not validate against the Bitcoin Blockchain is excluded. With NotaryChains, any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected and not allowed to be part of the NotaryChain. 
+Bitcoin is an example of a protocol that implements a particular server enforced sequence.  Any transaction that does not validate against the Bitcoin block chain is excluded. Any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected by the NotaryChains servers, and not added as an entry, and thus bared from being part of the notary chain. 
 
 Initially NotaryChains will implement these sequence types:
 
