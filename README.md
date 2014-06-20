@@ -6,7 +6,7 @@ Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payment
 
 NotaryChains seeks to simplify how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seeks to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events.
 
-Consider what any Bitcoin 2.0 application requires of a system recording and validating events:
+Consider what any Bitcoin 2.0 application requires:
 
 * Structured events that include additional information.
 * An ordered, cryptographically secured public ledger recording each event 
