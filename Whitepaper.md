@@ -1,6 +1,6 @@
 NotaryChains
 ============
-*A Highly Sophisticated Notary Service Secured by the Bitcoin Block Chain*
+*Creating a ledger of record for Bitcoin 2.0 applications, secured with the Bitcoin block chain*
 
 Abstract
 --------
