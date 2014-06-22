@@ -2,6 +2,14 @@ NotaryChains
 ============
 *A Highly Sophisticated Notary Service Secured by the Bitcoin Block Chain*
 
+Abstract
+--------
+
+NotaryChains create a Protocol Stack for Bitcoin 2.0 applications. The purpose of the NotaryChains project is to construct a simple, standard, effective, and secure foundation for Bitcoin 2.0 style applications.  Bitcoin provides a "ledger of record" where hashes for a NotaryChain server can provide proof of record for its own record of entries.  These entries can be crafted to support a wide range of applications.  An entry can be used to define the start of a notary chain, a sequenct of entries that define some progression of state.  Each notary chain has its own rules, and entries in these chains are constrained by those rules.  This architecture allows for the easy construction of tokens or coins, securities, smart contracts, etc.
+
+Introduction
+------------
+
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
 NotaryChains simplifies how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seek to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in NotaryChains), and chains of such events (sequences of entries referred to as notary chains).
