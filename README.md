@@ -1,3 +1,5 @@
 NotaryChains create a Protocol Stack for Bitcoin 2.0 applications. The purpose of the NotaryChains project is to construct a simple, standard, effective, and secure foundation for Bitcoin 2.0 style applications.  Bitcoin provides a "ledger of record" where hashes for a NotaryChain server can provide proof of record for its own record of entries.  These entries can be crafted to support a wide range of applications.  An entry can be used to define the start of a notary chain, a sequenct of entries that define some progression of state.  Each notary chain has its own rules, and entries in these chains are constrained by those rules.  This architecture allows for the easy construction of tokens or coins, securities, smart contracts, etc.
 
-For more about NotaryChains, you can [read the whitepaper here](https://github.com/NotaryChains/NotaryChainDocs/blob/master/whitepaper.md).  For more detailed and topical information, [visit the NotaryChains wiki](https://github.com/NotaryChains/NotaryChainDocs/wiki).
+For more about NotaryChains, you can [read the whitepaper here](https://github.com/NotaryChains/NotaryChainDocs/blob/master/whitepaper.md).  
+
+For more detailed and topical information, [visit the NotaryChains wiki](https://github.com/NotaryChains/NotaryChainDocs/wiki).
