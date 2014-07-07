@@ -198,6 +198,25 @@ NotaryChain servers are federated under one of the NotaryChain servers, the Mast
 
 Each Notary Server must provide access to their Notary Blocks to the other Notary Servers as well as to their users and customers.  For now, access can be provided via websites and torrents.  In the future, they can be provided by MaidSafe and the Safe Network. 
 
+#Crowd funding
+NotaryChains will use a token system for paying for entries to be placed on into notary blocks secured by NotaryChains.  Some token is necessary to prevent spamming or attacking the system.  
+
+##NotaryChain Zero (NCZ)
+NCO will be used for paying to create NotaryChain Specifications, start new NotaryChains using those specifications, and adding entries into NotaryChains.  It is very possible that NCZ will be perfect.  But in the event that we need to create an all new version, it will be followed with NC1, NC2, etc.    To reward early adopters, holders of NCZ will automatically be rewarded a stake in following coin versions.  What percentage is still being considered.
+
+The outline of our distribution of NCZ is as follows:
+
+* Algorithm:  Mastercoin Protocol 
+* Block Time: 10 minutes
+* Total Coins: 10,000,000 NCZ
+* Coin Distribution:
+ * 10% -- Auditing
+ * 10% -- Core Developers
+ * 10% -- Crowd Sale Participation
+ * 20% -- Third Party Developers
+ * 50% -- Federated SErvers
+
+
 #Bibliography
 
 "Bitcoin." / Mailing Lists. Accessed May 27, 2014. http://sourceforge.net/p/bitcoin/mailman/message/32108143/.
