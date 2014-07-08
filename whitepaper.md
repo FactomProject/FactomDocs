@@ -14,7 +14,7 @@ Proof of Process is created by chaining entries to track changes over time.  Eac
 Introduction
 ------------
 
-Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd source loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
+Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd sourced loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
 NotaryChains simplifies how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seek to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in NotaryChains), and chains of such events (sequences of entries referred to as notary chains).
 
@@ -216,6 +216,10 @@ The outline of our distribution of NCZ is as follows:
  * 20% -- Third Party Developers
  * 50% -- Federated SErvers
 
+# Disclosures
+1. NotaryChain coins (NCZ) are not Stock or Equity Participation in the crowd sale will not provide you with a "security" or "equity" stake in this 
+project. The digital token known as Notary Chain Zero is only useful for creating and using notary chains on Notary Chain servers 
+after development is complete. 
 
 #Bibliography
 
