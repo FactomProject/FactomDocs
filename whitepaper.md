@@ -9,7 +9,7 @@ NotaryChains create a Protocol Stack for Bitcoin 2.0 applications.  NotaryChains
 
 NotaryChains allow Bitcoin 2.0 applications to define tokens and communications without having to reinvent a public ledger, wallets, etc. Efforts to use Bitcoin for Bitcoin 2.0 applications (i.e. applications not primarily about exchanging currency) must face restrictions on data that can be stored on the Bitcoin blockchain.  NotaryChains are secured by Bitcoin (periodically hashes of the notary blocks of NotaryChains are inserted into the Bitcoin blockchain).  These notary blocks are lists of entries which can be crafted to support a wide range of applications.  Entries cannot be changed without breaking the hashes, which are secured by Bitcoin.
 
-Proof of Process is created by chaining entries to track changes over time.  Each such "notary chain" can have its own rules and restrictions. This architecture allows for the easy construction of tokens or coins, securities, smart contracts, etc.   
+Proof of Process is created by chaining entries to track changes over time.  Each such "notary chain" can have its own rules and restrictions. This architecture allows for the easy construction of tokens or coins, securities, smart contracts, etc.   A system of automatic audits, federated NotaryChain Servers, and cryptographic signatures insures that the entries in each notary chain are valid.
 
 Introduction
 ------------
