@@ -1,26 +1,30 @@
 NotaryChains
 ============
-*Creating a ledger of record for Bitcoin 2.0 applications, secured with the Bitcoin block chain*
+*Proof of Process*
 
 Abstract
 --------
 
-NotaryChains create a Protocol Stack for Bitcoin 2.0 applications.  NotaryChains extends the idea of "Proof of Existence" to include "Proof of Process."
+NotaryChains as a design resulted from an effort to distill the design of a framework down to its most simple and basic components.  The result is a general Protocol Stack for building new currencies, smart contracts, smart properties, etc.  
 
-NotaryChains allow Bitcoin 2.0 applications to define tokens and communications without having to reinvent a public ledger, wallets, etc. Efforts to use Bitcoin for Bitcoin 2.0 applications (i.e. applications not primarily about exchanging currency) must face restrictions on data that can be stored on the Bitcoin blockchain.  NotaryChains are secured by Bitcoin (periodically hashes of the notary blocks of NotaryChains are inserted into the Bitcoin blockchain).  These notary blocks are lists of entries which can be crafted to support a wide range of applications.  Entries cannot be changed without breaking the hashes, which are secured by Bitcoin.
+The most basic layer in this protocol stack collects into a "notary block" the hashes of digital artifacts (spreadsheets, text files, structured data, media, etc.).  This notary block is hashed itself, and that hash is placed into the Bitcoin block chain, and a new notary block is begun.  Because hashes are one way functions, the existence of the hash in the Bitcoin block chain is proof that all the hashes in the notary block existed at that time.  This is because you can create a hash from a digital artifact, but you cannot fit a digital artifact to an existing hash.  Likewise, the existence of a hash in a notary block proves the existence of the digital artifact.  The construction of notary blocks limits the data entered into the Bitcoin block chain.
 
-Proof of Process is created by chaining entries to track changes over time.  Each such "notary chain" can have its own rules and restrictions. This architecture allows for the easy construction of tokens or coins, securities, smart contracts, etc.   A system of automatic audits, federated NotaryChain Servers, and cryptographic signatures insures that the entries in each notary chain are valid.
+The "entry layer" sits on top of the proof of existence layer to provide the user with a structure for holding meta data about what is being secured by the proof of existence layer, and the Bitcoin blockchain. 
+
+The "notary chain" layer allows the linking of entries together, and it specifies the rules required for these links.  Each notary chain then can have its own rules governing what entries are accepted as links in that chain.  
+
+NotaryChains are run upon a set of federated servers that implement a set of policies that drive their behaviors.  These polices are subject to real time audits, and the NotaryChain servers use a system of audits to provide users proof that the servers are implementing these policies.  This system of audits is referred to as Proof by Audit. 
 
 Introduction
 ------------
 
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd sourced loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
-NotaryChains simplifies how Bitcoin 2.0 can be deployed.  Much as TCP/IP solves one problem, the exchange of packets, NotaryChains seek to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in NotaryChains), and chains of such events (sequences of entries referred to as notary chains).
+NotaryChains simplifies how Bitcoin 2.0 applications can be deployed.   NotaryChains seek to solve the foundational problem of Bitcoin 2.0.   NotaryChains do so by providing a few simple operators from which many more complicated operations can be built.  NotaryChains extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in NotaryChains), and chains of such events (sequences of entries referred to as notary chains).
 
 Consider what any Bitcoin 2.0 application requires:
 
-* Structured events that include additional information.
+* Structured events that may include additional information beyond that captured by a Bitcoin transaction.
 * An ordered, cryptographically secured public ledger recording each event 
 * Unambiguously defined sequences of events
 * Unambiguously defined rules governing sequences of events
@@ -38,7 +42,7 @@ NotaryChains is designed to meet these requirements.  NotaryChains implements a 
 
 **The Notary Layer**
 
-The Notary layer implements proof of existence for an digital artifiact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
+The Notary layer implements proof of existence for an digital artifact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the notary layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
 
 NotaryChains collects sets of such hashes into a notary block.  The notary block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since NotaryChains can be maintained more cheaply in terms of resources, the cost of entries into the notary layer will be much cheaper than transactions in the Bitcoin block chain.
 
