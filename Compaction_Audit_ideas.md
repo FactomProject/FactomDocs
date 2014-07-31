@@ -28,18 +28,23 @@ The Compaction Service Provider (CSP) has the power to exclude, delay, or reorde
 The customer, based on their risk preference, can select from various levels of auditing.
 
 level 1: No Auditing
+
 The customer sends their artifact fingerprint to their CSP of choice.  Minimal acknowledgement would be given to the customer from the CSP.  The customer would rely on the CSP's history to ensure their data gets timestamped.
 
 level 2: Self Auditing
+
 After submission to the CSP, the customer watches for the CSP to embed a Notary Block (NB) into the bitcoin blockchain.  The customer finds the NB on the DHT network and downloads it.  The customer verifies that their artifact fingerprint exists in the NB and that the timestamp is correct.
 
 level 3: Customer holds receipt
+
 When the customer submits a hash to the CSP, they would request the CSP provide a recipt.  The receipt would consist of the customer's fingerprint, a timestamp, and the NB serial number the CSP is expecting to place it in.  The CSP will sign the receipt and send it to the customer.  If the customer finds later that their artifact fingerprint is not in the blockchain, then the customer may be entitled to restitution.  
 
 level 4: Customer delivers receipt to CSA
+
 The customer receives the same receipt as above, but forwards it onto a CSA.  The CSA will watch the chosen CSP's outputs to ensure that the customer's data gets entered into the CSPs block.  If the CSP neglects to add the customer's CSA to the block, then the CSA would be entitled to restitution.
 
 level 5: Customer tests CSA
+
 This operation would allow the customer to work in conjunction with the CSP to trigger an audit failure alarm at the CSA.  The customer would pay above the normal transaction cost to the CSP.  The CSP would create a timestamp receipt, but intentionally leave it out of the NB.  The customer would deliver the receipt to the CSA, without letting them know they were being tested.  If they alert the customer and demand restitution from the CSP, the CSP will show proof that it was only a test and payments will be settled.  If the CSA does not alert the customer of the audit failure, then the customer knows the CSA is not performing it's job.
 
 
