@@ -1,5 +1,13 @@
-Compaction and Distribution Layer  
+Overview
 ----------------------------------------------
+
+This document explores one option for embedding data into the bitcoin blockchain.  It involves multiple competing parties each embedding their own data separately.  It also explores a method using independent auditors to ensure honest dealings.
+
+
+
+
+Compaction and Distribution Layer
+-----------
 
 A Compaction Service Provider (CSP) is an entity which accumulates data fingerprints (hashes) from its customers.  It assembles its customers' data, and gives it a timestamp.  The CSP periodically bundles all it's customer's data and makes it available on a Bittorrent like network.  Then it publishes the fingerprint on the bitcoin network, permanently timestamping the data. Alternatively, the CSP can send their fingerprint to another other CSP(s), who would timestamp it in bitcoin.  There would always be a path to a CSP that logs the fingerprint on the bitcoin network.
 
