@@ -13,14 +13,14 @@ The "entry layer" sits on top of the proof of existence layer to provide the use
 
 The "Factom chain" layer allows the linking of entries together, and it specifies the rules required for these links.  Each Factom chain then can have its own rules governing what entries are accepted as links in that chain.  
 
-Factom are run upon a set of federated servers that implement a set of policies that drive their behaviors.  These polices are subject to real time audits, and the FactomChain servers use a system of audits to provide users proof that the servers are implementing these policies.  This system of audits is referred to as Proof by Audit. 
+Factom is run upon a set of federated servers that implement a set of policies that drive their behaviors.  These polices are subject to real time audits, and the FactomChain servers use a system of audits to provide users proof that the servers are implementing these policies.  This system of audits is referred to as Proof by Audit. 
 
 Introduction
 ------------
 
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd sourced loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
-Factom simplifies how Bitcoin 2.0 applications can be deployed.   Factom seek to solve the foundational problem of Bitcoin 2.0.   Factom do so by providing a few simple operators from which many more complicated operations can be built.  Factom extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in Factom), and chains of such events (sequences of entries referred to as Factom Chains).
+Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom seek to solve the foundational problem of Bitcoin 2.0.  Factom does so by providing a few simple operators from which many more complicated operations can be built.  Factom extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in Factom), and chains of such events (sequences of entries referred to as Factom Chains).
 
 Consider what any Bitcoin 2.0 application requires:
 
