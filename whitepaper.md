@@ -1,4 +1,4 @@
-NotaryChains
+Factom
 ============
 *Proof of Process*
 
