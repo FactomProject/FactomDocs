@@ -18,6 +18,13 @@ Factom is run upon a set of federated servers that implement a set of policies t
 Introduction
 ------------
 
+When Satoshi Nakamoto launched the Bitcoin blockchain he revolutionized the way transactions were recorded. There had never before existed a permanent, decentralized, and trustless ledger of records. Developers have rushed to create applications built on top of this ledger. Unfortunately, they run into a few core problems that weren’t anticipated when the blockchain was launched:
+1)	Speed – because of it’s decentralized nature, the Bitcoin blockchain takes roughly 10 minutes to confirm a transaction. Many applications require multiple confirmations for security. 21st century applications can’t deliver a practical user experience with this time constraint. 
+2)	Cost – the current minimum transaction cost is 5.00 Bits (or roughly $0.005). The exchange price of Bitcoins has increased approximately 500% in the last 12 months and is projected to continue to increase. This provides a serious cost barrier to applications that need to manage millions of transactions.
+3)	Bloat – the Bitcoin blockchain currently has a 1MB block size limit which caps it at 7 transactions per second. Any application that wants to write and store information using the Bitcoin blockchain will add to the traffic. This problem has become politically charged. Should the Bitcoin blockchain be used for non-BTC transactions, or should it stay pure?
+
+Factom is a protocol designed to solve these three core problems. Factom creates a Protocol Stack for Bitcoin 2.0 applications and constructs a simple, standard, effective, and secure foundation for these applications to run faster, cheaper, and bloat-free. 
+
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd sourced loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
 Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom seek to solve the foundational problem of Bitcoin 2.0.  Factom does so by providing a few simple operators from which many more complicated operations can be built.  Factom extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in Factom), and chains of such events (sequences of entries referred to as Factom Chains).
