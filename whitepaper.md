@@ -1,6 +1,6 @@
 Factom
 ============
-verb: To compress vast data into a single hash for blockchain storage.
+verb: To secure vast data with a single hash in the blockchain.
 
 Abstract
 --------
