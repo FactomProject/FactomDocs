@@ -1,19 +1,15 @@
 Factom
 ============
-*Proof of Process*
+verb: To compress vast data into a single hash for blockchain storage.
 
 Abstract
 --------
 
-Factom as a design resulted from an effort to distill the design of a framework down to its most simple and basic components.  The result is a general Protocol Stack for building new currencies, smart contracts, smart properties, etc.  
+Factom is a project to distill large amounts of information into a tiny proof.  That proof is secured by the Bitcoin blockchain.  The secured data is shared on an P2P network, such as Bittorent.  The data is arranged in a heirarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in.  
 
-The most basic layer in this protocol stack collects into a "Factom block" the hashes of digital artifacts (spreadsheets, text files, structured data, media, etc.).  This Factom block is hashed itself, and that hash is placed into the Bitcoin block chain, and a new Factom block is begun.  Because hashes are one way functions, the existence of the hash in the Bitcoin block chain is proof that all the hashes in the Factom block existed at that time.  This is because you can create a hash from a digital artifact, but you cannot fit a digital artifact to an existing hash.  Likewise, the existence of a hash in a Factom block proves the existence of the digital artifact.  The construction of Factom blocks limits the data entered into the Bitcoin block chain.
+Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit. 
 
-The "entry layer" sits on top of the proof of existence layer to provide the user with a structure for holding meta data about what is being secured by the proof of existence layer, and the Bitcoin blockchain. 
-
-The "Factom chain" layer allows the linking of entries together, and it specifies the rules required for these links.  Each Factom chain then can have its own rules governing what entries are accepted as links in that chain.  
-
-Factom is run upon a set of federated servers that implement a set of policies that drive their behaviors.  These polices are subject to real time audits, and the FactomChain servers use a system of audits to provide users proof that the servers are implementing these policies.  This system of audits is referred to as Proof by Audit. 
+One objective of the project is to provide a location to house Mastercoin transactions, providing the security of Bitcoin, without bloating Bitcoin.
 
 Introduction
 ------------
@@ -30,25 +26,45 @@ Factom is a protocol designed to solve these three core problems. Factom creates
 
 Bitcoin is disrupting the status quo for online payments.  With Bitcoin, payments can be made worldwide without any centralized party or parties.  The success and elegance of Bitcoin has inspired many others to seek ways of decentralizing more than just payment systems.  Many have observed that the blockchain could enable the trading of commodities, trading of assets, issuing  securities, implementing self enforcing smart contracts, crowd sourced loans, etc.  The set of such extended applications is often referred to as "Bitcoin 2.0"
 
-Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom seek to solve the foundational problem of Bitcoin 2.0.  Factom does so by providing a few simple operators from which many more complicated operations can be built.  Factom extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events (entries in Factom), and chains of such events (sequences of entries referred to as Factom Chains).
+Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom does so by providing a few simple operators from which many more complicated designs can be built.  Factom extends Bitcoin beyond the exchange of bitcoins to include the recording and management of arbitrary events, and chains of such events.
 
 Consider what any Bitcoin 2.0 application requires:
 
-* Structured events that may include additional information beyond that captured by a Bitcoin transaction.
-* An ordered, cryptographically secured public ledger recording each event 
-* Unambiguously defined sequences of events
-* Unambiguously defined rules governing sequences of events
-* Auditable events, and event sequences, either publicly or privately
+* A public event
+* A secured ledger recording each event
+* Agreement on the sequence of events
+* Audits of the ledger, to ensure that the events and their sequence conform to the agreement  
 
-Factom is designed to meet these requirements.  Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
+Factom is designed to both meet and impose these requirements.  Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
-4) Applications
+1) Timestamping Layer
 
-3) Factom Chains
+2) Factom Layer
 
-2) Event structure
+3) Entry Layer
 
-1) Factom layer 
+4) Individual Entries Layer
+
+
+
+**The Timestamping Layer**
+
+Factom data is timestamped by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The timestamp is also enough data to query a peer-to-peer Distributed Hash Table (DHT, similar to Bittorrent) in order to retrieve all the data which was timestamped.  
+
+Data is organized into block structures, and is combined via a merkle trees.  Every 10 minutes, the dataset state is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom timestamp per block.  
+
+Bitcoin block timestamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality[x].  Factom will provide its own internal timestamps which conform with standard time systems.  Since Factom places high importance on timestamping, it will be a closely audited part of the system.
+
+The user data timestamps will be assigned when they are received at the server.  The server bounded within a 1 minute time frame.  That time frame is between when a Factom block is opened and when it is closed. On closing, the federated servers generate consensus and effectively time stamp the results.
+
+As a general note, the data could have existed long before it was timestamped.  It only proves the data did not originate after the time stamp.
+
+A timestamp is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to timestamp data.  [y]  The first few bytes of the available 40 following the OP_RETURN code would be a magic designator.  The magic designator tags the transaction as a Factom timestamp.
+
+The timestamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to timestamp the federation’s collected data moves some of their own BTC back to themselves.  The transaction will be broadcast on the Bitcoin network, and it will wait to be included in a block.  
+
+Bitcoin blocks are generated with a statistical process, as such, their timing cannot be predicted.  This means that the Factom timestamping cannot be synced up with the Bitcoin timestamping system.  The real value timestamping in Bitcoin gives is to prevent Factom from generating false histories in the future.  There could easily be an hour or more between when the Factom state is frozen and when it finally is included in Bitcoin.  
+
 
 **The Factom Layer**
 
@@ -63,6 +79,25 @@ Bitcoin 2.0 applications will need to record a varied range of information with 
 **Factom Chains**
 
 Factom Chains are chains of entries that define sequences of events.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Factom Chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  Factom support three levels of Factom Chains (i.e. Factom Chains, i.e. sequences of entries):
+
+
+
+Potential Attacks
+------------
+
+**Attacks on the Timestamping Layer**
+
+There is a potential Denial of Service (DOS) attack vector.  A 3rd party could create a transaction with OP_RETURN looking like a valid Factom entry.  Suppose a client naively downloads from the Factom DHT network every item which is tagged by the magic designator.  An attacker could formulate a Bitcoin transaction causing all the clients to search for, download, and share the attacker’s data.  Due to this possibility, clients should maintain a list of Bitcoin private keys used by the Factom servers.  Any Bitcoin transaction not signed by a recognized Factom server should be treated with suspicion.  
+
+Bitcoin transactions are susceptible to a malleability attack from miners.  Re-spending unconfirmed outputs could create invalid Bitcoin transactions, which would require future attention from the issuing server.  In order to not require that attention, timestamping would be done with confirmed Bitcoin transactions.  
+
+
+
+
+
+
+
+
 
 *Enforced Factom Chains*
 
