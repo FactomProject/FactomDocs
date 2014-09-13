@@ -53,13 +53,13 @@ Factom data is timestamped by the Bitcoin network.  User's data is as secure as 
 
 Data is organized into block structures, and is combined via a merkle trees.  Every 10 minutes, the dataset state is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom timestamp per block.  
 
-Bitcoin block timestamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality[x].  Factom will provide its own internal timestamps which conform with standard time systems.  Since Factom places high importance on timestamping, it will be a closely audited part of the system.
+Bitcoin block timestamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1].  Factom will provide its own internal timestamps which conform with standard time systems.  Since Factom places high importance on timestamping, it will be a closely audited part of the system.
 
 The user data timestamps will be assigned when they are received at the server.  The server bounded within a 1 minute time frame.  That time frame is between when a Factom block is opened and when it is closed. On closing, the federated servers generate consensus and effectively time stamp the results.
 
 As a general note, the data could have existed long before it was timestamped.  It only proves the data did not originate after the time stamp.
 
-A timestamp is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to timestamp data.  [y]  The first few bytes of the available 40 following the OP_RETURN code would be a magic designator.  The magic designator tags the transaction as a Factom timestamp.
+A timestamp is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to timestamp data.  [2]  The first few bytes of the available 40 following the OP_RETURN code would be a magic designator.  The magic designator tags the transaction as a Factom timestamp.
 
 The timestamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to timestamp the federation’s collected data moves some of their own BTC back to themselves.  The transaction will be broadcast on the Bitcoin network, and it will wait to be included in a block.  
 
@@ -267,3 +267,7 @@ project. The digital token known as Factom Coins is only useful for creating and
 "Proof of Existence." Proof of Existence. Accessed May 27, 2014. http://www.proofofexistence.com/.
 
 "Virtual-Factom." Virtual-Factom. Accessed May 27, 2014. http://virtual-Factom.org/.
+
+[1] "Block timestamp" Accessed Sep 12, 2014. https://en.bitcoin.it/wiki/Block_timestamp
+
+[2] "OP_RETURN and the Future of Bitcoin" Accessed Sep 12, 2014.  http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/
