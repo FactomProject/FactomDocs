@@ -12,6 +12,4 @@ Factom chains are constructed from entries crafted to support a wide range of ap
 
 The architecture for Factom allows for the easy construction of tokens or coins, securities, smart contracts, etc.
 
-Continue to the full [Factom whitepaper](https://github.com/NotaryChains/NotaryChainDocs/blob/master/whitepaper.md).  
-
-Continue to the [Factom wiki](https://github.com/NotaryChains/NotaryChainDocs/wiki).
+Continue to the full [Factom whitepaper](https://github.com/FactomProject/FactomDocs/blob/master/whitepaper.md).  
