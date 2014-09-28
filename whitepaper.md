@@ -1,11 +1,11 @@
 Factom
 ============
-verb: To secure vast data with a single hash in the blockchain.
 
 Abstract
 --------
 
-Factom is a project to distill large amounts of information into a tiny proof.  That proof is secured by the Bitcoin blockchain.  The secured data is shared on an P2P network, such as Bittorent.  The data is arranged in a heirarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in.  
+Factom is a project to accept and organize large numbers of entries for the users of Factom, and swiftly and inexpensively construct for the users an inviolable ledger secured by the Bitcoin Ledger.  An entry is created from 0 or more hashes along with a data packet, often in the form of structured data like XML or JSON.  Factom secures these entries by creating a system of blocks and hashes within Factom that culminate into a single hash every ten minutes which is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on an P2P network, using a Torrent protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (this document is not in the ledger).
+ 
 
 Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit. 
 
@@ -18,9 +18,9 @@ When Satoshi Nakamoto launched the Bitcoin blockchain he revolutionized the way 
 
 1)	Speed – because of it’s decentralized nature, the Bitcoin blockchain takes roughly 10 minutes to confirm a transaction. Many applications require multiple confirmations for security. 21st century applications can’t deliver a practical user experience with this time constraint. 
 
-2)	Cost – the current minimum transaction cost is around 100 Bits (or roughly $0.05). The exchange price of Bitcoins has increased approximately 500% in the last 12 months and is projected to continue to increase. This provides a serious cost barrier to applications that need to manage millions of transactions.
+2)	Cost – the current minimum transaction cost is around 100 Bits (or roughly $0.05). The exchange price of Bitcoins has increased approximately 500% in the last 12 months ending August 2014, and is projected to continue to increase long term. This provides a serious cost barrier to applications that need to manage millions of transactions.
 
-3)	Bloat – the Bitcoin blockchain currently has a 1MB block size limit which caps it at 7 transactions per second. Any application that wants to write and store information using the Bitcoin blockchain will add to the traffic. This problem has become politically charged. Should the Bitcoin blockchain be used for non-BTC transactions, or should it stay pure?
+3)	Bloat – the Bitcoin blockchain currently has a 1 MB block size limit which caps it at 7 transactions per second. Any application that wants to write and store information using the Bitcoin blockchain will add to the traffic. This problem has become politically charged. Should the Bitcoin blockchain be used for non-BTC transactions, or should it stay pure?
 
 Factom is a protocol designed to solve these three core problems. Factom creates a Protocol Stack for Bitcoin 2.0 applications and constructs a simple, standard, effective, and secure foundation for these applications to run faster, cheaper, and bloat-free. 
 
@@ -49,7 +49,7 @@ At its heart, Factom is a network of federated servers.  These servers rotate re
 
 Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
-1) Timestamping Layer
+1) Time Stamping Layer
 
 2) Factom Layer
 
@@ -57,13 +57,13 @@ Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in 
 
 4) Individual Entries Layer
 
-**The Timestamping Layer**
+**The Time Stamping Layer**
 
-Factom data is timestamped by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The timestamp is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to Bittorrent) in order to retrieve all the data which was timestamped.  
+Factom data is time stamped by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The time stamp is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to Bittorrent) in order to retrieve all the data which was time stamped.  
 
-Data is organized into block structures, and combined via a merkle trees.  Every 10 minutes, the dataset is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom timestamp per Bitcoin block.
+Data is organized into block structures, and combined via a Merkle trees.  Every 10 minutes, the dataset is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom time stamp per Bitcoin block.
 
-Bitcoin block timestamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1].  Factom will provide its own internal timestamps which conform with standard time systems.  Since Factom places high importance on timestamping, it will be a closely audited part of the system.
+Bitcoin block time stamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1].  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on timestamping, it will be a closely audited part of the system.
 
 The user data timestamps will be assigned when they are received at the server.  A federated server network bounds the assigned server to within a 1 minute time frame.  The server is not allowed to timestamp outside of that timeframe.  The time spans between when a Factom block is opened and when it is closed. On closing, the federated server network generates consensus and cumulatively time stamp each other's data.
 
