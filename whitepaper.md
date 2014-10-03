@@ -34,11 +34,11 @@ Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom does so 
 Consider what any Bitcoin 2.0 application requires:
 
 * A set of public or private events
-* A secured ledger recording each event
-* Agreement on the sequence of events
-* Audits of the ledger, to ensure that the events and their sequence conform to the agreement  
+* A inviolable ledger recording and ordering entries related to events
+* Support for unambiguous audits of the ledger, insuring internal consistency of the ledger
+* The ability to assert state(s) of participants based on the ledger
 
-Factom is designed to both meet and impose these requirements.  
+Factom is designed to both meet and support the implementation of systems that meet these requirements.  
 
 ------------
 
@@ -48,15 +48,15 @@ At its heart, Factom is a network of federated servers.  These servers rotate re
 
 Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
-1) Time Stamping Layer
+1) Time Stamping Layer 
 
 2) Factom Layer
 
 3) Entry Layer
 
-4) Individual Entries Layer
+4) Application Layer
 
-**The Time Stamping Layer**
+**Time Stamping**
 
 Factom data is time stamped by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The time stamp is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to Bittorrent) in order to retrieve all the data which was time stamped.  
 
@@ -68,63 +68,39 @@ The user data time stamps will be assigned when they are received at the server.
 
 As a general note, the data could have existed long before it was time stamped.  Factom only proves the data did not originate after the time stamp.
 
-A time stamp is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data.  [2]  The first few bytes of the available 40 following the OP_RETURN code would be a magic designator.  The magic designator tags the transaction as a Factom time stamp.
+The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data.  [2]  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom tag.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
 
-The time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a block.  
+The Merkle Root time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a Bitcoin block.  
 
-Bitcoin blocks are generated with a statistical process, as such, their timing cannot be predicted.  This means that the Factom time stamping cannot be synced up with the Bitcoin time stamping system.  The real value time stamping in Bitcoin gives is to prevent Factom from generating false histories in the future.  Due to bad luck of Bitcoin miners, there could easily be an hour or more between when the Factom state is frozen and when it is mined into a block.
+Bitcoin blocks are generated with a statistical process, as such, their timing cannot be predicted.  This means that the time stamping done for entries within Factom is only roughly bound by the entries inserted into the Bitcoin block chain, and thus Bitcoin time stamping system.  The real value of inserting these values  into Bitcoin is to prevent anyone from generating false Factom histories in the future.  Due to bad luck of Bitcoin miners, or slow inclusion of Factom transactions, there could easily be an hour or more between when the Factom state is frozen for a particular Factom block and when the Bitcoin transaction that secures that Factom block is mined into a Bitcoin block.
 
 
-**The Factom Layer**
+**Factom Layer**
 
-The Factom layer implements proof of existence for an digital artifact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the Factom layer.  Because of the vast difficulty and complexity of finding a digital document that will fit a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
+The Factom layer implements proof of existence for an digital artifact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the Factom layer.  Because of the vast (currently insurmountable) difficulty and complexity of creating a digital document that will generate a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
 
-Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed, and that hash is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since Factom can be maintained more cheaply in terms of resources, the cost of entries into the Factom layer will be much cheaper than transactions in the Bitcoin block chain.
+Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since Factom can be maintained more cheaply in terms of resources, the cost of entries into the Factom layer will be much cheaper than transactions in the Bitcoin block chain.
 
-**Event Structure**
+**Entry Structure**
 
-Bitcoin 2.0 applications will need to record a varied range of information with the event itself.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some entries may need to be part of the event itself rather than be held off chain.   Factom allow the application to define the event structure, and manage that structure in the Factom Chains. 
+Bitcoin 2.0 applications will need to record a varied range of information associated with events within their application.   The information associated with an event can be encoded into an Entry and the entry recorded into Factom.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some applications need information recorded into the ledger rather than holding that information off chain.   Factom allow the application to define the entry structure(s) they require, and manage the structure(s) in Factom Chains. 
 
 **Factom Chains**
 
-Factom Chains are chains of entries that define sequences of events.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Factom Chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  Factom support three levels of Factom Chains (i.e. Factom Chains, i.e. sequences of entries):
+Factom Chains are chains of entries that that reflect the events of an application.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Factom Chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  
 
+**Applications**
 
+Applications are possibly distributed applications running on top of Factom to provide additional services.  For example, one might imagine a trading engine that processes transactions very fast, with very accurate time stamping.  Such an application may none the less stream transactions out into Factom chains to document and secure the ledger for the engine.  Such a mechanism could provide real time cryptographic proof of process, of reserves, and of  communications.
 
-Potential Attacks
-------------
+Another application may provide an exchange of Bitcoin or even conventional credit cards for Factom tokens.  Using such a "Vending Machine", users could buy entries to be used in Factom without ever owning the Factom Tokens that drive the Factom servers.  And yet such a service is decentralized, in the sense that no application is forced to use a particular "Vending Machine," even if such applications are run by centralized parties.
 
-**Attacks on the Timestamping Layer**
+-----------
 
-There is a potential Denial of Service (DOS) attack vector.  A 3rd party could create a transaction with OP_RETURN looking like a valid Factom entry.  Suppose a client naively downloads from the Factom DHT network every item which is tagged by the magic designator.  An attacker could formulate a Bitcoin transaction causing all the clients to search for, download, and share the attacker’s data.  Due to this possibility, clients should maintain a list of Bitcoin private keys used by the Factom servers.  Any Bitcoin transaction not signed by a recognized Factom server should be treated with suspicion.  
+Factom Chains
+---------------
 
-Bitcoin transactions are susceptible to a malleability attack from miners.  Re-spending unconfirmed outputs could create invalid Bitcoin transactions, which would require future attention from the issuing server.  In order to not require that attention, timestamping would be done with confirmed Bitcoin transactions.  
-
-
-
-
-
-
-
-
-
-*Enforced Factom Chains*
-
-Some sorts of event sequences are very coommon.  These common sorts of sequences are defined as part of the FactomChain servers, such that these Factom Chains are enforced directly.  As development on the Factom technology continues, the set of enforced sequence types will be expanded.  
-
-Bitcoin is an example of a protocol that implements a particular server enforced event sequence.  Any transaction that does not validate against the Bitcoin block chain is excluded. Factom provides that same sort of enforcement of enforced Factom Chains.  Any attempt to add an event to an enforced sequence that breaks the rules of that sequence type is rejected by the Factom servers, and is not added as an entry, and thus bared from being part of the Factom chain. 
-
-Initially Factom will implement these sequence types:
-
-* Account -- maintains a balance, which is decremented as used
-* Ticket -- allows for issuing, transferring, and consuming tickets until a particular date and time
-* Coin -- allows for the issuing and trading of coins
-* Notes -- a sequence that allows information to be recorded about another event. 
-* Log -- a sequence restricting entry to a set of signatures
-
-*Independent but public enforced sequences*
-
-The first event beginning a chain will provide a hash of a human readable list of rules for the FactomChain. The first event will also provide a hash of a script or an application that can be run to validate entries in the sequence.  The description of the event will provide a link to these rules, scripts, and applications.
+The first entry beginning a chain will, by convention, provide a hash of a human readable list of rules for the Factom Chain, a url The first event will also provide a hash of a script or an application that can be run to validate entries in the sequence.  The description of the event will provide a link to these rules, scripts, and applications.
 
 An enforced sequence can be specified.  Entries that cannot meet the requirements of the specified enforced sequence will be rejected.  However, entries that might be rejected by the script or the app will still be recorded.  Thus users of such chains will need to run the app or script to validate a chain sequence of this type. The FactomChain servers will not validate using the script or app.
 
