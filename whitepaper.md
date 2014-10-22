@@ -4,9 +4,9 @@ Factom
 Abstract
 --------
 
-Factom is a project to accept and organize large numbers of digital entries for the users of Factom, and swiftly and inexpensively construct for the users an inviolable ledger secured by the Bitcoin Ledger.  An entry is created from 0 or more hashes along with a data packet, often in the form of structured data like XML or JSON.  
+Factom is an open source project which levarages the irreversable security of the Bitcoin Blockchain.  Multiple user's data is collected by the system and is packaged with other user's data.  The entire set of data is distilled to a single hash which is placed in the Bitcoin Blockchain.  The data package is then published on a peer-to-peer netork, allowing users to download the entire set of timestamps.
 
-Factom secures these entries by creating a system of blocks and hashes within Factom that culminate into a single hash every ten minutes which is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on an P2P network, using a Torrent protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
+Factom secures the entries by creating a hierarchical system of blocks and hashes culminating into a single hash every ten minutes.  This single hash is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on an P2P network, using a BitTorrent like protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
  
 Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit. 
 
@@ -81,7 +81,7 @@ The Factom layer implements proof of existence for an digital artifact.  Any eve
 
 Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin block chain.  This allows the most minimum expansion of the Bitcoin block chain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since Factom can be maintained more cheaply in terms of resources, the cost of entries into the Factom layer will be much cheaper than transactions in the Bitcoin block chain.
 
-**Entry Structure**
+**Entry Layer**
 
 Bitcoin 2.0 applications will need to record a varied range of information associated with events within their application.   The information associated with an event can be encoded into an Entry and the entry recorded into Factom.  Encoding all that information into the Bitcoin block chain is unreasonable, yet some applications need information recorded into the ledger rather than holding that information off chain.   Factom allow the application to define the entry structure(s) they require, and manage the structure(s) in Factom Chains. 
 
