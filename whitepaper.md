@@ -4,7 +4,7 @@ Factom
 Abstract
 --------
 
-Factom is an open source project which levarages the irreversable security of the Bitcoin Blockchain.  Multiple user's data is collected by the system and is packaged with other user's data.  The entire set of data is distilled to a single hash which is placed in the Bitcoin Blockchain.  The data package is then published on a peer-to-peer netork, allowing users to download the entire set of timestamps.
+Factom is an open source project which leverages the irreversible security of the Bitcoin Blockchain.  Multiple user's data is collected by the system and is packaged with other user's data.  The entire set of data is distilled to a single hash which is placed in the Bitcoin Blockchain.  The data package is then published on a peer-to-peer network, allowing users to download the entire set of timestamps.
 
 Factom secures the entries by creating a hierarchical system of blocks and hashes culminating into a single hash every ten minutes.  This single hash is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on an P2P network, using a BitTorrent like protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
  
