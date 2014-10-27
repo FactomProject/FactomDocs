@@ -15,9 +15,9 @@ One objective of the project is to provide a location to house Mastercoin transa
 Introduction
 ------------
 
-When Satoshi Nakamoto launched the Bitcoin blockchain he revolutionized the way transactions were recorded. There had never before existed a permanent, decentralized, and trustless ledger of records. Developers have rushed to create applications built on top of this ledger. Unfortunately, they run into a few core problems that were not anticipated when the blockchain was launched:
+When Satoshi Nakamoto launched the Bitcoin blockchain he revolutionized the way transactions were recorded. There had never before existed a permanent, decentralized, and trustless ledger of records. Developers have rushed to create applications built on top of this ledger. Unfortunately, they run into a few core problems that were part of the original design tradeoffs when the blockchain was launched:
 
-1)	Speed – because of its decentralized nature, the blockchain takes roughly 10 minutes to confirm a transaction. Many applications require multiple confirmations for security.  Many applications can’t deliver a practical user experience with this time constraint. 
+1)	Speed – because of its decentralized nature, the blockchain takes on average 10 minutes to confirm a transaction. Many applications require multiple confirmations for security.  Many applications can’t deliver a practical user experience with this time constraint. 
 
 2)	Cost – the current minimum transaction cost is around 100 Bits (or roughly $0.05). The exchange price of Bitcoins has increased approximately 500% in the last 12 months ending August 2014, and is projected to continue to increase long term. This provides a serious cost barrier to applications that need to manage millions of transactions. (For conversions between USD, BTC, mBTC, and bits, check out this [Bitcoin Price Converter](http://youmeandbtc.com/bitcoin-converter/).)
 
@@ -34,9 +34,9 @@ Factom simplifies how Bitcoin 2.0 applications can be deployed.  Factom does so 
 Consider what any Bitcoin 2.0 application requires:
 
 * A set of public or private events
-* A inviolable ledger recording and ordering entries related to events
-* Support for unambiguous audits of the ledger, insuring internal consistency of the ledger
-* The ability to assert state(s) of participants based on the ledger
+* An unforgeable ledger recording and ordering entries
+* Support for unambiguous audits of the ledger, ensuring internal consistency of the ledger
+* The ability to determine the state(s) of participants based on the ledger
 
 Factom is designed to both meet and support the implementation of systems that meet these requirements.  
 
@@ -58,17 +58,17 @@ Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in 
 
 **Time Stamping**
 
-Factom data is time stamped by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The time stamp is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to Bittorrent) in order to retrieve all the data which was time stamped.  
+Factom data is time stamped and made irreversible by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The Bitcoin entry is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to BitTorrent) in order to retrieve all the data which was time stamped.
 
 Data is organized into block structures, and combined via a Merkle trees.  Every 10 minutes, the data set is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom time stamp per Bitcoin block.
 
-Bitcoin block time stamps themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1].  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
+Bitcoin internal header block times themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1](https://en.bitcoin.it/wiki/Block_timestamp).  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
 
-The user data time stamps will be assigned when they are received at the server.  A federated server network bounds the assigned server to within a 1 minute time frame.  The server is not allowed to time stamp outside of that time frame.  The time spans between when a Factom block is opened and when it is closed. On closing, the federated server network generates consensus and cumulatively time stamps each other's data.
+The user data ordering will be assigned when received at the server.  A federated server network bounds the assigned server to within a 1 minute time frame; the time between when a Factom block is opened and closed.  The server is not allowed to time stamp its data collection outside of that time frame.  On closing, the federated server network generates consensus and cumulatively time stamp each other's data.
 
 As a general note, the data could have existed long before it was time stamped.  Factom only proves the data did not originate after the time stamp.
 
-The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data.  [2]  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom tag.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
+The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data [2](http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/).  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom tag.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
 
 The Merkle Root time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a Bitcoin block.  
 
