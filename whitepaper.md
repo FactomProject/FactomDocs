@@ -4,9 +4,9 @@ Factom
 Abstract
 --------
 
-Factom is an open source project which leverages the irreversible security of the Bitcoin Block Chain ("blockchain").  Multiple user's data is collected by the Factom system and is packaged with other user's data.  The entire set of data is distilled to a single hash which is placed in the blockchain.  The data package is then published on a peer-to-peer network, allowing users to download the entire set of timestamps.
+Factom is an open source project which leverages the irreversible security of the Bitcoin Block Chain ("blockchain").  Multiple user's data is collected by the Factom system and is packaged with other user's data.  The entire set of data is distilled to a single hash which is placed in the blockchain.  The data package is then published on a peer-to-peer network, allowing users to download the entire set of data.
 
-Factom secures the entries by creating a hierarchical system of blocks and hashes culminating into a single hash every ten minutes.  This single hash is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on an P2P network, using a BitTorrent like protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
+Factom secures the entries by creating a hierarchical system of blocks and hashes culminating into a single hash every ten minutes.  This single hash is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on a P2P network, using a BitTorrent like protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
  
 Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit. 
 
@@ -35,14 +35,14 @@ Consider what any Bitcoin 2.0 application requires:
 
 * A set of public or private events
 * An unforgeable ledger recording and ordering entries
-* Support for unambiguous audits of the ledger, ensuring internal consistency of the ledger
+* Support for unambiguous audits of the ledger, ensuring internal consistency
 * The ability to determine the state(s) of participants based on the ledger
 
-Factom is designed to both meet and support the implementation of systems that meet these requirements.  
+Factom is designed to both meet and support the implementation of systems that have these requirements.
 
 ------------
 
-Factom is a method of decentralized structure for collecting and packaging data.  Bitcoin does this too, but it has a requirement for total consistency over many thousand servers worldwide.  Distributing the world's records to every Bitcoin server presents a substantial bandwidth challenge.  
+Factom is a method of decentralized structure for collecting and packaging data.  Bitcoin does this too, but it has a requirement for total consistency over many thousand servers worldwide.  Distributing the world's records to every Bitcoin server presents a substantial bandwidth challenge.
 
 At its heart, Factom is a network of federated servers.  These servers rotate responsibility for different aspects of the system.  No single server is permanently in control of the system, or part of a system.
 
@@ -62,15 +62,15 @@ Factom data is time stamped and made irreversible by the Bitcoin network.  User'
 
 Data is organized into block structures, and combined via a Merkle trees.  Every 10 minutes, the data set is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom time stamp per Bitcoin block.
 
-Bitcoin internal header block times themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [1](https://en.bitcoin.it/wiki/Block_timestamp).  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
+Bitcoin internal header block times themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [[1](https://en.bitcoin.it/wiki/Block_timestamp)].  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
 
 The user data ordering will be assigned when received at the server.  A federated server network bounds the assigned server to within a 1 minute time frame; the time between when a Factom block is opened and closed.  The server is not allowed to time stamp its data collection outside of that time frame.  On closing, the federated server network generates consensus and cumulatively time stamp each other's data.
 
 As a general note, the data could have existed long before it was time stamped.  Factom only proves the data did not originate after the time stamp.
 
-The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data [2](http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/).  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom tag.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
+The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data [[2](http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/)].  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom entry.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
 
-The Merkle Root time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a Bitcoin block.  
+The Merkle Root time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a Bitcoin block.  Bitcoin transactions that look like Factom entries, but are not spent from an address known as a Factom server will be ignored.
 
 Bitcoin blocks are generated with a statistical process, as such, their timing cannot be predicted.  This means that the time stamping done for entries within Factom is only roughly bound by the entries inserted into the Bitcoin blockchain, and thus Bitcoin time stamping system.  The real value of inserting these values  into Bitcoin is to prevent anyone from generating false Factom histories in the future.  Due to bad luck of Bitcoin miners, or slow inclusion of Factom transactions, there could easily be an hour or more between when the Factom state is frozen for a particular Factom block and when the Bitcoin transaction that secures that Factom block is mined into a Bitcoin block.
 
