@@ -38,13 +38,13 @@ Consider what any Bitcoin 2.0 application requires:
 * Support for unambiguous audits of the ledger, ensuring internal consistency
 * The ability to determine the state(s) of participants based on the ledger
 
-Factom is designed to both meet and support the implementation of systems that have these requirements.
+Factom is designed to both meet and support the implementation of systems having these requirements.
 
 
 Theory of Operation
 ------------
 
-Factom extends Bitcoin's feature set to record events outside of monetary transfers.  Factom has a very minimal rule set for adding permanent entries.  This is a double edged sword, as it allows for easy entry of data into the record.  The drawback is that Factom cannot be relied on to ensure validity.  Factom has a few rules for financial compensation for running the network, and some internal consistency rules, but cannot check the validity of statements recorded.
+Factom extends Bitcoin's feature set to record events outside of monetary transfers.  Factom has a very minimal rule set for adding permanent entries.  This is a double edged sword, as it allows data to easily be entered into the record.  The drawback is Factom cannot be relied on to ensure validity.  Factom has a few rules regarding financial compensation for running the network, and some internal consistency rules, but cannot check the validity of statements recorded.
 
 Bitcoin only allows entries which correctly move value from an input to an output.  Having a cryptographic signature is enough for the system to ensure validity.  This is a rule which can be automated, so the audit process is easy.  If Factom were used, for instance, to record a deed transfer of real estate, numerous rules exist for the transfer.  A local jurisdiction may have special requirements for property owned by a foreigner.  A cryptographic signature alone is insufficient to fully verify the validity.  Factom is unable to check legitimacy of such a transfer, and so doesn't try.
 
@@ -64,7 +64,9 @@ Certain land ownership recording systems are similar.  [[1](http://en.wikipedia.
 
 In both of the above cases, the negative can be proven because only transfers in small search space are recognized.  A land transfer recorded in a different jurisdiction 1000 miles away would not have a valid prior claim in the above example.  In Factom, there is a hierarchy of data classification.  This differs from Bitcoin where every entry is potentially a double spend.  The hierarchy allows Applications to have smaller search spaces than if all Factom data were combined together into one ledger.  A land transfer Application could safely ignore Entries tagged as security camera logs.
 
-[[2](http://szabo.best.vwh.net/securetitle.html)]
+Nick Szabo has written about Property Clubs, which have many overlaps of this system.  Here is a nugget from his paper "Secure Property Titles with Owner Authority" 
+
+`While thugs can still take physical property by force, the continued existence of correct ownership records will remain a thorn in the side of usurping claimants. [[2](http://szabo.best.vwh.net/securetitle.html)]`
 
 
 
