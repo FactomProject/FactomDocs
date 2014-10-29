@@ -8,7 +8,7 @@ Factom is an open source project which leverages the irreversible security of th
 
 Factom secures the entries by creating a hierarchical system of blocks and hashes culminating into a single hash every ten minutes.  This single hash is placed into the Bitcoin blockchain.  These structures holding and securing the entries are shared on a P2P network, using a BitTorrent like protocol.  The structures are arranged in a hierarchy, allowing for compact proofs.  The arrangement also allows users to download only the data subset they are interested in, and still be able to create proofs on their data, such as proofs of the negative (the hash of this document is not in the ledger).
  
-Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit. 
+Factom is run on a system of federated servers.  The servers are subject to real time audits, which provide users assurance that the servers are implementing published policies.  This system of audits is referred to as Proof by Audit.
 
 One objective of the project is to provide a location to house Mastercoin transactions, providing the security of Bitcoin, without bloating Bitcoin.
 
@@ -58,24 +58,20 @@ Trustless auditing would be similar to Bitcoin.  If a system were as easy to aud
 
 Mastercoin has a similar trust model.  Mastercoin transactions are embedded into the Bitcoin blockchain.  Bitcoin miners do not audit them for validity, therefore invalid Mastercoin transactions can be inserted into the blockchain.  The Mastercoin wallet scans through the blockchain and finds potential Mastercoin transactions.  It then checks them for validity, building an interpretation of which addresses own which assets.  It is up to the Mastercoin wallet to do its own auditing.  Software development is a little more forgiving with this arrangement.  If a software bug causes an incompatibility, interpretation can be changed after the fact instead of disrupting ongoing operations.
 
-prove negative...
+Bitcoin, Mastercoin, land registries, and many other systems solve a fundamental problem: proving a negative.  They prove something has been transfered to one person, and that it hasn't been transfered to someone else first.  Mastercoin solves this problem by limiting the places where Mastercoin transactions can be found.  Mastercoin transactions can only be found in the Bitcoin blockchain.  If a relevant transaction is not found in the blockchain, it is assumed not to exist and the asset hasn't been sent twice (double spent).
 
-Having a hierarchy allows Applications to be able to prove a negative.  Bitcoin solves the problem of proving the negative for double spends in two ways.  A BTC receiver must either audit the entire blockchain themselves or rely on miners only to include transactions spent once.  In Factom, the servers cannot discern a valid real estate transfer from an invalid one.  As such all claims for property tansfer would be included.  The Application would be responsible for determining validity of a property transfer.  Alternatively, multiple auditors can vouch for the transfer validity, and indicate as much in the system.  
+Certain land ownership recording systems are similar.  [[1](http://en.wikipedia.org/wiki/Recording_%28real_estate%29)]  Assume a system where land transfer is recorded in a governmental registry and the legal system is setup so that unrecorded transfers are invalid.  If an individual wanted to check if a title is clear, that no one else claims the land, the answer would be in the governmental registry.  They could prove the negative; the land _wasn't_ owned by a 3rd party.
 
-http://szabo.best.vwh.net/securetitle.html
+In both of the above cases, the negative can be proven because only transfers in small search space are recognized.  A land transfer recorded in a different jurisdiction 1000 miles away would not have a valid prior claim in the above example.  In Factom, there is a hierarchy of data classification.  This differs from Bitcoin where every entry is potentially a double spend.  The hierarchy allows Applications to have smaller search spaces than if all Factom data were combined together into one ledger.  A land transfer Application could safely ignore Entries tagged as security camera logs.
 
-
-Factom is a method of decentralized structure for collecting and packaging data.  Bitcoin does this too, but it has a requirement for total consistency over many thousand servers worldwide.  Factom differs from Bitcoin in this sense by having a lower number of servers which must come to consensus, allowing easier 
-
-
-Distributing the world's records to every Bitcoin server presents a substantial bandwidth challenge.
+[[2](http://szabo.best.vwh.net/securetitle.html)]
 
 
 
 Factom 
 ------------
 
-At its heart, Factom is a network of federated servers.  These servers rotate responsibility for different aspects of the system.  No single server is permanently in control of the system, or part of a system.
+At its heart, Factom is a decentralized way to collect, package, and secure data into the Bitcoin blockchain.  Factom accomplishes this with a network of federated servers.  These servers rotate responsibility for different aspects of the system.  No single server is permanently in control of the system, or part of a system.
 
 Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
@@ -95,13 +91,13 @@ Factom data is time stamped and made irreversible by the Bitcoin network.  User'
 
 Data is organized into block structures, and combined via a Merkle trees.  Every 10 minutes, the data set is frozen and submitted to the Bitcoin network.  Since Bitcoin has an unpredictable block time, there may be more or fewer than one Factom time stamp per Bitcoin block.
 
-Bitcoin internal header block times themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [[1](https://en.bitcoin.it/wiki/Block_timestamp)].  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
+Bitcoin internal header block times themselves have a fluid idea of time.  They have a 2 hour flexibility from reality [[3](https://en.bitcoin.it/wiki/Block_timestamp)].  Factom will provide its own internal time stamps which conform with standard time systems.  Since Factom places high importance on time stamping, it will be a closely audited part of the system.
 
 The user data ordering will be assigned when received at the server.  A federated server network bounds the assigned server to within a 1 minute time frame; the time between when a Factom block is opened and closed.  The server is not allowed to time stamp its data collection outside of that time frame.  On closing, the federated server network generates consensus and cumulatively time stamp each other's data.
 
 As a general note, the data could have existed long before it was time stamped.  Factom only proves the data did not originate after the time stamp.
 
-The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data [[2](http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/)].  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom entry.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
+The Merkle Root for the Factom block (effectively a time stamp) is entered into the Bitcoin blockchain with a spending transaction.  The spend includes an output with an OP_RETURN.  This method is the least damaging to the Bitcoin network of the various ways to time stamp data [[4](http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/)].  The first eight bytes of the available 40 following the OP_RETURN code would be a designator tag.  The designator tag indicates the transaction could be a Factom entry.  Other qualifiers are required, but the tag eliminates most of the OP_RETURN entries that would otherwise need to be inspected.
 
 The Merkle Root time stamp will be entered into the Bitcoin blockchain by one of the members in the federation.  The server delegated to time stamp the federation’s collected data creates a small BTC transaction.  The transaction will be broadcast to the Bitcoin network, and be included in a Bitcoin block.  Bitcoin transactions that look like Factom entries, but are not spent from an address known as a Factom server will be ignored.
 
@@ -288,6 +284,10 @@ project. The digital token known as Factom Coins is only useful for creating and
 
 "Virtual-Factom." Virtual-Factom. Accessed May 27, 2014. http://virtual-Factom.org/.
 
-[1] "Block timestamp" Accessed Sep 12, 2014. https://en.bitcoin.it/wiki/Block_timestamp
+[1] "Recording (real estate)" Accessed Oct 29, 2014. http://en.wikipedia.org/wiki/Recording_%28real_estate%29
 
-[2] "OP_RETURN and the Future of Bitcoin" Accessed Sep 12, 2014.  http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/
+[2] "Secure Property Titles with Owner Authority" Accessed Oct 29, 2014.  http://szabo.best.vwh.net/securetitle.html
+
+[3] "Block timestamp" Accessed Sep 12, 2014. https://en.bitcoin.it/wiki/Block_timestamp
+
+[4] "OP_RETURN and the Future of Bitcoin" Accessed Sep 12, 2014.  http://bitzuma.com/posts/op-return-and-the-future-of-bitcoin/
