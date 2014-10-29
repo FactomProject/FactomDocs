@@ -66,7 +66,7 @@ In both of the above cases, the negative can be proven because only transfers in
 
 Nick Szabo has written about Property Clubs, which have many overlaps of this system.  Here is a nugget from his paper "Secure Property Titles with Owner Authority" 
 
-`While thugs can still take physical property by force, the continued existence of correct ownership records will remain a thorn in the side of usurping claimants. [[2](http://szabo.best.vwh.net/securetitle.html)]`
+`While thugs can still take physical property by force, the continued existence of correct ownership records will remain a thorn in the side of usurping claimants.` [[2](http://szabo.best.vwh.net/securetitle.html)]
 
 
 
