@@ -40,9 +40,40 @@ Consider what any Bitcoin 2.0 application requires:
 
 Factom is designed to both meet and support the implementation of systems that have these requirements.
 
+
+Theory of Operation
 ------------
 
-Factom is a method of decentralized structure for collecting and packaging data.  Bitcoin does this too, but it has a requirement for total consistency over many thousand servers worldwide.  Distributing the world's records to every Bitcoin server presents a substantial bandwidth challenge.
+Factom extends Bitcoin's feature set to record events outside of monetary transfers.  Factom has a very minimal rule set for adding permanent entries.  This is a double edged sword, as it allows for easy entry of data into the record.  The drawback is that Factom cannot be relied on to ensure validity.  Factom has a few rules for financial compensation for running the network, and some internal consistency rules, but cannot check the validity of statements recorded.
+
+Bitcoin only allows entries which correctly move value from an input to an output.  Having a cryptographic signature is enough for the system to ensure validity.  This is a rule which can be automated, so the audit process is easy.  If Factom were used, for instance, to record a deed transfer of real estate, numerous rules exist for the transfer.  A local jurisdiction may have special requirements for property owned by a foreigner.  A cryptographic signature alone is insufficient to fully verify the validity.  Factom is unable to check legitimacy of such a transfer, and so doesn't try.
+
+Bitcoin miners perform two jobs, amongst others.  First, they resolve a double spend.  Seeing two conflicting transactions which spend the same value twice, they decide which one is legitimate.  The second job they perform is auditing.  Since Bitcoin miners only include valid transactions, one that is included in the blockchain can be assumed to be audited.  A light client does not need to know the full history of Bitcoin to see if value they receive has already been spent.  This has the disadvantage of making Bitcoin very fragile.  A disagreement on auditing will create a chain fork, disrupting the Bitcoin economy.
+
+Factom splits the two jobs: transaction ordering and auditing.  The Factom servers accept entries, and assemble them into blocks.  After a few minutes, the transaction ordering is fixed by the Bitcoin blockchain.  The auditing is a separate process which can be done either with or without trust.  The auditing is critical, since it would be trivial to enter invalid data into an Entry Chain.
+
+With trust based auditing, a light client would trust a competent auditor of their choice.  After an entry was entered into the system, an auditor would verify the entry was valid.  They would submit their own entry signed cryptographically.  The signature would show that the entry passed all the checks the auditor thought were required.  In the real estate example from earlier, the auditor would double check the transfer conformed to local standards.  They would publicly attest that the transfer was valid.
+
+Trustless auditing would be similar to Bitcoin.  If a system were as easy to audit as Bitcoin, it also could be done programatically.  If the rules for transfer were able to be audited by a computer, then an Application could download the relevant data and run the audit itself.  The application would build an awareness of the system state as it downloaded, verified, and decided which entries were valid or not.
+
+Mastercoin has a similar trust model.  Mastercoin transactions are embedded into the Bitcoin blockchain.  Bitcoin miners do not audit them for validity, therefore invalid Mastercoin transactions can be inserted into the blockchain.  The Mastercoin wallet scans through the blockchain and finds potential Mastercoin transactions.  It then checks them for validity, building an interpretation of which addresses own which assets.  It is up to the Mastercoin wallet to do its own auditing.  Software development is a little more forgiving with this arrangement.  If a software bug causes an incompatibility, interpretation can be changed after the fact instead of disrupting ongoing operations.
+
+prove negative...
+
+Having a hierarchy allows Applications to be able to prove a negative.  Bitcoin solves the problem of proving the negative for double spends in two ways.  A BTC receiver must either audit the entire blockchain themselves or rely on miners only to include transactions spent once.  In Factom, the servers cannot discern a valid real estate transfer from an invalid one.  As such all claims for property tansfer would be included.  The Application would be responsible for determining validity of a property transfer.  Alternatively, multiple auditors can vouch for the transfer validity, and indicate as much in the system.  
+
+http://szabo.best.vwh.net/securetitle.html
+
+
+Factom is a method of decentralized structure for collecting and packaging data.  Bitcoin does this too, but it has a requirement for total consistency over many thousand servers worldwide.  Factom differs from Bitcoin in this sense by having a lower number of servers which must come to consensus, allowing easier 
+
+
+Distributing the world's records to every Bitcoin server presents a substantial bandwidth challenge.
+
+
+
+Factom 
+------------
 
 At its heart, Factom is a network of federated servers.  These servers rotate responsibility for different aspects of the system.  No single server is permanently in control of the system, or part of a system.
 
@@ -52,9 +83,11 @@ Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in 
 
 2) Factom Layer
 
-3) Entry Layer
+3) Entry Block Layer
 
-4) Application Layer
+4) Entries
+
+5) Applications
 
 **Time Stamping**
 
@@ -77,15 +110,17 @@ Bitcoin blocks are generated with a statistical process, as such, their timing c
 
 **Factom Layer**
 
-The Factom layer implements proof of existence for an digital artifact.  Any event, document, image, recording, etc. that is defined in a digital representation can be hashed.  That hash can be recorded in the Factom layer.  Because of the vast (currently insurmountable) difficulty and complexity of creating a digital document that will generate a particular hash, the mere recording of such a hash is proof of the digital document’s existence at the time of the recording of the hash.
+The Factom layer is the first level of hierarchy in the Factom system.  It defines which Entry Chain IDs have been updated during the time period covered by a Factom Block.  It mainly consists of entries pairing a Chain ID and a pointer to find the Entry Block containing data for that Chain ID.
 
-Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin blockchain.  This allows the most minimum expansion of the blockchain, yet the ledger itself becomes as secure as Bitcoin itself.  Furthermore, since Factom can be maintained more cheaply in terms of resources, the cost of entries into the Factom layer will be much cheaper than transactions in the blockchain.
+If an Application only has the Factom Blocks, an Application can find Entry Blocks it is interested in without downloading every Entry Block.  An individual application would only be interested in a small subset of Chain IDs being tracked by Factom.  This greatly limits the amount of bandwidth an individual client would need to use Factom as a system of record.  For example, an Application monitoring real estate transfers could safely ignore video camera security logs.
 
-**Entry Layer**
+Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin blockchain.  This allows the most minimum expansion of the blockchain, yet the ledger itself becomes as secure as Bitcoin itself.
+
+**Entry Block Layer**
 
 Bitcoin 2.0 applications will need to record a varied range of information associated with events within their application.   The information associated with an event can be encoded into an Entry and the entry recorded into Factom.  Encoding all that information into the Bitcoin blockchain is unreasonable, yet some applications need information recorded into the ledger rather than holding that information off chain.   Factom allow the application to define the entry structure(s) they require, and manage the structure(s) in Factom Chains. 
 
-**Factom Chains**
+**Entries**
 
 Factom Chains are chains of entries that that reflect the events of an application.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Factom Chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  
 
