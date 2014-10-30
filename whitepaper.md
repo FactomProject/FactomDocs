@@ -75,6 +75,8 @@ Factom
 
 At its heart, Factom is a decentralized way to collect, package, and secure data into the Bitcoin blockchain.  Factom accomplishes this with a network of federated servers.  These servers rotate responsibility for different aspects of the system.  No single server is permanently in control of the system, or part of a system.
 
+![Overview](images/Whitepaper---Factom-Complete-System.png)
+
 Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in this stack are:
 
 1) Time Stamping Layer 
@@ -88,6 +90,8 @@ Factom implements a Protocol Stack for Bitcoin 2.0 Applications.  The layers in 
 5) Applications
 
 **Time Stamping**
+
+![Time Stamping](images/Whitepaper---Factom---Proof-of-Existance-Layer.png)
 
 Factom data is time stamped and made irreversible by the Bitcoin network.  User's data is as secure as any other Bitcoin transaction.  A compact proof of existence is possible for any data entered into the Factom system.  The Bitcoin entry is also a key to query a peer-to-peer Distributed Hash Table (DHT, similar to BitTorrent) in order to retrieve all the data which was time stamped.
 
@@ -108,6 +112,8 @@ Bitcoin blocks are generated with a statistical process, as such, their timing c
 
 **Factom Layer**
 
+![Factom Layer](images/Whitepaper---Factom-Layer-Diagram.png)
+
 The Factom layer is the first level of hierarchy in the Factom system.  It defines which Entry Chain IDs have been updated during the time period covered by a Factom Block.  It mainly consists of entries pairing a Chain ID and a pointer to find the Entry Block containing data for that Chain ID.
 
 If an Application only has the Factom Blocks, an Application can find Entry Blocks it is interested in without downloading every Entry Block.  An individual application would only be interested in a small subset of Chain IDs being tracked by Factom.  This greatly limits the amount of bandwidth an individual client would need to use Factom as a system of record.  For example, an Application monitoring real estate transfers could safely ignore video camera security logs.
@@ -116,9 +122,13 @@ Factom collects sets of such hashes into a Factom block.  The Factom block is th
 
 **Entry Block Layer**
 
+![Entry Block Layer](images/Whitepaper---Entries-Blocks-written-as-Factom-Blocks.png)
+
 Bitcoin 2.0 applications will need to record a varied range of information associated with events within their application.   The information associated with an event can be encoded into an Entry and the entry recorded into Factom.  Encoding all that information into the Bitcoin blockchain is unreasonable, yet some applications need information recorded into the ledger rather than holding that information off chain.   Factom allow the application to define the entry structure(s) they require, and manage the structure(s) in Factom Chains. 
 
 **Entries**
+
+![Entries](images/Whitepaper---Hashes-and-Data-are-Written-to-Entry-Blocks.png)
 
 Factom Chains are chains of entries that that reflect the events of an application.  These sequences are at the heart of Bitcoin 2.0.  Defining what an event is, and what is required for following events is basic to all event sequences (even outside of Bitcoin 2.0).  Factom Chains document and validate these event sequences to provide an audit trail that can prove an event sequence occurred.  
 
