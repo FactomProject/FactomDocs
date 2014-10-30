@@ -116,9 +116,9 @@ Bitcoin blocks are generated with a statistical process, as such, their timing c
 
 The Factom layer is the first level of hierarchy in the Factom system.  It defines which Entry Chain IDs have been updated during the time period covered by a Factom Block.  It mainly consists of entries pairing a Chain ID and a pointer to find the Entry Block containing data for that Chain ID.
 
-If an Application only has the Factom Blocks, an Application can find Entry Blocks it is interested in without downloading every Entry Block.  An individual application would only be interested in a small subset of Chain IDs being tracked by Factom.  This greatly limits the amount of bandwidth an individual client would need to use Factom as a system of record.  For example, an Application monitoring real estate transfers could safely ignore video camera security logs.
+If an Application only has the Factom Blocks, it can find Entry Blocks it is interested in without downloading every Entry Block.  An individual application would only be interested in a small subset of Chain IDs being tracked by Factom.  This greatly limits the amount of bandwidth an individual client would need to use Factom as a system of record.  For example, an Application monitoring real estate transfers could safely ignore video camera security logs.
 
-Factom collects sets of such hashes into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin blockchain.  This allows the most minimum expansion of the blockchain, yet the ledger itself becomes as secure as Bitcoin itself.
+Factom servers collect Merkle roots of Entry Blocks and package them into a Factom block.  The Factom block is then hashed by computing a Merkle tree, and the Merkle root is recorded into the Bitcoin blockchain.  This allows the most minimum expansion of the blockchain, yet the ledger itself becomes as secure as Bitcoin itself.
 
 **Entry Block Layer**
 
@@ -196,17 +196,11 @@ Yet even if the data in FactomChain servers expand to many terabytes in size, th
 
 #How Factom Works
 
-![Figure 1](images/fig1.png)
-
-*Figure 1: Diagram showing that Factom Blocks are linked together, and the hash of each Factom Block is inserted into the Bitcoin blockchain.*
 
 The proof of existence hashes are held within a series of Factom Blocks.  Every so often, the current Factom block is hashed, and that hash is inserted into the Bitcoin blockchain, as shown by Figure 1.  The periodic hash is all that is inserted into the blockchain.  With the single hash, the Factom Block can be provably unalterable (as it would break the hash recorded in the blockchain).  We are looking at different ways to create a link to this hash from the Factom block. 
 
 A Factom Block is created immediately after the previous Factom Block is slated to have its Hash submitted to the blockchain.  A new Factom Block begins with a Block ID (one greater than the last).
 
-![Figure 2](images/fig2.png)
-
-*Figure 2:  Internal structure of a Factom Block.*
 
 As each Factom Entry is submitted, it is added to the Factom Block, along with a type, and a timestamp.  For a simple proof of existence entry, the type will be 0.  Other types provide indexes and information that link to information held in entries and chains.
 
@@ -214,9 +208,6 @@ As each Factom Entry is submitted, it is added to the Factom Block, along with a
 
 Any number of Factom entries can be added to a Factom Block, and remain secured by the Bitcoin blockchain.  This vastly reduces the overhead of Factom functions on the blockchain without significant loss of security for the Factom entries themselves.  We will discuss how the Factom Blocks are published in a later section.  But suffice it to say that anyone holding a copy of a Factom Block can prove its validity by simply providing the Bitcoin Transaction holding the block’s hash.  The block could not possibly have been constructed after the fact (as fitting a block’s contents to produce an existing hash is quite out of the question).  The Bitcoin Transaction holding the Factom Block’s hash + a copy of the Factom Block will fix the existence of a document at a point in time, and prove the document has not been altered.
 
-![Figure 3](images/fig3.png)
-
-*Figure 3: Internal structure of a Factom Entry*
 
 Figure 3 shows a simple Factom Entry.  It is composed of structured data (pretty much whatever data the user wants to provide), a reverse hash (a token system used by Factom to control access) and one or more signatures.  A simple entry does not receive any validity checking by the FactomChain server outside of verifying the signatures, if any are provided.  The user provides the entry, structured data, and the signatures (if desired) for the structured data.  If signatures are provided, but do not validate against the structured data provided, then the entry will be rejected. The FactomChain hashes the entry and signatures, then adds that hash to the Factom block (per figure 2).  The Factom block adds the entry type 1 (simple entry) and the time stamp at the Factom block level.
 
@@ -227,9 +218,6 @@ While a user can use the Structured Data section to implement a range of protoco
 
 Factom Chains are chains of Factom Entries. A Factom Chain provides the infrastructure for managing smart contracts, token counts, alternative currencies, etc.  
 
-![Figure 4](images/fig4.png)
-
-*Figure 4: Structure of the first link in a Factom Chain, i.e., a chain of Factom entries*
 
 A Start Link begins a Factom Chain.  It looks just like a simple entry, but is typed as a chain.  (The specification for the types for chains is under discussion.) The Structured Description must include a “VScript” entry.   Many chains could be validated privately.  In other words, the validation rules for the chain can be published (and notarized via the Start Link) and any attempt to fraudulently add links to the chain are invalidated by the rules published by the parties starting the FactomChain.  In fact, a reference implementation of an application that validates a FactomChain should be hashed and secured in the Start Link for a FactomChain. That application in combination with the published rules for the FactomChain, rather than the FactomChain server, would be responsible for validating that FactomChain. 
 
@@ -250,11 +238,6 @@ The Validation Script must evaluate to true for any link that would directly fol
 
 #Creating Links in a FactomChain
 
-Following the Start Link is a series of Factom Entries of Type Link.
-
-![Figure 5](images/fig5.png)
-
-*Figure 5:  A link in a Factom Chain*
 
 A Factom Link points back to its parent links.  The Validation Script (part of the structured data) must evaluate to true, or the FactomChain service will not add the link to the Factom Block.  A USER FactomChain can possibly accept invalid entries, so it is critical for a FactomChain of type USER to make use of clear FactomChain rules and perhaps a reference application for entry validation in order to ignore invalid entries.
 
