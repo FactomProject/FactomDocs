@@ -213,7 +213,6 @@ Figure 3 shows a simple Factom Entry.  It is composed of structured data (pretty
 
 While a user can use the Structured Data section to implement a range of protocols like tokens, smart contracts, smart properties, etc., Factom provide some generic support for these features.  The support for Factom within FactomChain servers is necessary to make the FactomChain Servers auditable in real time for many common functions by its users, and by other Federated FactomChain Servers.   Federated FactomChain servers provide the redundancy and cross checking required for the security of many applications that may wish to run on top of Factom.
 
-
 # How to Create a Factom Chain
 
 Factom Chains are chains of Factom Entries. A Factom Chain provides the infrastructure for managing smart contracts, token counts, alternative currencies, etc.  
@@ -250,14 +249,14 @@ Each Factom Server must provide access to their Factom Blocks to the other Facto
 #Crowd Funding
 Factom will use a token system for paying for entries to be placed into Factom blocks secured by Factom.  Some token is necessary to prevent spamming or attacking the system.  
 
-##Factom Coins (XNC)
+##Factom Coins
 Factom Coins will be used for paying to create FactomChain Specifications, start new Factom using those specifications, and adding entries into Factom.  Factom Coins will be tracked in a Factom Chain, and will be generated to provide incentives for running the Federated Factom Chain servers, run independent audits, and other behaviors.  Because Factom Coins are tracked on Factom Chain servers directly, they can be used to automate payments for entries and chains directly.
 
 We plan to fund the development of Factom using their tokens.  While we are building the infrastructure, we will use the Mastercoin Protocol as a temporary representation of the Factom Coins as Master Factom Coins.  Once the launch of Factom Chains is final, the Master Factom Coins will be converted to native Factom Coins. The outline of the distribution of Factom Chains is still being discussed, but a possible structure is as follows:
 
 * Algorithm:  Mastercoin Protocol 
 * Block Time: 10 minutes
-* Total Coins: 10,000,000 XNC
+* Total Coins: 10,000,000
 * Coin Distribution:
  * 10% -- Auditing
  * 10% -- Core Developers
@@ -266,7 +265,7 @@ We plan to fund the development of Factom using their tokens.  While we are buil
  * 50% -- Federated SErvers
 
 # Disclosures
-1. FactomChain coins (XNC) are not a Stock or Equity.  Participation in the crowd sale will not provide you with a "security" or "equity" stake in this 
+1. FactomChain coins are not a Stock or Equity.  Participation in the crowd sale will not provide you with a "security" or "equity" stake in this 
 project. The digital token known as Factom Coins is only useful for creating and using Factom Chains on Factom Chain servers after development is complete. 
 
 #Bibliography
