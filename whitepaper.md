@@ -1,3 +1,11 @@
+
+
+
+***Note to Readers:  This document is undergoing extensive revision and is currently out of date.  The latest version being edited and reviewed by community leaders is located in a Google Drive document.  It will be updated once suggestions from the community leaders are collected.***
+
+
+
+
 Factom
 ============
 
