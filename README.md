@@ -15,5 +15,3 @@ At the most basic level, Factom provides "Proof of Existence."  Any digital arti
 Factom Chains are constructed from entries crafted to support a wide range of applications.  An entry can be used to prove data existed at a point in time.  And other Factom Chains and demonstrate their reaction to such data.  In other words, a Factom chain is a sequence of entries that define some progression of state, and the data that drove that progression.  Each Factom chain has its own rules, and entries in these Chains are constrained by those rules.  
 
 The architecture for Factom allows for the easy construction of tokens or coins, securities, smart contracts, etc.
-
-Continue to the full [Factom whitepaper](https://github.com/FactomProject/FactomDocs/blob/master/whitepaper.md).  
