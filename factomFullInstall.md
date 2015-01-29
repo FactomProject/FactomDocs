@@ -8,20 +8,26 @@ Before the node network gets setup. Factom clients will simulate talking to a P2
 
 These directions were prepared on ubuntu 14.04.  Variations have been reported to work on windows, but no guarantees.
 
-Install the go language
+#### Install the go language
 
+It is best to follow the directions here to install golang for for your platform.  http://golang.org/doc/install
+
+Examples for ubuntu are included here for expediency.
+
+##### Install go
 ```
 sudo apt-get install golang git mercurial
 ```
 
-open the file `~/.profile` and add these lines to the bottom.  if they are not exact, then your ubuntu may not be bootable.
+##### Setup gopath
+Open the file `~/.profile` and add these lines to the bottom.  If they are not exact, then your ubuntu may not be bootable.
 
 ```
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 ```
 
-**logout and login**.  this is the most straighforward way to run/test these changes.
+**logout and login**.  This is the most straightforward way to run/test these changes.
 
 # Install BTC Suite
 
@@ -67,7 +73,7 @@ change HardToGuessPW to something hard to guess.  It will still be in a config f
 
 ### Install GUI
 
-This is not strictly nessicary, but is needed if you want to know where to send testnet BTC and diagnose some issues.  Command line alternatives are listed below.
+This is not strictly necessary, but is needed if you want to know where to send testnet BTC and diagnose some issues.  Command line alternatives are listed below.
 
 
 ```
@@ -82,7 +88,7 @@ In the Authentication section, uncomment and set:
 `username=testuser`
 `password=SecurePassHere`
 
-Run `btcd` & `btcwallet` each in seperate terminal windows.
+Run `btcd` & `btcwallet` each in separate terminal windows.
 
 In a 3rd terminal window run `btcgui`
 
@@ -98,4 +104,36 @@ You might be able to get by with some command line arguments.  This one outputs 
 
 # Install Factom Central Server
 
-coming soon.
+The central server executable is called `restapi`.  It can be installed with this command:
+```
+go get -v github.com/FactomProject/FactomCode/restapi
+cp $GOPATH/src/github.com/FactomProject/FactomCode/restapi/restapi.conf $HOME/restapi.conf
+```
+
+open `$HOME/restapi.conf` in a text editor
+Change values on the lines:
+`BTCPubAddr` to the address in your wallet with testnet bitcoins
+`WalletPassphrase` to `HardToGuessPW` or the password used to encrypt your wallet
+`RpcClientPass` to `SecurePassHere` or the RPC password used in the btcd config files
+
+
+### Use the Installation
+
+With btcd, btcwallet and restapi all running conncurrently, you can now run factomclient and factomexplorer.
+
+The API document will walk you through installing those.
+
+https://github.com/FactomProject/FactomDocs/blob/master/FactomAPI.pdf
+
+The default configurations for those *should* point to localhost and work without further configuration.
+
+```
+go get -v github.com/FactomProject/FactomCode/factomclient/...
+go get -v github.com/FactomProject/factomexplorer/...
+```
+Run both factomclient and factomexplorer conncurrently.
+
+Browse to `http://localhost:8088/v1/buycredit?&to=wallet&value=100` to add entry credits.
+
+Browse to `http://localhost:8087/` and play with adding chains then entries.
+
