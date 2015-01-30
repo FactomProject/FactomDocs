@@ -137,3 +137,6 @@ Browse to `http://localhost:8088/v1/buycredit?&to=wallet&value=100` to add entry
 
 Browse to `http://localhost:8087/` and play with adding chains then entries.
 
+If the system gets into a weird mode, you might want to delete the folder `/tmp/ldb9/` and `/tmp/wallet/`
+
+Also, since the factom server state data is held in the temp directory, rebooting will erase changes made to your local installation.
