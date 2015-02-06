@@ -119,19 +119,24 @@ Change values on the lines:
 
 ### Use the Installation
 
-With btcd, btcwallet and restapi all running conncurrently, you can now run factomclient and factomexplorer.
+With btcd, btcwallet and restapi all running concurrently, you can now run factomclient and factomexplorer.
 
 The API document will walk you through installing those.
 
 https://github.com/FactomProject/FactomDocs/blob/master/FactomAPI.pdf
 
-The default configurations for those *should* point to localhost and work without further configuration.
+The default configurations for those should point to localhost and work without further configuration.
 
 ```
 go get -v github.com/FactomProject/FactomCode/factomclient/...
 go get -v github.com/FactomProject/factomexplorer/...
+mkdir ~/.factom/client/data
+cp -r ~/go/src/github.com/FactomProject/factomexplorer/bundle/data/* ~/.factom/client/data/
+# optional to configure clients to not use defaults
+cp ~/go/src/github.com/FactomProject/factomexplorer/client.conf ~/
+cp ~/go/src/github.com/FactomProject/FactomCode/factomclient/factomclient.conf ~/
 ```
-Run both factomclient and factomexplorer conncurrently.
+Run both factomclient and factomexplorer concurrently.
 
 Browse to `http://localhost:8088/v1/buycredit?&to=wallet&value=100` to add entry credits.
 
