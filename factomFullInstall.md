@@ -14,10 +14,25 @@ It is best to follow the directions here to install golang for for your platform
 
 Examples for ubuntu are included here for expediency.
 
-##### Install go
+##### Install go and dependencies
 ```
-sudo apt-get install golang git mercurial
+sudo apt-get install git mercurial
 ```
+download latest version of go https://golang.org/dl/  This example uses 64 bit linux and 1.4.1 is the latest version.
+
+```
+sudo tar -C /usr/local -xzf go1.4.1.linux-amd64.tar.gz
+```
+
+Put the go binary directory in you path.
+
+Open the file `~/.profile` and add these lines to the bottom.  If they are not exact, then your ubuntu may not be bootable.
+
+```
+export PATH=$PATH:/usr/local/go/bin
+```
+
+note: using `sudo apt-get install golang` will install go version 1.2.1.  Btcd requires go v1.3 or above.  Compiling with v1.2.1 will cause the compiler to use [lots of ram](https://github.com/btcsuite/btcd/issues/277).
 
 ##### Setup gopath
 Open the file `~/.profile` and add these lines to the bottom.  If they are not exact, then your ubuntu may not be bootable.
