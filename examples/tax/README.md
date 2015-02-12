@@ -55,7 +55,7 @@ OIc=
 ```
 
 5. Post the document to Factom.
-  1. Browse to https://http://demo.factom.org:8087/ in a web browser
+  1. Browse to http://demo.factom.org:8087/ in a web browser
   2. Click the down arrow next to Entries
   3. Select the Chain `13915515269537837/ERS/2015`
   4. In the Data field, paste the text from the `Encrypted_Obama_Tax_Return.txt` file
@@ -69,6 +69,7 @@ In the Chains page, click on the Chain `13915515269537837/ERS/2015`
 In each block, there is a list of Entries.  One of the Entries should be the one you created.
 
 When the ERS want to see if any returns have been sent in, they will open their chain.  They will then download each Entry and decrypt each one.  
+
 
 
 ### How the ERS Reads the Tax Returns
@@ -96,6 +97,55 @@ gpg: encrypted with 1024-bit RSA key, ID 8A138E1B, created 2015-02-11
 Since there is still a some question that the ERS got your return, or that something might have gotten jumbled during transit, a receipt would be nice.
 
 The public key that the ERS has issued can also be used to sign receipts, so that shortly after sending a tax return in, the submitter can be sure that the document was received.
+
+When the ERS scans and can correctly decrypt the message, they can sign an acknowledgement.  The receipts are posted in 13915515269537837/ERS/2015/Receipts.
+
+###### The ERS Creates Receipts
+
+The ERS would find a new tax return in Factom and save the Entry Hash.  This is unique to the data that was submitted.  In the Obama example, the Entry Hash is `ad8d6e1ef4cc10d6478b2d9eb01a50f7e4b62a207865769702b1a96f4784c21b`
+The ERS would run this command to create the receipt. 
+`echo ad8d6e1ef4cc10d6478b2d9eb01a50f7e4b62a207865769702b1a96f4784c21b | gpg --clearsign`  which would output:
+```
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+ad8d6e1ef4cc10d6478b2d9eb01a50f7e4b62a207865769702b1a96f4784c21b
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iJwEAQECAAYFAlTdLiAACgkQKA2KkleSKLl1bgQAjZQphX45OV74vpssCm085aEn
+bSPYYR6EO2mfxsMXIZz1nRx6cPXCESpFkmuSiBsXpY9ipE7jsw0DCAYmBshmaqU/
+90xV/3f6v8eH/mgrJUZpqQ3dwWliTIfHetV+N1ANeCkkKm0pwswuoS8qenVb1R9P
+pEIhDLijjZnuYqeGrGs=
+=g/CF
+-----END PGP SIGNATURE-----
+```
+
+The ERS could then post this in Factom.
+
+
+###### The Submitter Validates Receipts
+
+The submitter would know their Entry Hash, since they posted it themselves. They would review the 13915515269537837/ERS/2015/Receipts chain for an Entry that signs their Entry Hash.
+
+Once they get message above, they would verify that it was actually signed by the ERS, and not a prankster.
+
+First, they would save the data to a file.  In this example we will use `Receipt.txt`.  
+
+They would then run this command:  `gpg --verify Receipt.txt` which will give the output:
+```
+gpg: Signature made Thu 12 Feb 2015 04:50:08 PM CST using RSA key ID 579228B9
+gpg: Good signature from "Example Revenue Service (ERS)"
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 323A 8A02 5793 2F31 C0BF  4C1F 280D 8A92 5792 28B9
+```
+
+This shows that the ERS has seen your Entry.  If the convention is that they only sign it if they can read it, then you can be assured their computer received it and can decrypt it.  This would be a high tech equivalent to registered mail.
+
+
+
+
 
 
 
