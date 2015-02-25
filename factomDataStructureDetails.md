@@ -66,7 +66,7 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | **Header** |  | |
 | 32 bytes | ChainID | This is the chain which the author wants this entry to go into |
 | 1 byte | version | starts at 0.  Higher numbers are currently rejected |
-| varInt_F | Entry Length | Describes how many bytes the Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the user data |
+| 2 bytes | Entry Length | Describes how many bytes the Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the user data.  Big endian. |
 | 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual  |
 | **If Number of ExtIDs is > 0** |  | |
 | 1 byte | character encoding | 0=UTF-8  All other values are reserved |
@@ -82,8 +82,15 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | varaible | Chain Name element data | This is the data to be hashed |
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
-Minimum Empty Entry length: 35 bytes
-Maximum Payload size: 10KiB - (32 + 1 + 3 + 1) = 10203 bytes
+Minimum Empty Entry length: 36 bytes
+Maximum Payload size: 10KiB - (32 + 1 + 2 + 1) = 10204 bytes
+
+Typical size recording the hash of a file with 200 letters of extid metadata:
+32+1+2+1+1+1+200+32 = 270 bytes
+
+example size of something similar to an Omni(MSC) transaction, assuming 500 bytes (per transaction)[https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P]:
+32+1+2+1+500 = 536 bytes
+
 
 ### Entry Commit
 
