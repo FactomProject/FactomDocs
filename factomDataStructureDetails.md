@@ -83,10 +83,10 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
 Minimum Empty Entry length: 36 bytes
+
 Maximum Payload size: 10KiB - (32 + 1 + 2 + 1) = 10204 bytes
 
-Typical size recording the hash of a file with 200 letters of extid metadata:
-32+1+2+1+1+1+200+32 = 270 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 32+1+2+1+1+1+200+32 = 270 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
 32+1+2+1+500 = 536 bytes
