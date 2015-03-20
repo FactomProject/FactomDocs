@@ -68,17 +68,17 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | 1 byte | version | starts at 0.  Higher numbers are currently rejected |
 | 2 bytes | Entry Length | Describes how many bytes the Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the user data.  Big endian. |
 | 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual  |
-| **If Number of ExtIDs is > 0** |  | |
+| **If Number of ExtIDs is > 0** | | |
 | 1 byte | character encoding | 0=UTF-8  All other values are reserved |
-| varInt_F | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
+| 2 bytes | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
 | varaible | Chain Name element data | This is the first External ID |
-| varInt_F | Chain Name element X length | There will be as many ExtIDs and length designators as are specified in 'Number of ExtIDs' | 
+| 2 bytes | Chain Name element X length | There will be as many ExtIDs and length designators as are specified in 'Number of ExtIDs' | 
 | varaible | Chain Name element data | This is the Xth External ID |
 | **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Entry Data field starts here |
 | 1 byte | number of Chain Name elements  | This must be 1-255 if creating a new Chain.  These fields must hash to the ChainID specified in this Entry. |
-| varInt_F | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element | 
+| 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element | 
 | varaible | Chain Name element 0 data | This is the data to be hashed |
-| varInt_F | Chain Name element X length | There will be as many elements and length designators as are specified in 'number of Chain Name elements' | 
+| 2 bytes | Chain Name element X length | There will be as many elements and length designators as are specified in 'number of Chain Name elements' | 
 | varaible | Chain Name element X data | This is the data to be hashed |
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
@@ -86,7 +86,7 @@ Minimum Empty Entry length: 36 bytes
 
 Maximum Payload size: 10KiB - (32 + 1 + 2 + 1) = 10204 bytes
 
-Typical size recording the hash of a file with 200 letters of ExtID metadata: 32+1+2+1+1+1+200+32 = 270 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 32+1+2+1+1+2+200+32 = 271 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
 32+1+2+1+500 = 536 bytes
@@ -101,10 +101,10 @@ Factoid transactions are similar to Bitcoin transactions, but incorporate some [
 - They are closer to P2SH style addresses, where the value is sent to the hash of a redeem condition, instead of sent to the redeem condition itself. To redeem value, a datastructure containing public keys, etc should be revealed. This is referred to as the **Redeem Condition Datastructure (RCD)**
 - Factoids use Ed25519 with Schnorr signatures.  They have [many benefits](https://ripple.com/uncategorized/curves-with-a-twist/0) over the ECDSA signatures used in Bitcoin.
 - Txid does not cover the signature field.  This will limit damaging malleability by attackers without the private key.
-- Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are valid in blocks, but are not relayed on the P2P network. In Factom, non-standard transactions are undefined.
+- Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are not relayed on the Factom P2P network. In Factom, non-standard transactions are undefined.  Adding new transaction types will cause a hard fork of the Factom network.
 
 
-The transaction ID (txid) is a hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid.
+The transaction ID (txid) is a SHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
@@ -113,14 +113,14 @@ The transaction ID (txid) is a hash of the data from the header through the inpu
 | 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  |
-| varInt_F | value | (Output 0) The quantity of Factoids * 10^-8 reassigned. |
+| varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
 | 32 bytes | RCD Hash | (Output 0) The hash of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
-| varInt_F | value | (Output X) The quantity of Factoids * 10^-8 reassigned. |
+| varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
 | 32 bytes | RCD Hash | (Output X) The hash of the RCD |
 | varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.  |
-| varInt_F | value | (Purchase 0) The quantity of Factoids * 10^-8 to be turned into ECs. |
+| varInt_F | value | (Purchase 0) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase 0) The Ed25519 raw public key which is the Entry Credit pubkey.  |
-| varInt_F | value | (Purchase X) The quantity of Factoids * 10^-8 to be turned into ECs. |
+| varInt_F | value | (Purchase X) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase X) The Ed25519 raw EC public key. |
 | **Inputs** | | |
 | varInt_F | Input Count | This is the quantity of previous transaction outputs spent.  |
@@ -135,7 +135,7 @@ The transaction ID (txid) is a hash of the data from the header through the inpu
 | varInt_F | RCD 0 length | This is how many bytes the first RCD takes |
 | variable | RCD 0 | First RCD.  It hashes to input 0.  It may also hash to input 1, 2, 3, etc. Each RCD is checked against an input address, until the next input address is different.  No two identical RCDs can follow each other.  This allows a tx to be created which spends many inputs to the same address, but only needs to reveal the RCD once. |
 | varInt_F | RCD X length | This is how many bytes the Xth RCD takes |
-| variable | RCD | The next RCD is checked against the next different address in the inputs list.|
+| variable | RCD X | The next RCD is checked against the next different address in the inputs list.|
 | **Signatures** | | |
 | variable | Signature bitfield | (Input 0) This is a set of bytes which form a bitfield. The number of bytes is determined by the N value in the RCD. |
 | 64 bytes | Signature | (Input 0, 1st specified pubkey) signature covering the sighash data specified in input 0 |
@@ -169,23 +169,23 @@ For example, a 3 of 10 multisig might have a bitfield like this: 00101000 010000
 
 Factom note: these will be expanded and better defined soon.
 
-This field is modeled after Bitcoin's [OP_CHECKSIG](https://en.bitcoin.it/wiki/OP_CHECKSIG).  It allows the signer of this input to specify how the transaction can be reconfigured without resigning.  Not using the strictest type allows for transaction malleability.  This field defines the parts of the transaction that the signature is signing.  There are 4 types.
-- Sighash all - Inputs and outputs cannot be changed without breaking the signature.  Signature covers Header, Outputs, and Inputs.
-- Sighash single - The input signature is valid if the output at the same index number is included.  Signature signs the header, output, and input fields as if the desired output were the only one present.
-- Sighash anyonecanpay - signature covers the Header, all outputs, and the input field as if it were the only input.
-- Sighash none - Any outputs can be respecified to spend the value in any divisions to any address(es) without breaking the signature.
+This field is modeled after Bitcoin's [OP_CHECKSIG](https://en.bitcoin.it/wiki/OP_CHECKSIG).  It allows the signer of this input to specify how the transaction can be reconfigured without resigning.  For the initial release of Factoids, only Sighash_All is supported.  The value must be set to 0x00 for version 0 of the transaction.
 
-The upper bits are reserved and should be set to zero.
+The signature covers Header, Outputs, and Inputs.  The RCD is protected from tampering because the signed inputs specify only 1 possible RCD.
 
 
-Note: For the crowdsale, the raw Ed25519 pubkey in an OP_RETURN is used.  The the genesis block will contain a transaction which outputs to many 1 of 1 addresses.  There will be an output for each of the Bitcoin payments' specified pubkeys.  The addresses will be derived from the exposed pubkeys. 
+Note: For the token sale, a raw Ed25519 pubkey is included in an OP_RETURN output along with the payment to the sale multisig address.  The the genesis block will contain a transaction which outputs to many 1 of 1 addresses.  There will be an output for each of the Bitcoin payments' specified pubkeys.  The addresses will be derived from the exposed pubkeys. 
 
 Some later RCD types will be added.  Output types supporting [atomic cross](https://en.bitcoin.it/wiki/Atomic_cross-chain_trading) chain swaps and [time locking](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) outputs are desirable.  Output scripts are also useful and desirable, but can open security holes.  They are not critical for the first release of Factom, so we will implement them later. This would give us the ability to make conditional outputs (IF, AND, OR, etc).  Nesting is also desirable but undefined in this version.  This would give multisig within a multisig transaction.
 
 Ed25519 allows for threshold multisig in a single signature, but that cryptography will have to come later.  For now, multisig is based on multiple independent pubkeys and multiple signatures.
 
-Fees are the difference between the outputs and the inputs.  The fees are sacrificed.  They are not reclaimed by the federated servers.  The fees are only partially defined, but will at minimum cost as much as the per-KiB price of an entry.  The number of signature checks will also factor into the cost.
+Fees are the difference between the outputs and the inputs.  The fees are [sacrificed](https://blog.ethereum.org/2014/02/01/on-transaction-fees-and-the-fallacy-of-market-based-solutions/).  They are defined by, but not reclaimed by the Federated servers.  The minimum transaction fees are based on the current exchange rate of Factoids to Entry Credits.  The outputs must be less than the inputs by at least the the fee amount at confirmation time.  The fees the sum of 3 things that cause load on the system:
+1. Transaction data size. -- Factoid transactions are charged the same amount as Entry Credits (EC).  The size fees are 1 EC per KiB with a maximum transaction size of 10 KiB.
+2. Number of outputs created -- These are data points which potentially need to be tracked far into the future.  They are more expensive to handle, and require a larger sacrifice.  Outputs cost 10 EC per output. A purchase of Entry Credits also requires the 10 EC fee to be valid.
+3. Number of signatures checked -- These cause expensive computation on all full nodes.  A fee of 1 EC equivalent must be paid for each signature included.
 
+A minimal transaction with 2 inputs and 2 outputs spending single sig outputs would cost the equivalent of 23 Entry Credits.
 
 ## Block Elements
 
