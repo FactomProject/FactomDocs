@@ -81,6 +81,7 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | 1 byte | ExtID X encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
 | 2 bytes | ExtID X length | This is the number of the following bytes to be interpreted as an External ID | 
 | varaible | ExtID X data | This is the Nth External ID |
+| **Content** | | This is all user defined content | 
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
 Minimum empty Entry length: 35 bytes
