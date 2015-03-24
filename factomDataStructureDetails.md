@@ -53,12 +53,11 @@ See code at the go source path github.com/FactomProject/FactomCode/notaryapi/ech
 These data structures are composed by the Users.
 
 ### Entry
+**(Different from what is implemented)**
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
-An External ID (ExtID) is one or more byte fields which can serve as hints to 3rd party databases.  These are fields which the Entry author felt would make good keys into a database.  They are not required for Factom usage.  The data is not checked for validity, or sanitized.  The only enforcement of these fields is the lengths need to be within bounds.  Also, the character encoding selected must be not reserved.
-
-**(Different from what is implemented)**
+An External ID (ExtID) is one or more byte fields which can serve as hints to 3rd party databases.  These are fields which the Entry author felt would make good keys into a database.  They are not required for Factom usage.  The data is not checked for validity, or sanitized.  There is no enforcement of this data and is only interpreted when forming a key for a database.  When a database interprets the data at this point, the only validity check is that when parsed, the ExtID data cannot be more than the Payload.
 
 
 | data | Field Name | Description |
@@ -66,30 +65,57 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | **Header** |  | |
 | 32 bytes | ChainID | This is the chain which the author wants this entry to go into |
 | 1 byte | version | starts at 0.  Higher numbers are currently rejected |
-| 2 bytes | Entry Length | Describes how many bytes the Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the user data.  Big endian. |
-| 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual  |
-| **If Number of ExtIDs is > 0** | | |
-| 1 byte | character encoding | 0=UTF-8  All other values are reserved |
-| 2 bytes | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
-| varaible | Chain Name element data | This is the first External ID |
-| 2 bytes | Chain Name element X length | There will be as many ExtIDs and length designators as are specified in 'Number of ExtIDs' | 
-| varaible | Chain Name element data | This is the Xth External ID |
-| **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Entry Data field starts here |
+| 2 bytes | Entry Length | Describes how many bytes this Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the Payload.  Big endian. |
+| **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Payload field starts here |
 | 1 byte | number of Chain Name elements  | This must be 1-255 if creating a new Chain.  These fields must hash to the ChainID specified in this Entry. |
-| 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element | 
+| 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element.  Cannot be 0 length. | 
 | varaible | Chain Name element 0 data | This is the data to be hashed |
 | 2 bytes | Chain Name element X length | There will be as many elements and length designators as are specified in 'number of Chain Name elements' | 
 | varaible | Chain Name element X data | This is the data to be hashed |
+| **Payload** | | This is the data between the end of the enforced header and the end of data defined by Entry Length | 
+| **External Identifiers** | | This optional data is intended as suggested keys for searching for this Entry in an external database.  |
+| 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual ExtIDs to parse. |
+| 1 byte | ExtID 0 encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
+| 2 bytes | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
+| varaible | ExtID 0 data | This is the first External ID |
+| 1 byte | ExtID X encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
+| 2 bytes | ExtID X length | This is the number of the following bytes to be interpreted as an External ID | 
+| varaible | ExtID X data | This is the Nth External ID |
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
-Minimum Empty Entry length: 36 bytes
+Minimum empty Entry length: 35 bytes
 
-Maximum Payload size: 10KiB - (32 + 1 + 2 + 1) = 10204 bytes
+Minimum empty First Entry with Chain Name of 1 byte: 39 bytes
+
+Maximum Payload size: 10KiB - (32 + 1 + 2) = 10205 bytes
 
 Typical size recording the hash of a file with 200 letters of ExtID metadata: 32+1+2+1+1+2+200+32 = 271 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
-32+1+2+1+500 = 536 bytes
+32+1+2+500 = 535 bytes
+
+Example Entry with a ChainID of 'test', spaces added for clarity:
+As first entry:
+9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 00 0040 01 0004 74657374 01 01 0007 4b657948657265 5061796c6f616448657265
+
+As regular entry:
+9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 00 0039 01 01 0007 4b657948657265 5061796c6f616448657265
+
+
+### Entry Hash
+
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, so SHA3-256 is included in the process to generate an Entry Hash.
+
+To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
+
+Using the above Entry as an example.
+
+9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08000039010100074b6579486572655061796c6f616448657265 is passed into SHA3-256 and that gives: 2e11940a60e868d0363a90d4392e77e97353b6adbb9330591238dd761eece3ff 
+
+This is then appended to make 
+9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08000039010100074b6579486572655061796c6f6164486572652e11940a60e868d0363a90d4392e77e97353b6adbb9330591238dd761eece3ff
+which is then SHA256 hashed to make an Entry Hash of:
+b8b7f3e44a790ffb28ad2122c33336baf5edb939b0907cef26c5971d2aa90560
 
 
 ### Entry Commit
@@ -114,7 +140,7 @@ The transaction ID (txid) is a SHA256 hash of the data from the header through t
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  |
 | varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
-| 32 bytes | RCD Hash | (Output 0) The hash of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
+| 32 bytes | RCD Hash | (Output 0) The hash (SHA256) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
 | 32 bytes | RCD Hash | (Output X) The hash of the RCD |
 | varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.  |
@@ -138,7 +164,7 @@ The transaction ID (txid) is a SHA256 hash of the data from the header through t
 | variable | RCD X | The next RCD is checked against the next different address in the inputs list.|
 | **Signatures** | | |
 | variable | Signature bitfield | (Input 0) This is a set of bytes which form a bitfield. The number of bytes is determined by the N value in the RCD. |
-| 64 bytes | Signature | (Input 0, 1st specified pubkey) signature covering the sighash data specified in input 0 |
+| 64 bytes | Signature | (Input 0, 1st specified pubkey) signature covering the sighash data specified in input 0.  First is R then S|
 | 64 bytes | Signature | (Input 0, Yth specified pubkey) signature covering the sighash data specified in input 0 |
 | variable | Signature bitfield | (Input X) The bitfield which cover the Xth input. |
 | 64 bytes | Signature | (Input X, 1st specified pubkey) signature covering the sighash data specified in input 0 |
@@ -161,22 +187,20 @@ This can be considered equivalent to a Bitcoin redeem script behind a P2SH trans
 
 ##### Signature bitfield
 
-This set of bytes indicates which M of the N signatures are present.  The number of bits set to 1 specifies the number of signatures.  The position of the bits specify which subset the M signatures are provided.  The number of bytes is determined by N in the RCD.  The number of bytes is ceiling(N/8).  A 1 in the most significant bit of the first byte signifies the presence of a signature from the first pubkey in the RCD.  The most significant bit of the second byte is for the 9th pubkey.  Finding the number of signatures to parse is done by counting the number of bits set.  
+This set of bytes indicates which M of the N signatures are present.  The number of bits set to 1 specifies the number of signatures.  The position of the bits specify which subset the M signatures are provided.  The number of bytes is determined by N in the RCD.  The number of bytes is ceiling(N/8).  A 1 in the most significant bit of the first byte signifies the presence of a signature from the first pubkey in the RCD.  The most significant bit of the second byte is for the 9th pubkey.  Finding the number of signatures to parse is done by counting the number of bits set.
 
 For example, a 3 of 10 multisig might have a bitfield like this: 00101000 01000000.  The third, 5th and 10th keys have signatures provided.
 
 ##### Sighash Type
 
-Factom note: these will be expanded and better defined soon.
-
 This field is modeled after Bitcoin's [OP_CHECKSIG](https://en.bitcoin.it/wiki/OP_CHECKSIG).  It allows the signer of this input to specify how the transaction can be reconfigured without resigning.  For the initial release of Factoids, only Sighash_All is supported.  The value must be set to 0x00 for version 0 of the transaction.
 
-The signature covers Header, Outputs, and Inputs.  The RCD is protected from tampering because the signed inputs specify only 1 possible RCD.
+The signature covers Header, Outputs, and Inputs.  The RCD is protected from tampering because the signed inputs specify only one possible RCD.
 
 
 Note: For the token sale, a raw Ed25519 pubkey is included in an OP_RETURN output along with the payment to the sale multisig address.  The the genesis block will contain a transaction which outputs to many 1 of 1 addresses.  There will be an output for each of the Bitcoin payments' specified pubkeys.  The addresses will be derived from the exposed pubkeys. 
 
-Some later RCD types will be added.  Output types supporting [atomic cross](https://en.bitcoin.it/wiki/Atomic_cross-chain_trading) chain swaps and [time locking](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) outputs are desirable.  Output scripts are also useful and desirable, but can open security holes.  They are not critical for the first release of Factom, so we will implement them later. This would give us the ability to make conditional outputs (IF, AND, OR, etc).  Nesting is also desirable but undefined in this version.  This would give multisig within a multisig transaction.
+Some later RCD types will be added.  Output types supporting [atomic cross](https://en.bitcoin.it/wiki/Atomic_cross-chain_trading) chain swaps and [time locking](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) outputs are desirable.  Output scripts are also useful and desirable, but can open security holes.  They are not critical for the first release of Factom, so we will implement them later. This would give us the ability to make conditional outputs (IF, AND, OR, etc).  Nesting is also desirable but undefined in this version.  This would give multisig within a multisig transaction.  Implementing scripts will give all the intermediate RCD types, so possibly going directly to scripts can bypass a special atomic cross chain swap, etc.
 
 Ed25519 allows for threshold multisig in a single signature, but that cryptography will have to come later.  For now, multisig is based on multiple independent pubkeys and multiple signatures.
 
@@ -186,6 +210,7 @@ Fees are the difference between the outputs and the inputs.  The fees are [sacri
 3. Number of signatures checked -- These cause expensive computation on all full nodes.  A fee of 1 EC equivalent must be paid for each signature included.
 
 A minimal transaction with 2 inputs and 2 outputs spending single sig outputs would cost the equivalent of 23 Entry Credits.
+
 
 ## Block Elements
 
