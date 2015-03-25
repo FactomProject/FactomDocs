@@ -63,9 +63,9 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
-| 32 bytes | ChainID | This is the chain which the author wants this entry to go into |
 | 1 byte | version | starts at 0.  Higher numbers are currently rejected |
-| 2 bytes | Entry Length | Describes how many bytes this Entry uses.  Count starts at the beginning of the Chain ID and ends at the end of the Payload.  Big endian. |
+| 32 bytes | ChainID | This is the chain which the author wants this entry to go into |
+| 2 bytes | Entry Length | Describes how many bytes this Entry uses.  Count starts at the beginning of the version and ends at the end of the Payload.  Big endian. |
 | **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Payload field starts here |
 | 1 byte | number of Chain Name elements  | This must be 1-255 if creating a new Chain.  These fields must hash to the ChainID specified in this Entry. |
 | 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element.  Cannot be 0 length. | 
@@ -88,39 +88,52 @@ Minimum empty Entry length: 35 bytes
 
 Minimum empty First Entry with Chain Name of 1 byte: 39 bytes
 
-Maximum Payload size: 10KiB - (32 + 1 + 2) = 10205 bytes
+Maximum Payload size: 10KiB - (1 + 32 + 2) = 10205 bytes
 
-Typical size recording the hash of a file with 200 letters of ExtID metadata: 32+1+2+1+1+2+200+32 = 271 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+32+2+1+1+2+200+32 = 271 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
-32+1+2+500 = 535 bytes
+1+32+2+500 = 535 bytes
 
 Example Entry with a ChainID of 'test', spaces added for clarity:
-As first entry:
-9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 00 0040 01 0004 74657374 01 01 0007 4b657948657265 5061796c6f616448657265
+As first Entry:
+00 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 0040 01 0004 74657374 01 01 0007 4b657948657265 5061796c6f616448657265
 
-As regular entry:
-9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 00 0039 01 01 0007 4b657948657265 5061796c6f616448657265
+As regular Entry:
+00 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 0039 01 01 0007 4b657948657265 5061796c6f616448657265
 
 
 ### Entry Hash
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, so SHA3-256 is included in the process to generate an Entry Hash.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, so SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for merkle roots due to anticipated CPU hardware acceleration.
 
 To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
 Using the above Entry as an example.
 
-9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08000039010100074b6579486572655061796c6f616448657265 is passed into SHA3-256 and that gives: 2e11940a60e868d0363a90d4392e77e97353b6adbb9330591238dd761eece3ff 
+009f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a080039010100074b6579486572655061796c6f616448657265 is passed into SHA3-256 and that gives: bdb7b6b6b349b9cc0ce353b4181b77cb23ea1d2a26dcd90bd701ae6e8dbc673c 
 
 This is then appended to make 
-9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08000039010100074b6579486572655061796c6f6164486572652e11940a60e868d0363a90d4392e77e97353b6adbb9330591238dd761eece3ff
+009f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a080039010100074b6579486572655061796c6f616448657265bdb7b6b6b349b9cc0ce353b4181b77cb23ea1d2a26dcd90bd701ae6e8dbc673c
 which is then SHA256 hashed to make an Entry Hash of:
-b8b7f3e44a790ffb28ad2122c33336baf5edb939b0907cef26c5971d2aa90560
+66e1b94b528e54405426a103b62c9e8897ee84ce3af8e0ef0c96651a0853e151
 
 
 ### Entry Commit
 
+An Entry Commit is a payment for a specific Entry. It deducts a balance held by a specific public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------------- | 
+| **Header** |  | |
+| 1 byte | version | starts at 0.  Higher numbers are currently rejected |
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
+| 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be paid for. |
+| 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
+| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. |
+| 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
+
+The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based instead of transaction based like Factoids, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
 
 ### Factoid Transaction
 
@@ -136,7 +149,7 @@ The transaction ID (txid) is a SHA256 hash of the data from the header through t
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** | | |
-| 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed unless it is preceded by a federated server's confirmation.  |
+| 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed. |
 | 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  |
@@ -217,4 +230,6 @@ A minimal transaction with 2 inputs and 2 outputs spending single sig outputs wo
 
 These data structures are constructed of User Elements, etc.
 
+### Directory Block
 
+A Directory Block consists of a header and a body. The body is a series of pairs of ChainIDs and Merkle Roots.
