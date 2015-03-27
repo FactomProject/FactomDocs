@@ -144,7 +144,7 @@ Factoid transactions are similar to Bitcoin transactions, but incorporate some [
 - Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are not relayed on the Factom P2P network. In Factom, non-standard transactions are undefined.  Adding new transaction types will cause a hard fork of the Factom network.
 
 
-The transaction ID (txid) is a SHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid.
+The transaction ID (txid) is a DoubleSHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
@@ -152,18 +152,18 @@ The transaction ID (txid) is a SHA256 hash of the data from the header through t
 | 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed. |
 | 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
 | **Outputs** | | |
-| varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  |
+| varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
 | varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
 | 32 bytes | RCD Hash | (Output 0) The hash (SHA256) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
 | 32 bytes | RCD Hash | (Output X) The hash of the RCD |
-| varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.  |
+| varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.   Maximum allowable number is 16,000. |
 | varInt_F | value | (Purchase 0) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase 0) The Ed25519 raw public key which is the Entry Credit pubkey.  |
 | varInt_F | value | (Purchase X) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase X) The Ed25519 raw EC public key. |
 | **Inputs** | | |
-| varInt_F | Input Count | This is the quantity of previous transaction outputs spent.  |
+| varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Maximum allowable number is 16,000. |
 | 32 bytes | txid | (Input 0) This is the previous transaction identifier which is being spent. |
 | varInt_F | output index | (Input 0) This is the index of the specified txid which is being spent. |
 | 1 byte | sighash type | (Input 0) Define how the transaction can be reconfigured without resigning. |
@@ -218,9 +218,9 @@ Some later RCD types will be added.  Output types supporting [atomic cross](http
 
 Ed25519 allows for threshold multisig in a single signature, but that cryptography will have to come later.  For now, multisig is based on multiple independent pubkeys and multiple signatures.
 
-Fees are the difference between the outputs and the inputs.  The fees are [sacrificed](https://blog.ethereum.org/2014/02/01/on-transaction-fees-and-the-fallacy-of-market-based-solutions/).  They are defined by, but not reclaimed by the Federated servers.  The minimum transaction fees are based on the current exchange rate of Factoids to Entry Credits.  The outputs must be less than the inputs by at least the the fee amount at confirmation time.  The fees the sum of 3 things that cause load on the system:
+Fees are the difference between the outputs and the inputs.  The fees are [sacrificed](https://blog.ethereum.org/2014/02/01/on-transaction-fees-and-the-fallacy-of-market-based-solutions/).  They are defined by, but not reclaimed by the Federated servers.  The minimum transaction fees are based on the current exchange rate of Factoids to Entry Credits.  The outputs must be less than the inputs by at least the the fee amount at confirmation time.  The minimum fees are the sum of 3 things that cause load on the system:
 1. Transaction data size. -- Factoid transactions are charged the same amount as Entry Credits (EC).  The size fees are 1 EC per KiB with a maximum transaction size of 10 KiB.
-2. Number of outputs created -- These are data points which potentially need to be tracked far into the future.  They are more expensive to handle, and require a larger sacrifice.  Outputs cost 10 EC per output. A purchase of Entry Credits also requires the 10 EC fee to be valid.
+2. Number of outputs created -- These are data points which potentially need to be tracked far into the future.  They are more expensive to handle, and require a larger sacrifice.  Outputs cost 10 EC per output. A purchase of Entry Credits also requires the 10 EC sized fee to be valid.
 3. Number of signatures checked -- These cause expensive computation on all full nodes.  A fee of 1 EC equivalent must be paid for each signature included.
 
 A minimal transaction with 2 inputs and 2 outputs spending single sig outputs would cost the equivalent of 23 Entry Credits.
