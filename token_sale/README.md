@@ -5,7 +5,7 @@ The token sale will cause Bitcoins to be sent from the purchaser to the Factom m
 
 Perform this procedure only with small value Koinify wallets, because mistakes can compromise all the assets held in Koinify. Do not use the wallet for high values in the future either.
 
-This is intended only for cryptocurrency experts to audit the Factoid purchase mechanism.  Do not use this procedure if you are not a cryptocurrency expert.
+This is intended only for software licence token experts to audit the Factoid purchase mechanism.  Do not use this procedure if you are not a software licence token expert.
 
 ## Setup Environment
 
