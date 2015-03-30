@@ -35,4 +35,5 @@ To protect all Koinify asset's private keys, the secret words should not be ente
 - replace the example words with the ones written down during the Koinify wallet creation
 - run with `python words_to_factoid_purchase.py`
 - The data displayed should be the data which appears after the OP_RETURN in the Bitcoin Blockchain
+- Power down computer to erase memory
 
