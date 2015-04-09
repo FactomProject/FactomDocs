@@ -57,7 +57,7 @@ These data structures are composed by the Users.
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
-An External ID (ExtID) is one or more byte fields which can serve as hints to 3rd party databases.  These are fields which the Entry author felt would make good keys into a database.  They are not required for Factom usage.  The data is not checked for validity, or sanitized.  There is no enforcement of this data and is only interpreted when forming a key for a database.  When a database interprets the data at this point, the only validity check is that when parsed, the ExtID data cannot be more than the Payload.
+An External ID (ExtID) is one or more byte fields which can serve as keys to databases.  They are not required for Factom usage.  The data is not checked for validity, or sanitized.  There is no enforcement of this data and is only interpreted when forming a key for a database.  When a database interprets the data at this point, the only validity check is that when parsed, the ExtID data cannot be more than the Payload. 
 
 
 | data | Field Name | Description |
@@ -69,18 +69,18 @@ An External ID (ExtID) is one or more byte fields which can serve as hints to 3r
 | **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Payload field starts here |
 | 1 byte | number of Chain Name elements  | This must be 1-255 if creating a new Chain.  These fields must hash to the ChainID specified in this Entry. |
 | 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element.  Cannot be 0 length. | 
-| varaible | Chain Name element 0 data | This is the data to be hashed |
+| variable | Chain Name element 0 data | This is the data to be hashed |
 | 2 bytes | Chain Name element X length | There will be as many elements and length designators as are specified in 'number of Chain Name elements' | 
-| varaible | Chain Name element X data | This is the data to be hashed |
+| variable | Chain Name element X data | This is the data to be hashed |
 | **Payload** | | This is the data between the end of the enforced header and the end of data defined by Entry Length | 
 | **External Identifiers** | | This optional data is intended as suggested keys for searching for this Entry in an external database.  |
 | 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual ExtIDs to parse. |
 | 1 byte | ExtID 0 encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
 | 2 bytes | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
-| varaible | ExtID 0 data | This is the first External ID |
+| variable | ExtID 0 data | This is the first External ID |
 | 1 byte | ExtID X encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
 | 2 bytes | ExtID X length | This is the number of the following bytes to be interpreted as an External ID | 
-| varaible | ExtID X data | This is the Nth External ID |
+| variable | ExtID X data | This is the Nth External ID |
 | **Content** | | This is all user defined content | 
 | variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
 
@@ -105,7 +105,7 @@ As regular Entry:
 
 ### Entry Hash
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, so SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for merkle roots due to anticipated CPU hardware acceleration.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for merkle roots due to anticipated CPU hardware acceleration.
 
 To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
@@ -135,6 +135,15 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 
 The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based instead of transaction based like Factoids, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
 
+
+### Chain Commit
+
+A Chain Commit is a simultaneous payment for a specific Entry and a payment to allow a new Chain to be created. It deducts a balance held by a specific public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------------- | 
+
+
 ### Factoid Transaction
 
 Factoid transactions are similar to Bitcoin transactions, but incorporate some [lessons learned](http://www.reddit.com/r/Bitcoin/comments/2jw5pm/im_gavin_andresen_chief_scientist_at_the_bitcoin/clfp3xj) from Bitcoin.
@@ -150,7 +159,7 @@ The transaction ID (txid) is a DoubleSHA256 hash of the data from the header thr
 | ----------------- | ---------------- | --------------- | 
 | **Header** | | |
 | 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed. |
-| 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
+| 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time with 1 second resolution.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
 | varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
@@ -232,4 +241,31 @@ These data structures are constructed of User Elements, etc.
 
 ### Directory Block
 
-A Directory Block consists of a header and a body. The body is a series of pairs of ChainIDs and Merkle Roots.
+A Directory Block consists of a header and a body. The body is a series of pairs of ChainIDs and Entry Block Merkle Roots.
+
+
+### Entry Block
+
+An Entry Block is a datastructure which packages references to Entries all sharing a ChainID over a 10 minute period. The Entries are ordered in the Entry Block in the order that they were received by the Federated server. The Entry Blocks form a blockchain for a specific ChainID.
+
+The Entry Block consists of a header and a body.  The body is composed of primarily Entry Hashes with 10 one minute markers distributed throughout the body. 
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
+| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Entry Blocks is 0xFA92E5A2 |
+| 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
+| 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 6 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian.|
+| 6 bytes | DB Height | This a the Directory Block height which this Entry Block is located in. Big endian.|
+| 5 bytes | StartTime | This is the time when the block starts.  It is point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. |
+| 8 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
+| **Body** |  |  |
+| 32 bytes | All objects | A series of 32 byte sized objects arranged in chronological order. |
+
+Time delimiters are 32 byte big endian objects between 1 and 9 (inclusive).  They are inserted in into the Entry Block when a new Federated server takes control of the Chain.  They are not needed if there is not an Entry to timestamp.
+
+
