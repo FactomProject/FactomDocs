@@ -157,7 +157,7 @@ Factoid transactions are similar to Bitcoin transactions, but incorporate some [
 The transaction ID (txid) is a DoubleSHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.
 
 | data | Field Name | Description |
-| ----------------- | ---------------- | --------------- | 
+| ----------------- | ---------------- | --------------- |
 | **Header** | | |
 | 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed. |
 | 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time with 1 second resolution.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
@@ -236,6 +236,26 @@ Fees are the difference between the outputs and the inputs.  The fees are [sacri
 A minimal transaction with 2 inputs and 2 outputs spending single sig outputs would cost the equivalent of 23 Entry Credits.
 
 
+#### Coinbase Factoid Transaction
+
+The coinbase transaction, like in Bitcoin, is how the servers are paid for their services.  These are new Factoids created by the protocol.  The outputs are allocated in a deterministic fashion based upon the results from the election and which of the Federated servers participated in generating the blocks in the past.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------------- |
+| **Header** | | |
+| 1 byte | Version | Version 0 only. |
+| 5 bytes | lockTime | disabled, all zeros. |
+| **Outputs** | | |
+| varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
+| varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) assigned. |
+| 32 bytes | RCD Hash | (Output 0) The hash (SHA256) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
+| varInt_F | value | (Output X) The quantity of Factoshis assigned. |
+| 32 bytes | RCD Hash | (Output X) The hash of the RCD |
+| varInt_F | Entry Credit Purchase Count | Must be zero for the coinbase. |
+| **Inputs** | | |
+| varInt_F | Factoid Block Height | This is a changing seed so that the TXID for this transaction changes even if the outputs do not. |
+
+
 ## Block Elements
 
 These data structures are constructed of mostly User Elements defined by the Federated servers.
@@ -262,12 +282,12 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
 | 6 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian.|
 | 6 bytes | DB Height | This a the Directory Block height which this Entry Block is located in. Big endian.|
-| 5 bytes | StartTime | This is the time when the block starts.  It is point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. |
+| 5 bytes | StartTime | This is the time when the block starts.  It is the point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. |
 | 8 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | All objects | A series of 32 byte sized objects arranged in chronological order. |
 
-Time delimiters are 32 byte big endian objects between 1 and 10 (inclusive).  They are inserted in into the Entry Block when a new Federated server takes control of the Chain and an Entry has been acknowledged already.  They are not needed if there is not an Entry to include that minute.  Note, there can be duplicate Entries included in an Entry Block.  If an Entry is paid for twice, it is included twice.  The times are organized when the Federated server saw and acknowledged the Entry.
+Time delimiters are 32 byte big endian objects between 1 and 10 (inclusive).  They are inserted in into the Entry Block when a new Federated server yields control of the Chain and an Entry has been acknowledged already.  They are not needed if there is not an Entry to include that minute.  Note, there can be duplicate Entries included in an Entry Block.  If an Entry is paid for twice, it is included twice.  The times are organized when the Federated server saw and acknowledged the Entry.
 
 **Body With 1 Entry at 0:10 into block**
 ```
