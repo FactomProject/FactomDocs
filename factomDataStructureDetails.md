@@ -10,7 +10,7 @@ Unless otherwise specified, Data is interpreted as big-endian.
 This describes the low level minutia for common data structures.
 
 ### Variable Integers (varInt_F)
-**(not yet implemented)**
+**(implemented, not verified)**
 
 This is modeled after the Bitcoin's variable length integer, but is big-endian compared to Bitcoin's little endian.
 https://en.bitcoin.it/wiki/Protocol_documentation#Variable_length_integer
@@ -104,6 +104,7 @@ As regular Entry:
 
 
 ### Entry Hash
+**(Different from what is implemented)**
 
 The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for merkle roots due to anticipated CPU hardware acceleration.
 
@@ -237,7 +238,7 @@ A minimal transaction with 2 inputs and 2 outputs spending single sig outputs wo
 
 ## Block Elements
 
-These data structures are constructed of User Elements, etc.
+These data structures are constructed of mostly User Elements defined by the Federated servers.
 
 ### Directory Block
 
@@ -266,6 +267,48 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | **Body** |  |  |
 | 32 bytes | All objects | A series of 32 byte sized objects arranged in chronological order. |
 
-Time delimiters are 32 byte big endian objects between 1 and 9 (inclusive).  They are inserted in into the Entry Block when a new Federated server takes control of the Chain.  They are not needed if there is not an Entry to timestamp.
+Time delimiters are 32 byte big endian objects between 1 and 10 (inclusive).  They are inserted in into the Entry Block when a new Federated server takes control of the Chain and an Entry has been acknowledged already.  They are not needed if there is not an Entry to include that minute.  Note, there can be duplicate Entries included in an Entry Block.  If an Entry is paid for twice, it is included twice.  The times are organized when the Federated server saw and acknowledged the Entry.
 
+**Body With 1 Entry at 0:10 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+0000000000000000000000000000000000000000000000000000000000000001
 
+**Body With 1 Entry at 1:10 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+0000000000000000000000000000000000000000000000000000000000000002
+
+**Body With 1 Entry at 5:50 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+0000000000000000000000000000000000000000000000000000000000000006
+
+**Body With 1 Entry at 9:50 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+000000000000000000000000000000000000000000000000000000000000000A
+
+**Body With 2 Entries: 2:20 and 5:30 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+0000000000000000000000000000000000000000000000000000000000000003
+69379f5b2047a98ac9ec1726f49ab4e7854c958f070a1cfb222f40a0f49a9bb3
+0000000000000000000000000000000000000000000000000000000000000006
+
+**Body With 3 Entries: 2:20, 2:40 and 5:30 into block**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+69379f5b2047a98ac9ec1726f49ab4e7854c958f070a1cfb222f40a0f49a9bb3
+0000000000000000000000000000000000000000000000000000000000000003
+d03e315186bfbebf030e9cbcda99000a45a536ecf1583d792338fb44d9fb0041
+0000000000000000000000000000000000000000000000000000000000000006
+
+**Body With 8 Entries: 0:05, 3:40, 3:59, 4:00, 4:01, 4:30, 5:30, 9:59 into block with a duplicate**
+520e404c6565f5b204e46ba2972220820192f1b11648dfe128f9bd1d2d147d43
+0000000000000000000000000000000000000000000000000000000000000001
+69379f5b2047a98ac9ec1726f49ab4e7854c958f070a1cfb222f40a0f49a9bb3
+d03e315186bfbebf030e9cbcda99000a45a536ecf1583d792338fb44d9fb0041
+0000000000000000000000000000000000000000000000000000000000000004
+6e24e241c65e0623bd705cd968efdbe1c1a5c1d44f11cda45f23da24e29db0e5
+eebf7804da84e4f8e9330982808225649751ee5cc6ca20281dbe6983fe8e435f
+2f1972e07f61daec1002647ce5b3ce4d1b031d7d989e761252d6f248c2675d5b
+0000000000000000000000000000000000000000000000000000000000000005
+3f84cce967052e85c3cf2d671c2433dc4899226bb99a67d6bfe4aeb9e938b7cc
+0000000000000000000000000000000000000000000000000000000000000006
+3f84cce967052e85c3cf2d671c2433dc4899226bb99a67d6bfe4aeb9e938b7cc
+000000000000000000000000000000000000000000000000000000000000000A
