@@ -31,7 +31,7 @@ This allows small values to economize on space, but doesn't limit the amount to 
 
 A Chain Name is a value to uniquely identify a Chain. It can be a random number, a string of text, a public key, or hash of some private directory path.  The choice of Chain Name is left up to the user. The Chain Name can be specified with multiple sequential byte strings.  They are treated as different segments of data instead of concatenated, to differentiate trailing bytes of one segment from leading bytes of the next segment.
 
-There can be a maximum of 255 segments in a Chain Name.  The individual segment length are limited by how many bytes can fit in an Entry (approx 10 KiB).
+The individual segment length are limited by how many bytes can fit in an Entry (approx 10 KiB).  There must be at least one element in the Chain Name, and each element must be at least 1 byte long.
 
 
 ### ChainID
@@ -45,7 +45,7 @@ Getting a ChainID from a single segment Chain Name would be equivalent of hashin
 
 ChainID = SHA256( SHA256(Name[0]) | SHA256(Name[1]) | ... | SHA256(Name[X]) )
 
-See code at the go source path github.com/FactomProject/FactomCode/notaryapi/echain.go
+See code at the go source path github.com/FactomProject/FactomCode/common/echain.go
 
 
 ## User Elements
@@ -57,50 +57,51 @@ These data structures are composed by the Users.
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
-An External ID (ExtID) is one or more byte fields which can serve as keys to databases.  They are not required for Factom usage.  The data is not checked for validity, or sanitized.  There is no enforcement of this data and is only interpreted when forming a key for a database.  When a database interprets the data at this point, the only validity check is that when parsed, the ExtID data cannot be more than the Payload. 
+The Defined Fields (DF) are a part of the Entry which have byte sequence lengths that must be known by Factom.  The two data types in the DF are Chain Name and External IDs.
+
+If the Entry is the first of a certain ChainID in Factom, the DFs are interpreted as a Chain Name.  If it is not the first Entry, then the DFs are interpreted as External IDs.
+
+To be valid, the DF header is parsed and the end of the last field must match the defined length of the header.
+
+External IDs (ExtID) are intended to serve as keys to databases.  They are not required for Factom usage.  The data content is not checked for validity, or sanitized, as it is only viewed as binary data.
 
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
-| 1 byte | version | starts at 0.  Higher numbers are currently rejected |
-| 32 bytes | ChainID | This is the chain which the author wants this entry to go into |
-| 2 bytes | Entry Length | Describes how many bytes this Entry uses.  Count starts at the beginning of the version and ends at the end of the Payload.  Big endian. |
-| **Name Header** |  | This header is only interpreted and enforced if this is the first Entry in a Chain, otherwise the Payload field starts here |
-| 1 byte | number of Chain Name elements  | This must be 1-255 if creating a new Chain.  These fields must hash to the ChainID specified in this Entry. |
-| 2 bytes | Chain Name element 0 length | This is the number of the following bytes to be interpreted as a Chain Name element.  Cannot be 0 length. | 
-| variable | Chain Name element 0 data | This is the data to be hashed |
-| 2 bytes | Chain Name element X length | There will be as many elements and length designators as are specified in 'number of Chain Name elements' | 
-| variable | Chain Name element X data | This is the data to be hashed |
-| **Payload** | | This is the data between the end of the enforced header and the end of data defined by Entry Length | 
-| **External Identifiers** | | This optional data is intended as suggested keys for searching for this Entry in an external database.  |
-| 1 byte | Number of ExtIDs | Can be 0. Max is 255.  This describes the number of individual ExtIDs to parse. |
-| 1 byte | ExtID 0 encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
-| 2 bytes | ExtID 0 length | This is the number of the following bytes to be interpreted as an External ID | 
-| variable | ExtID 0 data | This is the first External ID |
-| 1 byte | ExtID X encoding | 0=Unprintable/binary 1=UTF-8  2=UTF-16 |
-| 2 bytes | ExtID X length | This is the number of the following bytes to be interpreted as an External ID | 
-| variable | ExtID X data | This is the Nth External ID |
-| **Content** | | This is all user defined content | 
-| variable | Entry Data | This is the payload of the Entry.  It is all user specified data. |
+| 1 byte | version | starts at 0.  Higher numbers are currently rejected. |
+| 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
+| 2 bytes | DF Header Size | Describes how many bytes the defined header takes.  Must be less than or equal to Paylod Size.  Big endian. |
+| 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the DF header (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
+| **Payload** | | This is the data between the end of the Header and the end of the Content. |
+| **Defined Fields Header** |  | This header is only interpreted and enforced if the DF length is greater than zero. |
+| 2 bytes | DF element 0 length | This is the number of the following bytes to be interpreted as a Defined Field element.  Cannot be 0 length. | 
+| variable | DF element 0 data | This is the data for the first element.  It is an ExtID or Chain Name element. |
+| 2 bytes | DF element X length | The DF Header will keep being parsed until it has iterated over the number of bytes specified in DF Header Size. | 
+| variable | DF element X data | This is the Xth element.  The last byte of the last element must fall on the last byte specified by DF Header Size. |
+| **Content** | | | 
+| variable | Entry Data | This is the unstructured part of the Entry.  It is all user specified data. |
 
-Minimum empty Entry length: 35 bytes
+Minimum empty Entry length: 37 bytes
 
-Minimum empty First Entry with Chain Name of 1 byte: 39 bytes
+Minimum empty First Entry with Chain Name of 1 byte: 40 bytes
 
-Maximum Payload size: 10KiB - (1 + 32 + 2) = 10205 bytes
+Maximum Entry size: 10KiB + 37 bytes = 10277 bytes
 
-Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+32+2+1+1+2+200+32 = 271 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+32+2+2+2+200+32 = 271 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
-1+32+2+500 = 535 bytes
+1+32+2+2+500 = 537 bytes
 
-Example Entry with a ChainID of 'test', spaces added for clarity:
+Example Entry with a Chain Name of 'test', spaces added for clarity:
 As first Entry:
-00 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 0040 01 0004 74657374 01 01 0007 4b657948657265 5061796c6f616448657265
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0006 0011 0004 74657374 5061796c6f616448657265
 
-As regular Entry:
-00 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08 0039 01 01 0007 4b657948657265 5061796c6f616448657265
+As regular Entry without ExtID:
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0000 000b 5061796c6f616448657265
+
+As regular Entry with ExtID of 'Hello' in 'test' chain:
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0007 0012 0005 48656c6c6f 5061796c6f616448657265
 
 
 ### Entry Hash
@@ -112,12 +113,12 @@ To calculate the Entry Hash, first the Entry is serialized and passed into a SHA
 
 Using the above Entry as an example.
 
-009f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a080039010100074b6579486572655061796c6f616448657265 is passed into SHA3-256 and that gives: bdb7b6b6b349b9cc0ce353b4181b77cb23ea1d2a26dcd90bd701ae6e8dbc673c 
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 1587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c 
 
 This is then appended to make 
-009f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a080039010100074b6579486572655061796c6f616448657265bdb7b6b6b349b9cc0ce353b4181b77cb23ea1d2a26dcd90bd701ae6e8dbc673c
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f6164486572651587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c
 which is then SHA256 hashed to make an Entry Hash of:
-66e1b94b528e54405426a103b62c9e8897ee84ce3af8e0ef0c96651a0853e151
+3a34ac57249d8321891b5bc04c42eb20dcaf5ddf5516bd9496a1c68c14947979
 
 
 ### Entry Commit
