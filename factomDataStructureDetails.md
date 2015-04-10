@@ -264,6 +264,25 @@ These data structures are constructed of mostly User Elements defined by the Fed
 
 A Directory Block consists of a header and a body. The body is a series of pairs of ChainIDs and Entry Block Merkle Roots.
 
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
+| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1 |
+| 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.|
+| 6 bytes | DB Height | This the current Directory Block height.  Big endian.|
+| 5 bytes | StartTime | This is the time when the block starts.  It is the point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. The time is scheduled to start every 10 minutes, on the 10 minute mark coordinated by UTC.|
+
+signatures, extra data, header size...
+
+| 8 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
+| **Body** |  |  |
+| 32 bytes | ChainID 0 | This is the ChainID of one Entry Block which was updated during this block time. These ChainID:KeyMR pairs are sorted numerically based on the ChainID.  |
+| 32 bytes | KeyMR 0 | This is the Key Merkle root of the Entry Block with ChainID 0 which was created during this Directory Block. |
+| 32 bytes | ChainID X | Nth Entry Block ChainID. |
+| 32 bytes | KeyMR X | Nth Entry Block KeyMR. |
 
 ### Entry Block
 
@@ -281,7 +300,7 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
 | 6 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian.|
-| 6 bytes | DB Height | This a the Directory Block height which this Entry Block is located in. Big endian.|
+| 6 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian.|
 | 5 bytes | StartTime | This is the time when the block starts.  It is the point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. |
 | 8 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
 | **Body** |  |  |
