@@ -69,12 +69,13 @@ External IDs (ExtID) are intended to serve as keys to databases.  They are not r
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
-| 1 byte | version | starts at 0.  Higher numbers are currently rejected. |
+| 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
+| 1 byte | Object Type | This byte describes the object type.  The type byte for Entries is 0xFC. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
 | 2 bytes | DF Header Size | Describes how many bytes the defined header takes.  Must be less than or equal to Paylod Size.  Big endian. |
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the DF header (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
-| **Defined Fields Header** |  | This header is only interpreted and enforced if the DF length is greater than zero. |
+| **Defined Fields Header** |  | This header is only interpreted and enforced if the DF Header Size is greater than zero. |
 | 2 bytes | DF element 0 length | This is the number of the following bytes to be interpreted as a Defined Field element.  Cannot be 0 length. | 
 | variable | DF element 0 data | This is the data for the first element.  It is an ExtID or Chain Name element. |
 | 2 bytes | DF element X length | The DF Header will keep being parsed until it has iterated over the number of bytes specified in DF Header Size. | 
@@ -82,43 +83,43 @@ External IDs (ExtID) are intended to serve as keys to databases.  They are not r
 | **Content** | | | 
 | variable | Entry Data | This is the unstructured part of the Entry.  It is all user specified data. |
 
-Minimum empty Entry length: 37 bytes
+Minimum empty Entry length: 38 bytes
 
-Minimum empty First Entry with Chain Name of 1 byte: 40 bytes
+Minimum empty First Entry with Chain Name of 1 byte: 41 bytes
 
-Maximum Entry size: 10KiB + 37 bytes = 10277 bytes
+Maximum Entry size: 10KiB + 38 bytes = 10278 bytes
 
-Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+32+2+2+2+200+32 = 271 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+1+32+2+2+2+200+32 = 272 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
-1+32+2+2+500 = 537 bytes
+1+1+32+2+2+500 = 538 bytes
 
 Example Entry with a Chain Name of 'test', spaces added for clarity:
 As first Entry:
-00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0006 0011 0004 74657374 5061796c6f616448657265
+00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0006 0011 0004 74657374 5061796c6f616448657265
 
 As regular Entry without ExtID:
-00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0000 000b 5061796c6f616448657265
+00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0000 000b 5061796c6f616448657265
 
 As regular Entry with ExtID of 'Hello' in 'test' chain:
-00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0007 0012 0005 48656c6c6f 5061796c6f616448657265
+00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0007 0012 0005 48656c6c6f 5061796c6f616448657265
 
 
 ### Entry Hash
 **(Different from what is implemented)**
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for merkle roots due to anticipated CPU hardware acceleration.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration.
 
 To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
 Using the above Entry as an example.
 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 1587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c 
+00fc954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 00b4ee349e1441a6ac67840c7c0fd3aa9343a93cc52d3d5d1b22282d6f503f24 
 
 This is then appended to make 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f6164486572651587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c
+00fc954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f61644865726500b4ee349e1441a6ac67840c7c0fd3aa9343a93cc52d3d5d1b22282d6f503f24
 which is then SHA256 hashed to make an Entry Hash of:
-3a34ac57249d8321891b5bc04c42eb20dcaf5ddf5516bd9496a1c68c14947979
+042dcda7098b2a703fde58054a38de5c1639bb8a42e4f5cab11b928c7df42dd0
 
 
 ### Entry Commit
@@ -126,16 +127,18 @@ which is then SHA256 hashed to make an Entry Hash of:
 An Entry Commit is a payment for a specific Entry. It deducts a balance held by a specific public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
 
 | data | Field Name | Description |
-| ----------------- | ---------------- | --------------- | 
+| ----------------- | ---------------- | --------------- |
 | **Header** |  | |
 | 1 byte | version | starts at 0.  Higher numbers are currently rejected |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
-| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. |
+| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
 | 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
 
-The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based instead of transaction based like Factoids, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
+The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based instead of transaction based like Factoids, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key per duplicate Entry. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
+
+The number of Entry Credits is based on the Payload size. Cost is 1 EC per KiB. Empty Entries cost 1 KiB.
 
 
 ### Chain Commit
@@ -143,19 +146,32 @@ The Entry Commit is only valid for 24 hours before and after the milliTimestamp.
 A Chain Commit is a simultaneous payment for a specific Entry and a payment to allow a new Chain to be created. It deducts a balance held by a specific public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
 
 | data | Field Name | Description |
-| ----------------- | ---------------- | --------------- | 
+| ----------------- | ---------------- | --------------- |
+| 1 byte | version | starts at 0.  Higher numbers are currently rejected |
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
+| 32 bytes | ChainID Hash | This is a SHA256 hash of the ChainID which the Entry is in. |
+| 32 bytes | Entry Hash + ChainID | This is the SHA256 of the Entry Hash concatenated with the ChainID. |
+| 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be the first in the Chain. |
+| 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 20 or below 11 are invalid. |
+| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
+| 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
 
+The Federated server will keep track of the Chain Commits based on ChainID Hash. The Federated servers keep track of the Chain Commits they receive.  When the first Entry is received, it will reveal the ChainID.  If the ChainID was a secret, then it now can be compared against all the possible Chain Commits claiming to pay for Entries of a certain ChainID. Once the ChainID is revealed, the ChainID hash and the 'Entry Hash + ChainID' fields can be compared to see if they match and form valid hashes. If they do not match, that Chain Commit is invalid.  If they do match, then the first one to be acknowledged gets accepted as the first Entry.  They maintain exclusivity for 1 hour for each ChainID hash after an acknowledgement.  The commit itself must be within 24 hours +/- of the milliTimestamp.
+
+A prudent user will not broadcast their First Entry until the Federated server acknowledges the Chain Commit.  If they do not wait, a peer on the P2P network can put their Entry as the first one in that Chain.
+
+Chain Commits cost 10 Entry Credits to create the Chain, plus the fee per KiB of the Entry itself.
 
 ### Factoid Transaction
 
 Factoid transactions are similar to Bitcoin transactions, but incorporate some [lessons learned](http://www.reddit.com/r/Bitcoin/comments/2jw5pm/im_gavin_andresen_chief_scientist_at_the_bitcoin/clfp3xj) from Bitcoin.
 - They are closer to P2SH style addresses, where the value is sent to the hash of a redeem condition, instead of sent to the redeem condition itself. To redeem value, a datastructure containing public keys, etc should be revealed. This is referred to as the **Redeem Condition Datastructure (RCD)**
 - Factoids use Ed25519 with Schnorr signatures.  They have [many benefits](https://ripple.com/uncategorized/curves-with-a-twist/0) over the ECDSA signatures used in Bitcoin.
-- Txid does not cover the signature field.  This will limit damaging malleability by attackers without the private key.
+- TXID does not cover the signature field.  This will limit damaging malleability by attackers without the private key.
 - Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are not relayed on the Factom P2P network. In Factom, non-standard transactions are undefined.  Adding new transaction types will cause a hard fork of the Factom network.
 
 
-The transaction ID (txid) is a DoubleSHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the txid. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.
+The transaction ID (TXID) is a DoubleSHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the TXID. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
@@ -175,11 +191,11 @@ The transaction ID (txid) is a DoubleSHA256 hash of the data from the header thr
 | 32 bytes | EC Pubkey | (Purchase X) The Ed25519 raw EC public key. |
 | **Inputs** | | |
 | varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Maximum allowable number is 16,000. |
-| 32 bytes | txid | (Input 0) This is the previous transaction identifier which is being spent. |
-| varInt_F | output index | (Input 0) This is the index of the specified txid which is being spent. |
+| 32 bytes | TXID | (Input 0) This is the previous transaction identifier which is being spent. |
+| varInt_F | output index | (Input 0) This is the index of the specified TXID which is being spent. |
 | 1 byte | sighash type | (Input 0) Define how the transaction can be reconfigured without resigning. |
-| 32 bytes | txid | (Input X) This is the previous transaction identifier which is being spent. |
-| varInt_F | output index | (Input X) This is the index of the specified txid which is being spent. |
+| 32 bytes | TXID | (Input X) This is the previous transaction identifier which is being spent. |
+| varInt_F | output index | (Input X) This is the index of the specified TXID which is being spent. |
 | 1 byte | sighash type | (Input X) Define how the transaction can be reconfigured without resigning. |
 | **Redeem Condition Datastructure (RCD) Reveal** | | |
 | varInt_F | RCD Count | The number of different hashes which which are presented as inputs. RCD Count can be lower than Input Count, but not higher. If duplicate input RCD hashes are used, then those inputs need to be ordered so that identical addresses are sequential. |
@@ -269,15 +285,13 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
-| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1 |
+| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1.  The first byte also serves as the Object Type for Directory Blocks. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.|
-| 6 bytes | DB Height | This the current Directory Block height.  Big endian.|
-| 5 bytes | StartTime | This is the time when the block starts.  It is the point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. The time is scheduled to start every 10 minutes, on the 10 minute mark coordinated by UTC.|
-
-signatures, extra data, header size...
-
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future. |
+| 4 bytes | DB Height | This the current Directory Block height.  Big endian. |
+| 4 bytes | Height Skip Count |  |
+| | **signatures, extra data, header size...** |
 | 8 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | ChainID 0 | This is the ChainID of one Entry Block which was updated during this block time. These ChainID:KeyMR pairs are sorted numerically based on the ChainID.  |
@@ -295,14 +309,13 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
-| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Entry Blocks is 0xFA92E5A2 |
+| 1 byte | Object Type | This byte describes the object type.  The type byte for Entry Blocks is 0xFB. |
 | 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
-| 6 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian.|
-| 6 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian.|
-| 5 bytes | StartTime | This is the time when the block starts.  It is the point when the Federated servers are scheduled to anchor the previous block and start working on this block.  The time is encoded as unix epoch time with 1 second resolution. Big endian. |
+| 4 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian. |
+| 4 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian. |
 | 8 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | All objects | A series of 32 byte sized objects arranged in chronological order. |
@@ -366,5 +379,18 @@ EEBF7804DA84E4F8E9330982808225649751EE5CC6CA20281DBE6983FE8E435F
 3F84CCE967052E85C3CF2D671C2433DC4899226BB99A67D6BFE4AEB9E938B7CC
 000000000000000000000000000000000000000000000000000000000000000A
 ```
+
+### Components
+
+These are some custom datastructures for Factom
+
+#### KeyMR
+
+A Key Merkle Root is a datastructure which allows fast validation of a header and also allows Merkle proofs to be built to the body data elements.
+
+First a Merkle tree is constructed of all the body elements. It is called the BodyMR.  This is very similar to how all Bitcoin transactions can be proven with a Merkle root in the header.
+
+The BodyMR is included in the header, among other things. The serialized header is then hashed.  The hashed header is combined with the BodyMR and hashed. This creates the KeyMR. With only the KeyMR, when a header is produced by a peer, the header can be validated with 2 hashes.
+
 
 
