@@ -70,7 +70,6 @@ External IDs (ExtID) are intended to serve as keys to databases.  They are not r
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
 | 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
-| 1 byte | Object Type | This byte describes the object type.  The type byte for Entries is 0xFC. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
 | 2 bytes | DF Header Size | Describes how many bytes the defined header takes.  Must be less than or equal to Paylod Size.  Big endian. |
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the DF header (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
@@ -83,26 +82,26 @@ External IDs (ExtID) are intended to serve as keys to databases.  They are not r
 | **Content** | | | 
 | variable | Entry Data | This is the unstructured part of the Entry.  It is all user specified data. |
 
-Minimum empty Entry length: 38 bytes
+Minimum empty Entry length: 37 bytes
 
-Minimum empty First Entry with Chain Name of 1 byte: 41 bytes
+Minimum empty First Entry with Chain Name of 1 byte: 40 bytes
 
-Maximum Entry size: 10KiB + 38 bytes = 10278 bytes
+Maximum Entry size: 10KiB + 37 bytes = 10277 bytes
 
-Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+1+32+2+2+2+200+32 = 272 bytes
+Typical size recording the hash of a file with 200 letters of ExtID metadata: 1+32+2+2+2+200+32 = 271 bytes
 
 example size of something similar to an Omni(MSC) transaction, assuming 500 bytes [per transaction](https://blockchain.info/address/1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P):
-1+1+32+2+2+500 = 538 bytes
+1+32+2+2+500 = 537 bytes
 
 Example Entry with a Chain Name of 'test', spaces added for clarity:
 As first Entry:
-00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0006 0011 0004 74657374 5061796c6f616448657265
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0006 0011 0004 74657374 5061796c6f616448657265
 
 As regular Entry without ExtID:
-00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0000 000b 5061796c6f616448657265
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0000 000b 5061796c6f616448657265
 
 As regular Entry with ExtID of 'Hello' in 'test' chain:
-00 fc 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0007 0012 0005 48656c6c6f 5061796c6f616448657265
+00 954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f4 0007 0012 0005 48656c6c6f 5061796c6f616448657265
 
 
 ### Entry Hash
@@ -114,12 +113,12 @@ To calculate the Entry Hash, first the Entry is serialized and passed into a SHA
 
 Using the above Entry as an example.
 
-00fc954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 00b4ee349e1441a6ac67840c7c0fd3aa9343a93cc52d3d5d1b22282d6f503f24 
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 1587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c 
 
 This is then appended to make 
-00fc954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f61644865726500b4ee349e1441a6ac67840c7c0fd3aa9343a93cc52d3d5d1b22282d6f503f24
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f6164486572651587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c
 which is then SHA256 hashed to make an Entry Hash of:
-042dcda7098b2a703fde58054a38de5c1639bb8a42e4f5cab11b928c7df42dd0
+3a34ac57249d8321891b5bc04c42eb20dcaf5ddf5516bd9496a1c68c14947979
 
 
 ### Entry Commit
@@ -129,7 +128,7 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** |  | |
-| 1 byte | version | starts at 0.  Higher numbers are currently rejected |
+| 1 byte | Version | starts at 0.  Higher numbers are currently rejected |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
@@ -147,7 +146,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
-| 1 byte | version | starts at 0.  Higher numbers are currently rejected |
+| 1 byte | Version | starts at 0.  Higher numbers are currently rejected |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | ChainID Hash | This is a SHA256 hash of the ChainID which the Entry is in. |
 | 32 bytes | Entry Hash + ChainID | This is the SHA256 of the Entry Hash concatenated with the ChainID. |
@@ -171,7 +170,7 @@ Factoid transactions are similar to Bitcoin transactions, but incorporate some [
 - Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are not relayed on the Factom P2P network. In Factom, non-standard transactions are undefined.  Adding new transaction types will cause a hard fork of the Factom network.
 
 
-The transaction ID (TXID) is a DoubleSHA256 hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the TXID. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.
+The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the TXID. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.  Stops length extension attacks.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
@@ -270,7 +269,10 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | 32 bytes | RCD Hash | (Output X) The hash of the RCD |
 | varInt_F | Entry Credit Purchase Count | Must be zero for the coinbase. |
 | **Inputs** | | |
+| varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Must be 1. |
+| 32 bytes | Coinbase ID | Coinbase identifier is a placeholder for the previous TXID.  This field must be all zeros for the coinbase. |
 | varInt_F | Factoid Block Height | This is a changing seed so that the TXID for this transaction changes even if the outputs do not. |
+| 1 byte | sighash placeholder | Must be set to 0 for coinbase. |
 
 
 ## Block Elements
@@ -285,7 +287,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
-| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1.  The first byte also serves as the Object Type for Directory Blocks. |
+| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future. |
@@ -309,7 +311,6 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
-| 1 byte | Object Type | This byte describes the object type.  The type byte for Entry Blocks is 0xFB. |
 | 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
