@@ -180,9 +180,9 @@ The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
 | varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
-| 32 bytes | RCD Hash | (Output 0) The hash (SHA256) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
+| 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
-| 32 bytes | RCD Hash | (Output X) The hash of the RCD |
+| 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
 | varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.   Maximum allowable number is 16,000. |
 | varInt_F | value | (Purchase 0) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase 0) The Ed25519 raw public key which is the Entry Credit pubkey.  |
@@ -213,7 +213,7 @@ The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the
 
 ##### Redeem Condition Datastructure (RCD)
 
-This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support multisignature addresses.  Type 0 is defined here.
+This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support multisignature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
@@ -264,9 +264,9 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
 | varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) assigned. |
-| 32 bytes | RCD Hash | (Output 0) The hash (SHA256) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
+| 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis assigned. |
-| 32 bytes | RCD Hash | (Output X) The hash of the RCD |
+| 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
 | varInt_F | Entry Credit Purchase Count | Must be zero for the coinbase. |
 | **Inputs** | | |
 | varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Must be 1. |
