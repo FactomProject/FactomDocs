@@ -107,7 +107,7 @@ As regular Entry with ExtID of 'Hello' in 'test' chain:
 ### Entry Hash
 **(Different from what is implemented)**
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [first-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration.
 
 To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
@@ -216,7 +216,7 @@ The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the
 This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support multisignature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks.
 
 | data | Field Name | Description |
-| ----------------- | ---------------- | --------------- | 
+| ----------------- | ---------------- | --------------- |
 | **Header** | | |
 | 1 byte | Version | Version of the RCD type.  Versions above 0 are not relayed unless it is preceded by a federated server's confirmation.  |
 | 1 byte | type | This specifies how the datastructure should be interpreted.  It sets expectations for the signature field. Type 0 is M of N multisignature. No other types are supported at this point. |
@@ -294,7 +294,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | 4 bytes | DB Height | This the current Directory Block height.  Big endian. |
 | 4 bytes | Height Skip Count |  |
 | | **signatures, extra data, header size...** |
-| 8 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
+| 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | ChainID 0 | This is the ChainID of one Entry Block which was updated during this block time. These ChainID:KeyMR pairs are sorted numerically based on the ChainID.  |
 | 32 bytes | KeyMR 0 | This is the Key Merkle root of the Entry Block with ChainID 0 which was created during this Directory Block. |
@@ -317,7 +317,7 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
 | 4 bytes | EB Height | This is the sequence which this block is in for this ChainID.  First block is height 0. Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian. |
-| 8 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
+| 4 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | All objects | A series of 32 byte sized objects arranged in chronological order. |
 
