@@ -148,8 +148,8 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 | ----------------- | ---------------- | --------------- |
 | 1 byte | Version | starts at 0.  Higher numbers are currently rejected |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
-| 32 bytes | ChainID Hash | This is a SHA256 hash of the ChainID which the Entry is in. |
-| 32 bytes | Entry Hash + ChainID | This is the SHA256 of the Entry Hash concatenated with the ChainID. |
+| 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
+| 32 bytes | Entry Hash + ChainID | This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
 | 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be the first in the Chain. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 20 or below 11 are invalid. |
 | 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
@@ -275,6 +275,19 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | 1 byte | sighash placeholder | Must be set to 0 for coinbase. |
 
 
+### Balance Increase
+
+This datastructure is a pointer to a valid Factoid transaction which purchases Entry Credits. It creates a trigger to increase the Entry Credit balance of a particular EC pubkey. It is derived deterministically from every Factoid output which credits EC keys.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| 32 bytes | EC Public Key | This is the public key which the Factoid transaction has credited. |
+| 32 bytes | TXID | This is the transaction ID of the Factoid transaction crediting the above public key. |
+| varInt_F | Index | The index in the above Factoid transaction crediting the EC pubkey. |
+| varInt_F | NumEC | This is the number of Entry Credits granted to the EC public key based on the current exchange rate in effect. |
+
+
+
 ## Block Elements
 
 These data structures are constructed of mostly User Elements defined by the Federated servers.
@@ -310,7 +323,6 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
-| 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
 | 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
@@ -381,6 +393,41 @@ EEBF7804DA84E4F8E9330982808225649751EE5CC6CA20281DBE6983FE8E435F
 000000000000000000000000000000000000000000000000000000000000000A
 ```
 
+
+### Entry Credit Block
+
+An Entry Credit (EC) Block is a datastructure which packages Chain Commits, Entry Commits, and EC balance increases over a 10 minute period. The Entries are ordered in the Entry Block in the order that they were received by each Federated server. All the Federated servers contribute to the building of the EC Block.
+
+The Entry Credit Block consists of a header and a body.  The body is composed of primarily Commits and balance increases with minute markers and server markers distributed throughout the body.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 32 bytes | EC ChainID | The EC ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000c. |
+| 32 bytes | BodyHash | This is the SHA256 hash of the serialized body data which accompanies this block. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the previous EC Block's key which was placed in the previous Directory Block.  It is the value which is used as a key into databases holding the EC Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevHash3 of 0. |
+| 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
+| 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
+| 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
+| 8 bytes | Body Size | This is the number bytes the body of this block contains.  Big endian. |
+| **Body** |  |  |
+| variable | All objects | A series of variable sized objects arranged in chronological order.  Each object is prepended with an ECID byte. |
+
+
+##### ECID Bytes
+
+Entry Credit Identifier (ECID) bytes are single bytes which specify how to interpret the following data. It specifies the type, and the type determines how long the data is.
+
+| Binary | Name | Description |
+| ----------------- | ---------------- | --------- |
+| 0x00 | Server Index Number | The following data was acknowledged by the server with the specified Index.  This byte is followed by another byte which signifies the server's order. |
+| 0x01 | Minute Number | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
+| 0x02 | Chain Commit | The following data is a Chain Commit. The following 200 bytes are a Chain Commit. |
+| 0x03 | Entry Commit | The following data is an Entry Commit. The following 136 bytes are an Entry Commit. |
+| 0x04 | Balance Increase | The following data is a balance increase. The following 66 - 82 bytes are a Balance Increase. |
+
+
 ### Components
 
 These are some custom datastructures for Factom
@@ -393,5 +440,5 @@ First a Merkle tree is constructed of all the body elements. It is called the Bo
 
 The BodyMR is included in the header, among other things. The serialized header is then hashed.  The hashed header is combined with the BodyMR and hashed. This creates the KeyMR. With only the KeyMR, when a header is produced by a peer, the header can be validated with 2 hashes.
 
-
+For the EC block, KeyMR is a hash of the header concatenated with the BodyHash.  The EC block does not have a Merkle root of the body data, but the KeyMR still can prove the header.
 
