@@ -410,7 +410,7 @@ The Entry Credit Block consists of a header and a body.  The body is composed of
 | 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
 | 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
 | 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
-| 8 bytes | Body Size | This is the number bytes the body of this block contains.  Big endian. |
+| 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | variable | All objects | A series of variable sized objects arranged in chronological order.  Each object is prepended with an ECID byte. |
 
@@ -426,6 +426,27 @@ Entry Credit Identifier (ECID) bytes are single bytes which specify how to inter
 | 0x02 | Chain Commit | The following data is a Chain Commit. The following 200 bytes are a Chain Commit. |
 | 0x03 | Entry Commit | The following data is an Entry Commit. The following 136 bytes are an Entry Commit. |
 | 0x04 | Balance Increase | The following data is a balance increase. The following 66 - 82 bytes are a Balance Increase. |
+
+
+### Factoid Block
+
+Factoid Block is a datastructure which packages Factoid transactions over a 10 minute period. The Factoid transactions are ordered in the Block in the order that they were received by the Federated server.
+
+The Factoid Block consists of a header and a body.  The body is composed of serialized Factoid transactions [with minute markers distributed throughout the body?].
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 32 bytes | Factoid ChainID | The Factoid ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000f. |
+| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the Factoid Block's previous Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Factoid Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
+| 32 bytes | UTXO Commitment | This field will hold a Merkle root of an array containing all unspent transactions.  Not implemented until later.  Currently set to all zeros. |
+| 4 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian. |
+| 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
+| **Body** |  |  |
+| variable | All objects | A series of variable sized objects arranged in chronological order. |
 
 
 ### Components
