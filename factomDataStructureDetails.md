@@ -410,6 +410,7 @@ The Entry Credit Block consists of a header and a body.  The body is composed of
 | 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
 | 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
 | 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
+| 8 bytes | Object Count | This is the number of objects this block contains.  Big endian. |
 | 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | variable | All objects | A series of variable sized objects arranged in chronological order.  Each object is prepended with an ECID byte. |
