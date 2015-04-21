@@ -48,8 +48,8 @@ The actual distribution will be documented with a list of the purchases and the 
 ```JSON
 {
   "factoidSales" : [ 
-     [ <UTC>, <BTC Trasnaction ID> , <Factom Address>, <Factoid Amount> ]
-     [ <UTC>, <BTC Trasnaction ID> , <Factom Address>, <Factoid Amount> ]
+     [ "<UTC>", "<BTC Trasnaction ID>" , "<Factom Address>", "<Factoid Amount>" ]
+     [ "<UTC>", "<BTC Trasnaction ID>" , "<Factom Address>", "<Factoid Amount>" ]
   ]
 }
 ```
@@ -107,7 +107,7 @@ And the first Entry is:
 
 ```JSON
 {  
-   “Key List Type” : “Identity”  ,
+   "Key List Type" : "Identity"  ,
    "type" : "Ed25519",
    "1" : "de8634289a978df57c5b07a3423b01e1a1c37263506c43b739d770e6d5924d92",
    "type" : "ECDSA",
@@ -123,11 +123,11 @@ The Entry to add Bitcoin addresses would look like this:
 
 ```JSON
     {
-        “Key List Type” : “Bitcoin”,
-          “1” : “1EYP7NzhfugjKvJH3BQTU7J6cQhCWWVYHx”,
-          “2” : “19jPEV4sf4sahupcawFD5vZ4Z3811HZB6i”,
-“3” : “1GTALs4J3tzyknyY2k7DdGDFLTPTKnHYyk”,
-“4” : “16NZ2R5YrMn1C9n5PcrFB1QrMoFWCmbNim”
+        "Key List Type" : "Bitcoin",
+          "1" : "1EYP7NzhfugjKvJH3BQTU7J6cQhCWWVYHx",
+          "2" : "19jPEV4sf4sahupcawFD5vZ4Z3811HZB6i",
+"3" : "1GTALs4J3tzyknyY2k7DdGDFLTPTKnHYyk",
+"4" : "16NZ2R5YrMn1C9n5PcrFB1QrMoFWCmbNim"
    }
 ```   
 
