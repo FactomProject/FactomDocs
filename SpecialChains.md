@@ -126,9 +126,9 @@ The Entry to add Bitcoin addresses would look like this:
         "Key List Type" : "Bitcoin",
           "1" : "1EYP7NzhfugjKvJH3BQTU7J6cQhCWWVYHx",
           "2" : "19jPEV4sf4sahupcawFD5vZ4Z3811HZB6i",
-"3" : "1GTALs4J3tzyknyY2k7DdGDFLTPTKnHYyk",
-"4" : "16NZ2R5YrMn1C9n5PcrFB1QrMoFWCmbNim"
-   }
+          "3" : "1GTALs4J3tzyknyY2k7DdGDFLTPTKnHYyk",
+          "4" : "16NZ2R5YrMn1C9n5PcrFB1QrMoFWCmbNim"
+    }
 ```   
 
 Any Identity used to back a server must have a Bitcoin Entry.  The 4th level address is what is used to write entries into Factom, and the higher priority addresses are used to manage situations where the 4th level address has been compromised. 
