@@ -72,13 +72,13 @@ External IDs and entry data content is not checked for validity, or sanitized, a
 | 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
 | 2 bytes | Size of External IDs | Describes how many bytes required for the set of External IDs for this entry.  Must be less than or equal to Paylod Size.  Big endian. |
-| 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the DF header (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
+| 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the External IDs (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
-| **Defined Fields Header** |  | This header is only interpreted and enforced if the DF Header Size is greater than zero. |
-| 2 bytes | DF element 0 length | This is the number of the following bytes to be interpreted as a Defined Field element.  Cannot be 0 length. | 
-| variable | DF element 0 data | This is the data for the first element.  It is an ExtID or Chain Name element. |
-| 2 bytes | DF element X length | The DF Header will keep being parsed until it has iterated over the number of bytes specified in DF Header Size. | 
-| variable | DF element X data | This is the Xth element.  The last byte of the last element must fall on the last byte specified by DF Header Size. |
+| **External IDs** |  | This section is only interpreted and enforced if the External ID Size is greater than zero. |
+| 2 bytes | ExID element 0 length | This is the number of the following bytes to be interpreted as a External ID element.  Cannot be 0 length. | 
+| variable | Externl ID 0 | This is the data for the first External ID. |
+| 2 bytes | External ID X | Size of the X External ID  | 
+| variable | External ID X data | This is the Xth element.  The last byte of the last element must fall on the last byte specified by DF Header Size. |
 | **Content** | | | 
 | variable | Entry Data | This is the unstructured part of the Entry.  It is all user specified data. |
 
