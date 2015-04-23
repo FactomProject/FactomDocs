@@ -57,13 +57,13 @@ These data structures are composed by the Users.
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
-The Defined Fields (DF) are a part of the Entry which have byte sequence lengths that must be known by Factom.  The two data types in the DF are Chain Name and External IDs.
+The External IDs are a part of the Entry which have byte sequence lengths that must be known by Factom.  The first entry in a Factom Chain uses the External IDs to define the Chain Name.  Other Entries can use the External IDs as their application dictates.
 
-If the Entry is the first of a certain ChainID in Factom, the DFs are interpreted as a Chain Name.  If it is not the first Entry, then the DFs are interpreted as External IDs.
+To be valid, the External IDs are parsed and the end of the last field must match the defined length for the External IDs as defined in the header.
 
-To be valid, the DF header is parsed and the end of the last field must match the defined length of the header.
+External IDs (ExtID) are intended to provide any sort of tagging information for entries that applications may find useful.  Keys to databases are likely to be a common use.  External IDs are simply data to Factom, and are not used in the consensus algorithm.  
 
-External IDs (ExtID) are intended to serve as keys to databases.  They are not required for Factom usage.  The data content is not checked for validity, or sanitized, as it is only viewed as binary data.
+External IDs and entry data content is not checked for validity, or sanitized, as it is only viewed as binary data.
 
 
 | data | Field Name | Description |
@@ -71,7 +71,7 @@ External IDs (ExtID) are intended to serve as keys to databases.  They are not r
 | **Header** |  | |
 | 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
-| 2 bytes | DF Header Size | Describes how many bytes the defined header takes.  Must be less than or equal to Paylod Size.  Big endian. |
+| 2 bytes | Size of External IDs | Describes how many bytes required for the set of External IDs for this entry.  Must be less than or equal to Paylod Size.  Big endian. |
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the DF header (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
 | **Defined Fields Header** |  | This header is only interpreted and enforced if the DF Header Size is greater than zero. |
