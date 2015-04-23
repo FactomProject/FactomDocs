@@ -334,17 +334,74 @@ This is a special block which accompanies this Directory Block. It contains the 
 
 Administrative Identifier (AdminID) bytes are single bytes which specify how to interpret the following data. It specifies the type, and the type determines how to interpret subsequent bytes.
 
+| Binary | Name | Data Bytes | Name |Description |
+| ----------------- | ---------------- | ------- | --------- |
+| 0x00 | Minute Number | 1 byte | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
+| 0x01 | DB Signature | 128 bytes | The following data is a signature of the preceding Directory Block header. The signature consists of the servers 32 byte identity ChainID, a 32 byte Ed25519 public key in that identity and a 64 byte signature of the previous Directory Block's header. |
+| 0x02 | Reveal Matryoshka Hash | 64 bytes | This is the latest M-hash reveal to be considered for determining server priority in subsequent blocks. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the M-hash reveal itself. |
+| 0x03 | Add/Replace Matryoshka Hash | 64 bytes | This is a command which adds or replaces the current M-hash for the specified identity with this new M-hash. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the new M-hash itself. This data is replicated from the server's identity chain. |
+| 0x04 | Increase Server Count | 1 byte | The server count is incremented by the amount encoded in a following single byte. |
+| 0x05 | Add Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is added to the pool. |
+| 0x06 | Remove Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
+| 0x07 | Add Federated Server Signing Key | 65 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 32 bytes are the public key itself.  If the specified priority for the server already exists, this replaces the old one. |
+| 0x08 | Add Federated Server Bitcoin Anchor Key | 65 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
+
+
+### Entry Credit Block
+
+An Entry Credit (EC) Block is a datastructure which packages Chain Commits, Entry Commits, and EC balance increases over a 10 minute period. The Entries are ordered in the Entry Block in the order that they were received by each Federated server. All the Federated servers contribute to the building of the EC Block.
+
+The Entry Credit Block consists of a header and a body.  The body is composed of primarily Commits and balance increases with minute markers and server markers distributed throughout the body.
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 32 bytes | EC ChainID | The EC ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000c. |
+| 32 bytes | BodyHash | This is the SHA256 hash of the serialized body data which accompanies this block. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the previous EC Block's key which was placed in the previous Directory Block.  It is the value which is used as a key into databases holding the EC Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevHash3 of 0. |
+| 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
+| 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
+| 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
+| 8 bytes | Object Count | This is the number of objects this block contains.  Big endian. |
+| 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
+| **Body** |  |  |
+| variable | All objects | A series of variable sized objects arranged in chronological order.  Each object is prepended with an ECID byte. |
+
+
+##### ECID Bytes
+
+Entry Credit Identifier (ECID) bytes are single bytes which specify how to interpret the following data. It specifies the type, and the type determines how to interpret subsequent bytes.
+
 | Binary | Name | Description |
 | ----------------- | ---------------- | --------- |
-| 0x00 | Minute Number | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
-| 0x01 | DB Signature | The following data is a signature of the preceding Directory Block header. The signature consists of the servers 32 byte identity ChainID, a 32 byte Ed25519 public key in that identity and a 64 byte signature of the previous Directory Block's header. |
-| 0x02 | Reveal Matryoshka Hash | This is the latest M-hash reveal to be considered for determining server priority in subsequent blocks. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the M-hash reveal itself. |
-| 0x03 | Replace Matryoshka Hash | This is a command which replaces the current M-hash for the specified identity with the new M-hash. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the new M-hash itself. This data is replicated from the server's identity chain. |
-| 0x04 | Increase Server Count | The server count is incremented by the amount encoded in a following single byte. |
-| 0x05 | Add Federated Server | The following 32 bytes are the ChainID of the Federated server which is added to the pool. |
-| 0x06 | Remove Federated Server | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
-| 0x07 | Add Federated Server Signing Key | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 32 bytes are the public key itself.  If the specified priority for the server already exists, this replaces the old one. |
-| 0x08 | Add Federated Server Bitcoin Anchor Key | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
+| 0x00 | Server Index Number | The following data was acknowledged by the server with the specified Index.  This byte is followed by another byte which signifies the server's order. |
+| 0x01 | Minute Number | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
+| 0x02 | Chain Commit | The following data is a Chain Commit. The following 200 bytes are a Chain Commit. |
+| 0x03 | Entry Commit | The following data is an Entry Commit. The following 136 bytes are an Entry Commit. |
+| 0x04 | Balance Increase | The following data is a balance increase. The following 66 - 82 bytes are a Balance Increase. |
+
+
+### Factoid Block
+
+Factoid Block is a datastructure which packages Factoid transactions over a 10 minute period. The Factoid transactions are ordered in the Block in the order that they were received by the Federated server.
+
+The Factoid Block consists of a header and a body.  The body is composed of serialized Factoid transactions [with minute markers distributed throughout the body?].
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------- |
+| **Header** |  |  |
+| 32 bytes | Factoid ChainID | The Factoid ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000f. |
+| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the Factoid Block's previous Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
+| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Factoid Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
+| 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
+| 32 bytes | UTXO Commitment | This field will hold a Merkle root of an array containing all unspent transactions.  Not implemented until later.  Currently set to all zeros. |
+| 4 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian. |
+| 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
+| **Body** |  |  |
+| variable | All objects | A series of variable sized objects arranged in chronological order. |
 
 
 ### Entry Block
@@ -426,62 +483,6 @@ EEBF7804DA84E4F8E9330982808225649751EE5CC6CA20281DBE6983FE8E435F
 000000000000000000000000000000000000000000000000000000000000000A
 ```
 
-
-### Entry Credit Block
-
-An Entry Credit (EC) Block is a datastructure which packages Chain Commits, Entry Commits, and EC balance increases over a 10 minute period. The Entries are ordered in the Entry Block in the order that they were received by each Federated server. All the Federated servers contribute to the building of the EC Block.
-
-The Entry Credit Block consists of a header and a body.  The body is composed of primarily Commits and balance increases with minute markers and server markers distributed throughout the body.
-
-| data | Field Name | Description |
-| ----------------- | ---------------- | --------- |
-| **Header** |  |  |
-| 32 bytes | EC ChainID | The EC ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000c. |
-| 32 bytes | BodyHash | This is the SHA256 hash of the serialized body data which accompanies this block. |
-| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the previous EC Block's key which was placed in the previous Directory Block.  It is the value which is used as a key into databases holding the EC Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevHash3 of 0. |
-| 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
-| 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
-| 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
-| 8 bytes | Object Count | This is the number of objects this block contains.  Big endian. |
-| 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
-| **Body** |  |  |
-| variable | All objects | A series of variable sized objects arranged in chronological order.  Each object is prepended with an ECID byte. |
-
-
-##### ECID Bytes
-
-Entry Credit Identifier (ECID) bytes are single bytes which specify how to interpret the following data. It specifies the type, and the type determines how to interpret subsequent bytes.
-
-| Binary | Name | Description |
-| ----------------- | ---------------- | --------- |
-| 0x00 | Server Index Number | The following data was acknowledged by the server with the specified Index.  This byte is followed by another byte which signifies the server's order. |
-| 0x01 | Minute Number | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
-| 0x02 | Chain Commit | The following data is a Chain Commit. The following 200 bytes are a Chain Commit. |
-| 0x03 | Entry Commit | The following data is an Entry Commit. The following 136 bytes are an Entry Commit. |
-| 0x04 | Balance Increase | The following data is a balance increase. The following 66 - 82 bytes are a Balance Increase. |
-
-
-### Factoid Block
-
-Factoid Block is a datastructure which packages Factoid transactions over a 10 minute period. The Factoid transactions are ordered in the Block in the order that they were received by the Federated server.
-
-The Factoid Block consists of a header and a body.  The body is composed of serialized Factoid transactions [with minute markers distributed throughout the body?].
-
-| data | Field Name | Description |
-| ----------------- | ---------------- | --------- |
-| **Header** |  |  |
-| 32 bytes | Factoid ChainID | The Factoid ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000f. |
-| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  It is calculated with SHA256. |
-| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the Factoid Block's previous Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Factoid Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
-| 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
-| 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
-| 32 bytes | UTXO Commitment | This field will hold a Merkle root of an array containing all unspent transactions.  Not implemented until later.  Currently set to all zeros. |
-| 4 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian. |
-| 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
-| **Body** |  |  |
-| variable | All objects | A series of variable sized objects arranged in chronological order. |
 
 
 ### Components
