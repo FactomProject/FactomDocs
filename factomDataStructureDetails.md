@@ -245,6 +245,7 @@ Some later RCD types will be added.  Output types supporting [atomic cross](http
 Ed25519 allows for threshold multisig in a single signature, but that cryptography will have to come later.  For now, multisig is based on multiple independent pubkeys and multiple signatures.
 
 Fees are the difference between the outputs and the inputs.  The fees are [sacrificed](https://blog.ethereum.org/2014/02/01/on-transaction-fees-and-the-fallacy-of-market-based-solutions/).  They are defined by, but not reclaimed by the Federated servers.  The minimum transaction fees are based on the current exchange rate of Factoids to Entry Credits.  The outputs must be less than the inputs by at least the the fee amount at confirmation time.  The minimum fees are the sum of 3 things that cause load on the system:
+
 1. Transaction data size. -- Factoid transactions are charged the same amount as Entry Credits (EC).  The size fees are 1 EC per KiB with a maximum transaction size of 10 KiB.
 2. Number of outputs created -- These are data points which potentially need to be tracked far into the future.  They are more expensive to handle, and require a larger sacrifice.  Outputs cost 10 EC per output. A purchase of Entry Credits also requires the 10 EC sized fee to be valid.
 3. Number of signatures checked -- These cause expensive computation on all full nodes.  A fee of 1 EC equivalent must be paid for each signature included.
