@@ -334,7 +334,7 @@ This is a special block which accompanies this Directory Block. It contains the 
 
 Administrative Identifier (AdminID) bytes are single bytes which specify how to interpret the following data. It specifies the type, and the type determines how to interpret subsequent bytes.
 
-| Binary | Name | Data Bytes | Name |Description |
+| Binary | Name | Data Bytes | Description |
 | ----------------- | ---------------- | ------- | --------- |
 | 0x00 | Minute Number | 1 byte | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
 | 0x01 | DB Signature | 128 bytes | The following data is a signature of the preceding Directory Block header. The signature consists of the servers 32 byte identity ChainID, a 32 byte Ed25519 public key in that identity and a 64 byte signature of the previous Directory Block's header. |
