@@ -345,7 +345,7 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 | 0x05 | Add Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is added to the pool. |
 | 0x06 | Remove Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
 | 0x07 | Add Federated Server Signing Key | 65 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 32 bytes are the public key itself.  If the specified priority for the server already exists, this replaces the old one. |
-| 0x08 | Add Federated Server Bitcoin Anchor Key | 65 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
+| 0x08 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
 
 
 ### Entry Credit Block
