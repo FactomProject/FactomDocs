@@ -325,6 +325,7 @@ This is a special block which accompanies this Directory Block. It contains the 
 | 32 bytes | Admin ChainID | The Admin ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000a. |
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
 | 4 bytes | DB Height | This the Directory Block height which this Admin Block is located in. Big endian. |
+| 32 bytes | Chain Head Commitment | This is the Merkle root of an array holding pairs of ChainIDs with their current head KeyMRs.  This will allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. This field will not not be implemented until later.  Currently set to all zeros. |
 | 4 bytes | Message Count | This is the number of Admin Messages and time delimiters that the body of this block contains.  Big endian. |
 | 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
