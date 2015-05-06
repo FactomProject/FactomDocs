@@ -79,11 +79,9 @@ In the RPC section, uncomment and set:
 `username=testuser`
 `password=SecurePassHere`
 
-In a second console window, run `btcwallet`
+In a second console window, run `btcwallet --create`
 
-In a 3rd console window, run `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet createencryptedwallet HardToGuessPW`
-
-change HardToGuessPW to something hard to guess.  It will still be in a config file, so it will not be that secure, though.
+Follow the directions to create a wallet.  Give it password which is hard to guess.  One example password is `HardToGuessPW` which will be used as an example later.  It will be in a config file, so it will not be that secure, though.
 
 
 ### Install GUI
