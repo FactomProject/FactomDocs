@@ -75,10 +75,10 @@ External IDs and entry data content is not checked for validity, or sanitized, a
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the External IDs (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
 | **External IDs** |  | This section is only interpreted and enforced if the External ID Size is greater than zero. |
-| 2 bytes | ExID element 0 length | This is the number of the following bytes to be interpreted as a External ID element.  Cannot be 0 length. | 
-| variable | Externl ID 0 | This is the data for the first External ID. |
-| 2 bytes | External ID X | Size of the X External ID  | 
-| variable | External ID X data | This is the Xth element.  The last byte of the last element must fall on the last byte specified by DF Header Size. |
+| 2 bytes | ExtID element 0 length | This is the number of the following bytes to be interpreted as a External ID element.  Cannot be 0 length. | 
+| variable | ExtID 0 | This is the data for the first External ID. |
+| 2 bytes | ExtID X | Size of the X External ID  | 
+| variable | ExtID X data | This is the Xth element.  The last byte of the last element must fall on the last byte specified by DF Header Size. |
 | **Content** | | | 
 | variable | Entry Data | This is the unstructured part of the Entry.  It is all user specified data. |
 
