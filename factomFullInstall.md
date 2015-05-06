@@ -111,7 +111,7 @@ Send testnet bitcoins to an address in gui
 ### Command Line Alternatives to GUI
 
 
-You might be able to get by with some command line arguments.  This one outputs an address in your wallet `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet getnewaddress`.  Save the address it gives you and send testnet bitcoins to it.  You can use `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet listreceivedbyaccount 0` to see if money has been sent to the wallet.  Also `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet listtransactions` to see what has happened in the wallet.
+You might be able to get by with some command line arguments.  This one outputs an address in your wallet `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet getaccountaddress "default"`.  Save the address it gives you and send testnet bitcoins to it.  You can use `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet listreceivedbyaccount` to see if money has been sent to the wallet.  Also `btcctl --rpcuser=testuser --rpcpass=SecurePassHere --testnet --wallet listtransactions` to see what has happened in the wallet.
 
 
 
