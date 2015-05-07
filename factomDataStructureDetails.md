@@ -57,13 +57,13 @@ These data structures are composed by the Users.
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
-The External IDs are a part of the Entry which have byte sequence lengths that must be known by Factom.  The first entry in a Factom Chain uses the External IDs to define the Chain Name.  Other Entries can use the External IDs as their application dictates.
+The External IDs are a part of the Entry which have byte sequence lengths that must be known by Factom.  The first Entry in a Factom Chain uses the External IDs to define the Chain Name.  Other Entries can use the External IDs as their application dictates.
 
 To be valid, the External IDs are parsed and the end of the last field must match the defined length for the External IDs as defined in the header.
 
 External IDs (ExtID) are intended to provide any sort of tagging information for entries that applications may find useful.  Keys to databases are likely to be a common use.  External IDs are simply data to Factom, and are not used in the consensus algorithm.  
 
-External IDs and entry data content is not checked for validity, or sanitized, as it is only viewed as binary data.
+External IDs and Content is not checked for validity, or sanitized, as it is only viewed as binary data.
 
 
 | data | Field Name | Description |
@@ -71,7 +71,7 @@ External IDs and entry data content is not checked for validity, or sanitized, a
 | **Header** |  | |
 | 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
-| 2 bytes | Size of External IDs | Describes how many bytes required for the set of External IDs for this entry.  Must be less than or equal to Paylod Size.  Big endian. |
+| 2 bytes | Size of External IDs | Describes how many bytes required for the set of External IDs for this Entry.  Must be less than or equal to Paylod Size.  Big endian. |
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the External IDs (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
 | **External IDs** |  | This section is only interpreted and enforced if the External ID Size is greater than zero. |
@@ -183,6 +183,7 @@ The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the
 | 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
 | 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
+|  |  |  |
 | varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.   Maximum allowable number is 16,000. |
 | varInt_F | value | (Purchase 0) The quantity of Factoshis to be turned into ECs. |
 | 32 bytes | EC Pubkey | (Purchase 0) The Ed25519 raw public key which is the Entry Credit pubkey.  |
