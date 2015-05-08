@@ -301,13 +301,13 @@ Factoids are sent to an RCD Hash.  Inside the computer, the RCD hash is represen
 To convert a 32 byte RCD Hash to a Factoid address follow these steps:
 
 1. Concatenate 0x5fb1 and the RCD Hash bytewise
-  * 5fb10000000000000000000000000000000000000000000000000000000000000000 using zeros as a substitute RCD Hash
+  * `5fb10000000000000000000000000000000000000000000000000000000000000000` using zeros as a substitute RCD Hash
 2. Take the SHA256d of the above data.  Append the first 4 bytes of this SHA256d to the end of the above value bytewise.
-  * 5fb10000000000000000000000000000000000000000000000000000000000000000d48a8e32
+  * `5fb10000000000000000000000000000000000000000000000000000000000000000d48a8e32`
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
-  * FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu
+  * `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu`
 
-Factoid addresses will range between FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu and FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq
+Factoid addresses will range between `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu` and `FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq`
 
 #### Entry Credit Address
 
@@ -316,13 +316,13 @@ Entry Credits are redeemed to an Ed25519 raw public key.  Inside the computer, t
 To convert a 32 byte pubkey to an Entry Credit address follow these steps:
 
 1. Concatenate 592a and the pubkey bytewise
-  * 592a0000000000000000000000000000000000000000000000000000000000000000 using zeros as a substitute pubkey
+  * `592a0000000000000000000000000000000000000000000000000000000000000000` using zeros as a substitute pubkey
 2. Take the SHA256d of the above data.  Append the first 4 bytes of this SHA256d to the end of the above value bytewise.
-  * 592a00000000000000000000000000000000000000000000000000000000000000003cf4595f
+  * `592a00000000000000000000000000000000000000000000000000000000000000003cf4595f`
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
-  * EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa
+  * `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa`
 
-Entry Credit addresses will range between EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa and EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK
+Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK`
 
 
 ## Block Elements
