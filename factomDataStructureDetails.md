@@ -69,7 +69,7 @@ External IDs and Content is not checked for validity, or sanitized, as it is onl
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
-| 1 byte | Version | starts at 0.  Higher numbers are currently rejected. |
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
 | 2 bytes | Size of External IDs | Describes how many bytes required for the set of External IDs for this Entry.  Must be less than or equal to Paylod Size.  Big endian. |
 | 2 bytes | Payload Size | Describes how many bytes the payload of this Entry uses.  Count starts at the beginning of the External IDs (if present) and spans through the Content.  Max value can be 10240.  Big endian. |
@@ -128,7 +128,7 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** |  | |
-| 1 byte | Version | starts at 0.  Higher numbers are currently rejected |
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected.  Can safely be coded using 1 byte for the first 252 versions. |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
@@ -146,8 +146,8 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
-| 1 byte | Version | starts at 0.  Higher numbers are currently rejected |
-| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions.|
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. Can safely be coded using 1 byte for the first 252 versions.|
 | 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
 | 32 bytes | Entry Hash + ChainID | This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
 | 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be the first in the Chain. |
@@ -175,7 +175,7 @@ The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| 1 byte | Version | Version of the transaction type.  Versions above 0 are not relayed. |
+| varInt_F | Version | Version of the transaction type.  Versions above 0 are not relayed. Can safely be coded using 1 byte for the first 252 versions. |
 | 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time with 1 second resolution.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
@@ -219,7 +219,7 @@ This can be considered equivalent to a Bitcoin redeem script behind a P2SH trans
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| 1 byte | Version | Version of the RCD type.  Versions above 0 are not relayed unless it is preceded by a federated server's confirmation.  |
+| varInt_F | Version | Version of the RCD type.  Versions above 0 are not relayed unless it is preceded by a federated server's confirmation. Can safely be coded using 1 byte for the first 252 versions. |
 | 1 byte | type | This specifies how the datastructure should be interpreted.  It sets expectations for the signature field. Type 0 is M of N multisignature. No other types are supported at this point. |
 | varInt_F | N | The number of pubkeys specified.  |
 | 32 bytes | Pubkey 0 | the first pubkey in the datastructure |
@@ -261,7 +261,7 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| 1 byte | Version | Version 0 only. |
+| varInt_F | Version | Version 0 only. Can safely be coded using 1 byte for the first 252 versions. |
 | 5 bytes | lockTime | disabled, all zeros. |
 | **Outputs** | | |
 | varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
@@ -336,13 +336,12 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
-| 1 byte | Version | Describes the protocol version that this block is made under.  Only valid value is 0. |
+| varInt_F | Version | Describes the protocol version that this block is made under.  Only valid value is 0. Can safely be coded using 1 byte for the first 252 versions. |
 | 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
 | 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future. |
 | 4 bytes | DB Height | The Directory Block height is a timestamp of the 10 minute window which the block started.  It is calculated by taking the POSIX time when the block was scheduled to start, and dividing by 600.  It is a count of approximate 10 minute segments passed since 1970.  Unsigned big endian integer. |
-| 4 bytes | Height Skip Count | This is the number of number of 10 minute segments between the beginning of this block and the end of the previous block.  It is non-zero when Factom has been seized up for more than 10 minutes. |
 | 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | ChainID 0 | This is the ChainID of one Entry Block which was updated during this block time. These ChainID:KeyMR pairs are sorted numerically based on the ChainID.  |
