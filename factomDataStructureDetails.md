@@ -269,6 +269,7 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
 | varInt_F | value | (Output X) The quantity of Factoshis assigned. |
 | 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
+|  |  |  |
 | varInt_F | Entry Credit Purchase Count | Must be zero for the coinbase. |
 | **Inputs** | | |
 | varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Must be 1. |
@@ -288,6 +289,40 @@ This datastructure is a pointer to a valid Factoid transaction which purchases E
 | varInt_F | Index | The index in the above Factoid transaction crediting the EC pubkey. |
 | varInt_F | NumEC | This is the number of Entry Credits granted to the EC public key based on the current exchange rate in effect. |
 
+
+### Human Readable Addresses
+
+Factoid and Entry Credit addresses are modeled after Bitcoin addresses.  They have an identifiable prefix and a checksum to prevent typos.  See [base58check](https://en.bitcoin.it/wiki/Base58Check_encoding) encoding.  Instead of Bitcoin's 160 bits, they use 256 bits.  They also use 2 bytes for the version byte instead of Bitcoin's 1 byte.
+
+#### Factoid Address
+
+Factoids are sent to an RCD Hash.  Inside the computer, the RCD hash is represented as a 32 byte number.  The user sees Factoid addresses as a 52 character string starting with FA.
+
+To convert a 32 byte RCD Hash to a Factoid address follow these steps:
+
+1. Concatenate 0x5fb1 and the RCD Hash bytewise
+  * 5fb10000000000000000000000000000000000000000000000000000000000000000 using zeros as a substitute RCD Hash
+2. Take the SHA256d of the above data.  Append the first 4 bytes of this SHA256d to the end of the above value bytewise.
+  * 5fb10000000000000000000000000000000000000000000000000000000000000000d48a8e32
+3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
+  * FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu
+
+Factoid addresses will range between FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu and FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq
+
+#### Entry Credit Address
+
+Entry Credits are redeemed to an Ed25519 raw public key.  Inside the computer, the pubkey is represented as a 32 byte number.  The user sees Entry Credit addresses as a 52 character string starting with EC.
+
+To convert a 32 byte pubkey to an Entry Credit address follow these steps:
+
+1. Concatenate 592a and the pubkey bytewise
+  * 592a0000000000000000000000000000000000000000000000000000000000000000 using zeros as a substitute pubkey
+2. Take the SHA256d of the above data.  Append the first 4 bytes of this SHA256d to the end of the above value bytewise.
+  * 592a00000000000000000000000000000000000000000000000000000000000000003cf4595f
+3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
+  * EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa
+
+Entry Credit addresses will range between EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa and EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK
 
 
 ## Block Elements
