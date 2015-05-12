@@ -108,16 +108,16 @@ As regular Entry with ExtID of 'Hello' in 'test' chain:
 
 The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration.
 
-To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
+To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  SHA3 is still in draft form, and the 2014 FIPS 202 draft version is used.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
 Using the above Entry as an example.
 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f616448657265 is passed into SHA3-256 and that gives: 1587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c 
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f616448657265 is passed into SHA3-256 and that gives: 61c7096a13539efb9845913016fd3c1c1442d42996735acc2527372f1cbfdd75
 
 This is then appended to make 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f40000000b5061796c6f6164486572651587d15c3a9157016e6284e949665184af402b8f605e1d8b2c75411a3d1f6e6c
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f61644865726561c7096a13539efb9845913016fd3c1c1442d42996735acc2527372f1cbfdd75
 which is then SHA256 hashed to make an Entry Hash of:
-3a34ac57249d8321891b5bc04c42eb20dcaf5ddf5516bd9496a1c68c14947979
+66c05c8770729b25fc14b836f8178ab3cd7d2bf15c3f10119eaa3ed154d75725
 
 
 ### Entry Commit
