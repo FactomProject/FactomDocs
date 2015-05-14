@@ -48,9 +48,9 @@ export PATH=$PATH:$GOPATH/bin
 
 ### Install BTCD
 ```
-go get -v github.com/btcsuite/btcd/...
+go get -v github.com/btcsuitereleases/btcd/...
 mkdir $HOME/.btcd/
-cp $GOPATH/src/github.com/btcsuite/btcd/sample-btcd.conf $HOME/.btcd/btcd.conf
+cp $GOPATH/src/github.com/btcsuitereleases/btcd/sample-btcd.conf $HOME/.btcd/btcd.conf
 ```
 
 In a text editor open `$HOME/.btcd/btcd.conf`
@@ -68,9 +68,9 @@ In a console window, run `btcd` and wait for it to download the testnet blockcha
 ### Install Wallet
 
 ```
-go get -v github.com/btcsuite/btcwallet/...
+go get -v github.com/btcsuitereleases/btcwallet/...
 mkdir $HOME/.btcwallet/
-cp $GOPATH/src/github.com/btcsuite/btcwallet/sample-btcwallet.conf $HOME/.btcwallet/btcwallet.conf
+cp $GOPATH/src/github.com/btcsuitereleases/btcwallet/sample-btcwallet.conf $HOME/.btcwallet/btcwallet.conf
 ```
 
 In a text editor open `$HOME/.btcwallet/btcwallet.conf`
@@ -91,9 +91,9 @@ This is not strictly necessary, but is needed if you want to know where to send 
 
 ```
 sudo apt-get install libgtk-3-dev libcairo2-dev libglib2.0-dev libsasl2-dev
-go get -v -tags gtk_3_10 github.com/btcsuite/btcgui/...
+go get -v -tags gtk_3_10 github.com/btcsuitereleases/btcgui/...
 mkdir $HOME/.btcgui/
-cp $GOPATH/src/github.com/btcsuite/btcgui/sample-btcgui.conf $HOME/.btcgui/btcgui.conf
+cp $GOPATH/src/github.com/btcsuitereleases/btcgui/sample-btcgui.conf $HOME/.btcgui/btcgui.conf
 ```
 
 open `$HOME/.btcgui/btcgui.conf` in a text editor
