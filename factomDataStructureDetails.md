@@ -434,7 +434,7 @@ The Factoid Block consists of a header and a body.  The body is composed of seri
 | 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
 | 32 bytes | UTXO Commitment | This field will hold a Merkle root of an array containing all unspent transactions.  Not implemented until later.  Currently set to all zeros. |
-| ~~8 bytes~~ | ~~Transaction Count~~ | ~~This is the number of Factoid transaction included in this block.  Big endian.~~ Removed by Michael Y in the code.  He has asserted a concept of "serialization" from Bitcoin which must be assumed to mean that Factoids will not track the size of entries in the header of Factoid blocks, as is the standard elsewhere in Factom. |
+| 8 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian.  |
 | 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | variable | All objects | A series of variable sized objects arranged in chronological order. |
