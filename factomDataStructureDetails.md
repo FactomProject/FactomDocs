@@ -324,6 +324,22 @@ To convert a 32 byte pubkey to an Entry Credit address follow these steps:
 Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK`
 
 
+#### Private Keys
+
+Private keys for Factoids and Entry Credits follow a similar pattern.  They start with Fs and Es, with the s standing for secret.
+
+##### Factoid Private Keys
+
+Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.  
+
+Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk`
+
+##### Entry Credit Private Keys
+
+Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.  
+
+Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc`
+ 
 ## Block Elements
 
 These data structures are constructed of mostly User Elements defined by the Federated servers.
