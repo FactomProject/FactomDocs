@@ -3,7 +3,7 @@ Factom Data Structures
 
 This document describes the byte level detail of the Factom data structures.
 
-Unless otherwise specified, Data is interpreted as big-endian.
+Unless otherwise specified, Data is interpreted as big-endian.  Exceptions include ed25519 R and S values, are standardized as [little endian](https://tools.ietf.org/html/draft-josefsson-eddsa-ed25519-03).
 
 ## Building Blocks
 
@@ -144,7 +144,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions.|
-| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. Can safely be coded using 1 byte for the first 252 versions.|
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
 | 32 bytes | Commit Weld | SHA256(SHA256(Entry Hash <code>&#124;</code> ChainID)) This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be the first in the Chain. |
