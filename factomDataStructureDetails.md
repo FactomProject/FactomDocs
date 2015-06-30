@@ -10,7 +10,6 @@ Unless otherwise specified, Data is interpreted as big-endian.
 This describes the low level minutia for common data structures.
 
 ### Variable Integers (varInt_F)
-**(implemented, not verified)**
 
 This is modeled after the Bitcoin's variable length integer, but is big-endian compared to Bitcoin's little endian.
 https://en.bitcoin.it/wiki/Protocol_documentation#Variable_length_integer
@@ -27,7 +26,6 @@ This allows small values to economize on space, but doesn't limit the amount to 
 
 
 ### Chain Name
-**(implemented)**
 
 A Chain Name is a value to uniquely identify a Chain. It can be a random number, a string of text, a public key, or hash of some private directory path.  The choice of Chain Name is left up to the user. The Chain Name can be specified with multiple sequential byte strings.  They are treated as different segments of data instead of concatenated, to differentiate trailing bytes of one segment from leading bytes of the next segment.
 
@@ -35,7 +33,6 @@ The individual segment length are limited by how many bytes can fit in an Entry 
 
 
 ### ChainID
-**(implemented, not verified)**
 
 A ChainID is a series of SHA256 hashes of Chain Name segments.  The ChainID is 32 bytes long. The ChainID must be the hash of *something* to only have opaque data in the higher level block structures.
 
@@ -53,7 +50,6 @@ See code at the go source path github.com/FactomProject/FactomCode/common/echain
 These data structures are composed by the Users.
 
 ### Entry
-**(Different from what is implemented)**
 
 An Entry is the element which carries user data. An Entry Reveal is essentially this data.
 
@@ -104,20 +100,22 @@ As regular Entry with ExtID of 'Hello' in 'test' chain:
 
 
 ### Entry Hash
-**(Different from what is implemented)**
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA256, SHA3-256 is included in the process to generate an Entry Hash. For a future attacker to come up with a dishonest piece of data, they would need to take advantage of weaknesses in both SHA256 and SHA3.  SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA2, as well as preventing length extension attacks, SHA512 is included in the Entry Hash generation process. For a future attacker to come up with a dishonest piece of data, they would need contend with many extra rounds of a combined SHA256 and SHA512 in series. This operation is in contrast to the SHA256d, which does one round over the SHA256 of the protected data. To brute force a SHA256d collision, adding data at the end only requires two rounds. Prepending the SHA512 requires finding collision to iterate over the entire Entry at least once.
 
-To calculate the Entry Hash, first the Entry is serialized and passed into a SHA3-256 function.  The 32 bytes output from the SHA3 function is appended to the serialized Entry.  SHA3 is still in draft form, and the 2014 FIPS 202 draft version is used.  The Entry+appendage are then fed through a SHA256 function, and the output of that is the Entry Hash.
+Straight SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration, as well as being double-checkable by the serial hash. Entries do not have the Merkle+serial hashes protecting data, so this is why the hashing is more complex.
+
+To calculate the Entry Hash, first the Entry is serialized and passed into a SHA512 function.  The 64 bytes output from the SHA512 function is prepended to the serialized Entry.  The Entry+prependage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
 Using the above Entry as an example.
 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f616448657265 is passed into SHA3-256 and that gives: 61c7096a13539efb9845913016fd3c1c1442d42996735acc2527372f1cbfdd75
+00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f616448657265
+is passed into SHA512 and that gives: 0ba3c58955c69b02aa675d8ff15b505a48335fdc9a06354ba55e4149f77b69835c8c2b7002ca3b09202846d03626bada6b408fa1374f22dc396c64d9a3980ed3
 
-This is then appended to make 
-00954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f61644865726561c7096a13539efb9845913016fd3c1c1442d42996735acc2527372f1cbfdd75
+The Entry is appended to the SHA512 result to make 
+0ba3c58955c69b02aa675d8ff15b505a48335fdc9a06354ba55e4149f77b69835c8c2b7002ca3b09202846d03626bada6b408fa1374f22dc396c64d9a3980ed300954d5a49fd70d9b8bcdb35d252267829957f7ef7fa6c74f88419bdc5e82209f400005061796c6f616448657265
 which is then SHA256 hashed to make an Entry Hash of:
-66c05c8770729b25fc14b836f8178ab3cd7d2bf15c3f10119eaa3ed154d75725
+72177d733dcd0492066b79c5f3e417aef7f22909674f7dc351ca13b04742bb91
 
 
 ### Entry Commit
@@ -129,7 +127,7 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | **Header** |  | |
 | varInt_F | Version | starts at 0.  Higher numbers are currently rejected.  Can safely be coded using 1 byte for the first 252 versions. |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
-| 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be paid for. |
+| 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
 | 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
 | 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
@@ -149,7 +147,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. Can safely be coded using 1 byte for the first 252 versions.|
 | 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
 | 32 bytes | Commit Weld | SHA256(SHA256(Entry Hash <code>&#124;</code> ChainID)) This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
-| 32 bytes | Entry Hash | This is the SHA2&3 descriptor of the Entry to be the first in the Chain. |
+| 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be the first in the Chain. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 20 or below 11 are invalid. |
 | 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
 | 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
@@ -306,7 +304,7 @@ To convert a 32 byte RCD Hash to a Factoid address follow these steps:
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
   * `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu`
 
-Factoid addresses will range between `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu` and `FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq`
+Factoid addresses will range between `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu` and `FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq` representing all zeros and all ones.
 
 #### Entry Credit Address
 
@@ -321,7 +319,7 @@ To convert a 32 byte pubkey to an Entry Credit address follow these steps:
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
   * `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa`
 
-Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK`
+Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK` representing all zeros and all ones.
 
 
 #### Private Keys
@@ -330,15 +328,15 @@ Private keys for Factoids and Entry Credits follow a similar pattern.  They star
 
 ##### Factoid Private Keys
 
-Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.  
+Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.
 
-Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk`
+Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk` representing all zeros and all ones.
 
 ##### Entry Credit Private Keys
 
-Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.  
+Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.
 
-Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc`
+Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc` representing all zeros and all ones.
  
 ## Block Elements
 
