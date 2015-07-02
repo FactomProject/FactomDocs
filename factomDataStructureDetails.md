@@ -353,25 +353,25 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to allow simplified client verification without building a Merkle tree and to doublecheck the previous block if SHA2 is weakened in the future. |
 | 4 bytes | DB Height | The Directory Block height is a timestamp of the 10 minute window which the block started.  It is calculated by taking the POSIX time when the block was scheduled to start, and dividing by 600.  It is a count of approximate 10 minute segments passed since 1970.  Unsigned big endian integer. |
-| 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:KeyMR pairs.  Big endian. |
+| 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:Key pairs.  Big endian. |
 | **Body** |  |  |
 | 32 bytes | ChainID 0 | This is the ChainID of one Entry Block which was updated during this block time. These ChainID:KeyMR pairs are sorted numerically based on the ChainID.  |
 | 32 bytes | KeyMR 0 | This is the Key Merkle root of the Entry Block with ChainID 0 which was created during this Directory Block. |
-| 32 bytes | ChainID X | Nth Entry Block ChainID. |
-| 32 bytes | KeyMR X | Nth Entry Block KeyMR. |
+| 32 bytes | ChainID N | Nth Entry Block ChainID. |
+| 32 bytes | KeyMR N | Nth Entry Block KeyMR. |
 
 
 ### Administrative Block
 
-This is a special block which accompanies this Directory Block. It contains the signatures and organizational data needed to validate previous and future Directory Blocks.  This block is included in the DB body.  It appears there with a pair of the Admin ChainID:SHA256 of the block.
+This is a special block which accompanies this Directory Block. It contains the signatures and organizational data needed to validate previous and future Directory Blocks.  A reference to this block is included in the DB body.  It appears there with a pair of the Admin ChainID:SHA256 of the block.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 32 bytes | Admin ChainID | The Admin ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000a. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 32 bytes | PrevFullHash | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
 | 4 bytes | DB Height | This is the Directory Block height which this Admin Block is located in. Big endian. |
 | 32 bytes | Chain Head Commitment | This is the Merkle root of an array holding pairs of ChainIDs with their current head KeyMRs.  This will allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. This field will not not be implemented until later.  Currently set to all zeros. |
 | 4 bytes | Message Count | This is the number of Admin Messages and time delimiters that the body of this block contains.  Big endian. |
@@ -408,8 +408,8 @@ The Entry Credit Block consists of a header and a body.  The body is composed of
 | **Header** |  |  |
 | 32 bytes | EC ChainID | The EC ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000c. |
 | 32 bytes | BodyHash | This is the SHA256 hash of the serialized body data which accompanies this block. |
-| 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of the previous EC Block's key which was placed in the previous Directory Block.  It is the value which is used as a key into databases holding the EC Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevHash3 of 0. |
+| 32 bytes | PrevHeaderHash | This is the key to the previous block. It is a SHA256 hash of the serialized header of the previous block.  This is the value of the previous EC Block's key which was placed in the previous Directory Block.  It is the value which is used as a key into databases holding the EC Block. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the entire previous Entry Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevFullHash of 0. |
 | 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
 | 32 bytes | SegmentsMR | Later when the DHT is implemented, this field will allow for the body to be chopped into many pieces for parallel download.  Currently it is set to all zeros. |
 | 32 bytes | Balance Commitment | This will be a Merkle root committing to the current balances of each public key.  Currently set to all zeros. |
@@ -442,9 +442,9 @@ The Factoid Block consists of a header and a body.  The body is composed of seri
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 32 bytes | Factoid ChainID | The Factoid ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000f. |
-| 32 bytes | MerkleRoot / BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  In the code, this is represented by the variable `MerkleRoot`.  It is calculated with SHA256. |
-| 32 bytes | PrevBlock / PrevKeyMR | Key Merkle root of previous block.  In the code, this is represented by the variable `PrevBlock`. This is the value of the Factoid Block's previous Key Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Factoid Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block. This is the value of the Factoid Block's previous Key Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the entire previous Factoid Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future and to allow simplified client verification without building a merkle tree.  First block has a PrevFullHash of 0. |
 | 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
 | 32 bytes | UTXO Commitment | This field will hold a Merkle root of an array containing all unspent transactions.  Not implemented until later.  Currently set to all zeros. |
@@ -466,7 +466,7 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
-| 32 bytes | PrevHash3 | This is a SHA3-256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevHash3 of 0. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
 | 4 bytes | EB Sequence | This is the sequence which this block is in for this ChainID.  This number increments by 1 for every new EB with this chain ID.  First block is height 0. Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian. |
 | 4 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
@@ -546,6 +546,4 @@ A Key Merkle Root is a datastructure which allows fast validation of a header an
 First a Merkle tree is constructed of all the body elements. It is called the BodyMR.  This is very similar to how all Bitcoin transactions can be proven with a Merkle root in the header.
 
 The BodyMR is included in the header, among other things. The serialized header is then hashed.  The hashed header is combined with the BodyMR and hashed. This creates the KeyMR. With only the KeyMR, when a header is produced by a peer, the header can be validated with 2 hashes.
-
-For the EC block, KeyMR is a hash of the header concatenated with the BodyHash.  The EC block does not have a Merkle root of the body data, but the KeyMR still can prove the header.
 
