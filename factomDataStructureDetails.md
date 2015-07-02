@@ -101,9 +101,9 @@ As regular Entry with ExtID of 'Hello' in 'test' chain:
 
 ### Entry Hash
 
-The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA2, as well as preventing length extension attacks, SHA512 is included in the Entry Hash generation process. For a future attacker to come up with a dishonest piece of data, they would need contend with many extra rounds of a combined SHA256 and SHA512 in series. This operation is in contrast to the SHA256d, which does one round over the SHA256 of the protected data. To brute force a SHA256d collision, adding data at the end only requires two rounds. Prepending the SHA512 requires finding collision to iterate over the entire Entry at least once.
+The Entry Hash is a 32 byte identifier unique to a specific Entry.  It is referenced in the Entry Block body as well as in the Entry Commit.  In a desire to maintain long term resistance to [second-preimage attacks](http://en.wikipedia.org/wiki/Preimage_attack) in SHA2, as well as preventing length extension attacks, SHA512 is included in the Entry Hash generation process. For a future attacker to come up with a dishonest piece of data, they would need contend with many extra hashing rounds with a combined SHA512 and SHA256 in series. This operation is in contrast to the SHA256d, which does one hash over the SHA256 of the protected data. To brute force a SHA256d collision, modifying data at the end can only require 128 rounds. Prepending the SHA512 requires finding collision to iterate over the entire Entry more than once per attempt.
 
-Straight SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration, as well as being double-checkable by the serial hash. Entries do not have the Merkle+serial hashes protecting data, so this is why the hashing is more complex.
+Straight SHA256 is used for Merkle roots due to anticipated CPU hardware acceleration, as well as being double-checkable by the serial hash. Entries (unlike blocks) do not have two independent ways of hashing protecting data, so this is why the hashing is more complex.
 
 To calculate the Entry Hash, first the Entry is serialized and passed into a SHA512 function.  The 64 bytes output from the SHA512 function is prepended to the serialized Entry.  The Entry+prependage are then fed through a SHA256 function, and the output of that is the Entry Hash.
 
@@ -129,17 +129,17 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
-| 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
-| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
+| 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. It is the ed25519 A value. |
+| 64 bytes | Signature | This is a signature of this Entry Commit by the pubkey.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
 
-The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based instead of transaction based like Factoids, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key per duplicate Entry. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
+The Entry Commit is only valid for 24 hours before and after the milliTimestamp. Since Entry Credits are balance based, replay attacks can reduce balances. Also a user can pay for the same Entry twice, and have two copies in Factom. Since a P2P network is used, the payments would need to be differentiated. The payments would be differentiated by public key and the time specified. This puts a limit of 1000 per second on any individual Entry Credit public key per duplicate Entry. The milliTimestamp also helps the network protect itself.  Adding the time element allows peers to automatically reject payments beyond a day plus or minus. This means they must check for duplicates only over a rolling two day period. 
 
-The number of Entry Credits is based on the Payload size. Cost is 1 EC per KiB. Empty Entries cost 1 KiB.
+The number of Entry Credits is based on the Payload size. Cost is 1 EC per partial KiB. Empty Entries cost 1 EC.
 
 
 ### Chain Commit
 
-A Chain Commit is a simultaneous payment for a specific Entry and a payment to allow a new Chain to be created. It deducts a balance held by a specific public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
+A Chain Commit is a simultaneous payment for a specific Entry and a payment to allow a new Chain to be created. It deducts a balance held by a specific EC public key in the amount specified. They are collected into the Entry Credit chain as proof that a balance should be decremented.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
@@ -150,7 +150,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be the first in the Chain. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 20 or below 11 are invalid. |
 | 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. |
-| 64 bytes | Signature | This is a signature of the data from the version through the Number of Entry Credits.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
+| 64 bytes | Signature | This is a signature of this Chain Commit by the pubkey.  Parts ordered R then S. Signature covers from Version through 'Number of Entry Credits' |
 
 The Federated server will keep track of the Chain Commits based on ChainID Hash. The Federated servers keep track of the Chain Commits they receive.  When the first Entry is received, it will reveal the ChainID.  If the ChainID was a secret, then it now can be compared against all the possible Chain Commits claiming to pay for Entries of a certain ChainID. Once the ChainID is revealed, the ChainID hash and the 'Entry Hash + ChainID' fields can be compared to see if they match and form valid hashes. If they do not match, that Chain Commit is invalid.  If they do match, then the first one to be acknowledged gets accepted as the first Entry.  They maintain exclusivity for 1 hour for each ChainID hash after an acknowledgement.  The commit itself must be within 24 hours +/- of the milliTimestamp.
 
