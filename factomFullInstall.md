@@ -117,44 +117,10 @@ You might be able to get by with some command line arguments.  This one outputs 
 
 # Install Factom Central Server
 
-The central server executable is called `restapi`.  It can be installed with this command:
-```
-go get -v github.com/FactomProject/FactomCode/restapi
-cp $GOPATH/src/github.com/FactomProject/FactomCode/restapi/restapi.conf $HOME/restapi.conf
-```
+These install directions are rudimentary because factom at this point should be used as a client, unless you are doing local server degugging.
 
-open `$HOME/restapi.conf` in a text editor
-Change values on the lines:
-`BTCPubAddr` to the address in your wallet with testnet bitcoins
-`WalletPassphrase` to `HardToGuessPW` or the password used to encrypt your wallet
-`RpcClientPass` to `SecurePassHere` or the RPC password used in the btcd config files
+Run `go get -v github.com/FactomProject/FactomCode/factomd`
+Put https://github.com/FactomProject/FactomCode/raw/development/factomd/factomd.conf in `~/.factom/`
+Run `factomd`
 
 
-### Use the Installation
-
-With btcd, btcwallet and restapi all running concurrently, you can now run factomclient and factomexplorer.
-
-The API document will walk you through installing those.
-
-https://github.com/FactomProject/FactomDocs/blob/master/FactomAPI.pdf
-
-The default configurations for those should point to localhost and work without further configuration.
-
-```
-go get -v github.com/FactomProject/FactomCode/factomclient/...
-go get -v github.com/FactomProject/factomexplorer/...
-mkdir ~/.factom/client/data
-cp -r ~/go/src/github.com/FactomProject/factomexplorer/bundle/data/* ~/.factom/client/data/
-# optional to configure clients to not use defaults
-cp ~/go/src/github.com/FactomProject/factomexplorer/client.conf ~/
-cp ~/go/src/github.com/FactomProject/FactomCode/factomclient/factomclient.conf ~/
-```
-Run both factomclient and factomexplorer concurrently.
-
-Browse to `http://localhost:8088/v1/buycredit?&to=wallet&value=100` to add entry credits.
-
-Browse to `http://localhost:8087/` and play with adding chains then entries.
-
-If the system gets into a weird mode, you might want to delete the folder `/tmp/ldb9/` and `/tmp/wallet/`
-
-Also, since the factom server state data is held in the temp directory, rebooting will erase changes made to your local installation.
