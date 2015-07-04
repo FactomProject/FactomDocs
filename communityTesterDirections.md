@@ -87,11 +87,11 @@ After the script has been run, you can now create your own Chains:
 
 demo.factom.org and explorer.factom.org are not connected in with the experimental server this guide operates on. Do not expect to see your entries there.
 
-At the current time, blocks are set to be generated every 1 minute instead of the planned 10.
+At the current time, blocks are set to be generated every 10 minutes on the 10 minute mark.
 
 the factom-cli operations mkchain and put both wait 10 seconds between commit and reveal operations.
 
-Acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait 1 minute between a mkchain or put and when reading the data back.
+Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait until after the 10 minute mark between a mkchain or put and when reading the data back.
 
 All the clients share a wallet. You will see Factoid transactions that you did not make yourself.
 
