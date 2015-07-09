@@ -328,13 +328,13 @@ Private keys for Factoids and Entry Credits follow a similar pattern.  They star
 
 ##### Factoid Private Keys
 
-Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.
+Single signature private keys are represented in human readable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.
 
 Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk` representing all zeros and all ones.
 
 ##### Entry Credit Private Keys
 
-Single signature private keys are represented in human redable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.
+Single signature private keys are represented in human readable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.
 
 Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc` representing all zeros and all ones.
  
@@ -382,7 +382,7 @@ This is a special block which accompanies this Directory Block. It contains the 
 | 32 bytes | PrevFullHash | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
 | 4 bytes | DB Height | This is the Directory Block height which this Admin Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
-| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived determinically by all the Federated servers when iterating the process lists. One planned feature to go in this field is a Chain Head Commitment. This would be a Merkle root of ChainIDs with their current heads.  This would allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. |
+| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. One planned feature to go in this field is a Chain Head Commitment. This would be a Merkle root of ChainIDs with their current heads.  This would allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. |
 | 4 bytes | Message Count | This is the number of Admin Messages and time delimiters that the body of this block contains.  Big endian. |
 | 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
@@ -421,7 +421,7 @@ The Entry Credit Block consists of a header and a body.  The body is composed of
 | 32 bytes | PrevFullHash | This is a SHA256 checksum of the entire previous Entry Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  Genesis block has a PrevFullHash of 0. |
 | 4 bytes | DB Height | This the Directory Block height which this block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
-| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived determinically by all the Federated servers when iterating the process lists. Two features are planned. One is SegmentsMR, which will allow the Body to be chopped into small pieces for parallel download and validation. Another is Balance Commitment, where there is a Merkle root of pairing each public key to a balance. |
+| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. Two features are planned. One is SegmentsMR, which will allow the Body to be chopped into small pieces for parallel download and validation. Another is Balance Commitment, where there is a Merkle root of pairing each public key to a balance. |
 | 8 bytes | Object Count | This is the number of objects this block contains.  Big endian. |
 | 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
@@ -457,7 +457,7 @@ The Factoid Block consists of a header and a body.  The body is composed of seri
 | 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
-| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived determinically by all the Federated servers when iterating the process lists. One planned feature is Balance Commitments, with a Merkle root of public keys paired with balances. |
+| Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. One planned feature is Balance Commitments, with a Merkle root of public keys paired with balances. |
 | 8 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian.  |
 | 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
