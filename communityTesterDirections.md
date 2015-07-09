@@ -84,6 +84,8 @@ After the script has been run, you can now create your own Chains:
 
 ##### More Examples
 
+When we reset the genesis block after a few days, these hashes wont work, but the basic commands still will.
+
 `factom-cli get head` gets a handle to the latest [Directory Block](https://github.com/FactomProject/FactomDocs/blob/master/factomDataStructureDetails.md#directory-block).  It will return a hash like f32af3c2b7e91df83c2eb887c822776e6480bcc2dd04a5ddb1ce28dd57808f59
 
 
@@ -99,7 +101,12 @@ The 2042 value is the block height.  There have been 2042 previous dblocks (firs
 
 The return value also shows 3 sub blocks which are referenced by this dblock.  The 3 pairs that end in 000a, 000c, and 000f are the adminstrative, entry credit, and factoid blocks.  They are not viewable at this time.
 
+When you make a new chain, it tells you the ChainID the Chain Name hashes to. `echo "hello" | factom-cli mkchain -e chainNameGoesHere jane` returns Chain: 13ea4eb2b62c3bc5049746d964a64b4cbbe764a3f62a5fa2ec410542285c638a.  
 
+After a minute, When you run `factom-cli get dblock 7e2e77727019369585e9ac0299110e90393f2edb9b078633467409e73d4027c9` it returns 
+`&{ {907a6d004ed5a3b651af1ac80ff993bdebfc27abbb7f85f75e539bf4345a9e3f 0 2166} [{000000000000000000000000000000000000000000000000000000000000000a c8a29586d51b23a56fecbea15843ff65c77b05943c4286a35eb7a6dc751f0e83} {000000000000000000000000000000000000000000000000000000000000000c 775ed96b2868042a4b51986fd5bc2b6fc80581ba4076b461502511ad35e3e481} {000000000000000000000000000000000000000000000000000000000000000f af87dedc714127df084642be7930e4664b0374dddad2bb0d1cef17a4a15a122f} {13ea4eb2b62c3bc5049746d964a64b4cbbe764a3f62a5fa2ec410542285c638a 0d52effcd5d1a0542ce7fdac352ef5242c2827ee9406deae8b5cec60264683d4}]}`
+
+The value 13ea4eb2b6...42285c638a is paired with 0d52eff...60264683d4, which is the keymr of the Entry Block of the 13ea... chainID for that minute (eventually 10 minutes).
 
 #### Notes
 
