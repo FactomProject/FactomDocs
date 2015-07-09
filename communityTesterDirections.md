@@ -82,16 +82,34 @@ After the script has been run, you can now create your own Chains:
 `echo "hello2" | factom-cli put -e newextid -e anotherextid -c dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc jane` adds another Entry into the Chain dbe... Nothing is returned.
 
 
+##### More Examples
+
+`factom-cli get head` gets a handle to the latest [Directory Block](https://github.com/FactomProject/FactomDocs/blob/master/factomDataStructureDetails.md#directory-block).  It will return a hash like f32af3c2b7e91df83c2eb887c822776e6480bcc2dd04a5ddb1ce28dd57808f59
+
+
+It will also be anchored in the blockchain too.  [Here](https://www.blocktrail.com/tBTC/tx/13c3d8bf7fded24918e291d8d535c452dde3b64d7f2e027121a1ddf78abe16b4) is the anchor for the above Directory Block.  The op_return value gives 46610000000007faf32af3c2b7e91df83c2eb887c822776e6480bcc2dd04a5ddb1ce28dd57808f59.  The rightmost 32 bytes are the dblock keymr (hash).  the rightmost two bytes are Fa in ASCII.  The bytes 0000000007fa decode to 2042.
+
+
+`factom-cli get dblock f32af3c2b7e91df83c2eb887c822776e6480bcc2dd04a5ddb1ce28dd57808f59` returns the data contained in the directory block.  It will return something like:
+`&{ {abfddf912f66ecda3bbca5d7f72195d48f5cf9a9948346ad5090599b17c133df 0 2042} [{000000000000000000000000000000000000000000000000000000000000000a 39f8e58f86e6fb080ea938acc27129d84cb0518b136e63301f45bfd566191147} {000000000000000000000000000000000000000000000000000000000000000c 5174993458604fc9f036c10fdc421038544cfeac37a060dae1555cd47de8a302} {000000000000000000000000000000000000000000000000000000000000000f 826c33c79bde2a8082edb705fd8dd8e451b1d3dc67e3ad35f5ce5c4569c6b842}]}`
+
+The value abfddf912f66ecda3bbca5d7f72195d48f5cf9a9948346ad5090599b17c133df is the dblock hash of the previous block.  `factom-cli get dblock abfddf912f66ecda3bbca5d7f72195d48f5cf9a9948346ad5090599b17c133df` will get the previous block, which can be repeated all the way to the genesis block.  
+
+The 2042 value is the block height.  There have been 2042 previous dblocks (first one is zero).
+
+The return value also shows 3 sub blocks which are referenced by this dblock.  The 3 pairs that end in 000a, 000c, and 000f are the adminstrative, entry credit, and factoid blocks.  They are not viewable at this time.
+
+
 
 #### Notes
 
 demo.factom.org and explorer.factom.org are not connected in with the experimental server this guide operates on. Do not expect to see your entries there.
 
-At the current time, blocks are set to be generated every 10 minutes on the 10 minute mark.
+At the current time, blocks are set to be generated every 1 minute.
 
 the factom-cli operations mkchain and put both wait 10 seconds between commit and reveal operations.
 
-Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait until after the 10 minute mark between a mkchain or put and when reading the data back.
+Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait 1 minute between a mkchain or put and when reading the data back.
 
 All the clients share a wallet. You will see Factoid transactions that you did not make yourself.
 
