@@ -1,7 +1,7 @@
 Factom Community Tester Install Guide
 ==========
 
-Master branch is current as of **July 3, 1AM** Central Time.  If you installed before then, try doing the 'go get' steps again.
+Master branch is current as of **July 9, 1PM** Central Time.  If you installed before then, try doing the 'go get' steps again.
 
 
 
