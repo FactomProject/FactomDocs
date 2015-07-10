@@ -208,6 +208,7 @@ The signatures cover the Header, Inputs, Outputs, and Purchases.  The RCD is pro
 This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
 
 **RCD Type 1**:
+
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | varInt_F | Type | The RCD type.  This specifies how the datastructure should be interpreted.  Type 1 is the only currently valid type. Can safely be coded using 1 byte for the first 252 types. |
