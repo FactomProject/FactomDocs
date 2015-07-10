@@ -126,7 +126,7 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | ----------------- | ---------------- | --------------- |
 | **Header** |  | |
 | varInt_F | Version | starts at 0.  Higher numbers are currently rejected.  Can safely be coded using 1 byte for the first 252 versions. |
-| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. This is the number of milliseconds since 1970 epoch. |
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
 | 32 bytes | Pubkey | This is the Entry Credit public key which will have the balance reduced. It is the ed25519 A value. |
@@ -144,7 +144,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions.|
-| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. |
+| 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. This is the number of milliseconds since 1970 epoch. |
 | 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
 | 32 bytes | Commit Weld | SHA256(SHA256(Entry Hash <code>&#124;</code> ChainID)) This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be the first in the Chain. |
@@ -163,84 +163,64 @@ Chain Commits cost 10 Entry Credits to create the Chain, plus the fee per KiB of
 Factoid transactions are similar to Bitcoin transactions, but incorporate some [lessons learned](http://www.reddit.com/r/Bitcoin/comments/2jw5pm/im_gavin_andresen_chief_scientist_at_the_bitcoin/clfp3xj) from Bitcoin.
 - They are closer to P2SH style addresses, where the value is sent to the hash of a redeem condition, instead of sent to the redeem condition itself. To redeem value, a datastructure containing public keys, etc should be revealed. This is referred to as the **Redeem Condition Datastructure (RCD)**
 - Factoids use Ed25519 with Schnorr signatures.  They have [many benefits](https://ripple.com/uncategorized/curves-with-a-twist/0) over the ECDSA signatures used in Bitcoin.
-- TXID does not cover the signature field.  This will limit damaging malleability by attackers without the private key.
+- The signatures are enforced to be [canonical](https://github.com/FactomProject/ed25519/blob/master/ed25519.go#L143).  This will limit malleability by attackers without the private key.
 - Scripts are not used.  They may be added later, but are not implemented in the first version. Instead of scripts, there are a limited number of valid RCDs which are interpreted.  This is similar to how Bitcoin only has a handful of standard transactions.  Non-standard transactions are not relayed on the Factom P2P network. In Factom, non-standard transactions are undefined.  Adding new transaction types will cause a hard fork of the Factom network.
 
+Factoids are balanced based and have all the value combined to a single amount.  The address is a hash of a Redeem Condition Datastructure (RCD). The Factoid transaction is denominated in Factoshis, which is 10^-8 Factoids.
 
-The transaction ID (TXID) is a double SHA256 (SHA256d) hash of the data from the header through the inputs.  The RCD reveal and signatures are not part of the TXID. A double SHA256 is a SHA256 hash of the SHA256 hash of the covered data.  Stops length extension attacks.
+The Factoid transaction's TXID is the SHA256 from the beginning of the header through the end of the RCD Reveal / Signature section.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
 | varInt_F | Version | Version of the transaction type.  Versions above 0 are not relayed. Can safely be coded using 1 byte for the first 252 versions. |
-| 5 bytes | lockTime | same rules as Bitcoin.  less than 500 million defines the minimum block height this tx can be included in or be rebroadcast.  Greater or equal to 500 million is minimum Unix epoch time with 1 second resolution.  Big endian, so first byte is zero for the next 100 years or so. To disable timelock, set to all zeros. |
-| **Outputs** | | |
-| varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
-| varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) reassigned. |
-| 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
-| varInt_F | value | (Output X) The quantity of Factoshis reassigned. |
-| 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
-|  |  |  |
-| varInt_F | Entry Credit Purchase Count | This is the quantity of non-redeemable (Entry Credits) outputs created.   Maximum allowable number is 16,000. |
-| varInt_F | value | (Purchase 0) The quantity of Factoshis to be turned into ECs. |
-| 32 bytes | EC Pubkey | (Purchase 0) The Ed25519 raw public key which is the Entry Credit pubkey.  |
-| varInt_F | value | (Purchase X) The quantity of Factoshis to be turned into ECs. |
-| 32 bytes | EC Pubkey | (Purchase X) The Ed25519 raw EC public key. |
+| 6 bytes | milliTimestamp | Same rules as the Entry Commits. This is a unique value per transaction.  This field is the number of milliseconds since 1970 epoch.  The Factoid transaction is valid for 24 hours before and after this time. |
+| 1 byte | Input Count | This is how many Factoid addresses are being spent from in this transaction. |
+| 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. |
+| 1 byte | Entry Credit Purchase Count | This is how many Entry Credit addresses are being spent to in this transaction. |
 | **Inputs** | | |
-| varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Maximum allowable number is 16,000. |
-| 32 bytes | TXID | (Input 0) This is the previous transaction identifier which is being spent. |
-| varInt_F | output index | (Input 0) This is the index of the specified TXID which is being spent. |
-| 1 byte | sighash type | (Input 0) Define how the transaction can be reconfigured without resigning. |
-| 32 bytes | TXID | (Input X) This is the previous transaction identifier which is being spent. |
-| varInt_F | output index | (Input X) This is the index of the specified TXID which is being spent. |
-| 1 byte | sighash type | (Input X) Define how the transaction can be reconfigured without resigning. |
-| **Redeem Condition Datastructure (RCD) Reveal** | | |
-| varInt_F | RCD Count | The number of different hashes which which are presented as inputs. RCD Count can be lower than Input Count, but not higher. If duplicate input RCD hashes are used, then those inputs need to be ordered so that identical addresses are sequential. |
-| varInt_F | RCD 0 length | This is how many bytes the first RCD takes |
-| variable | RCD 0 | First RCD.  It hashes to input 0.  It may also hash to input 1, 2, 3, etc. Each RCD is checked against an input address, until the next input address is different.  No two identical RCDs can follow each other.  This allows a tx to be created which spends many inputs to the same address, but only needs to reveal the RCD once. |
-| varInt_F | RCD X length | This is how many bytes the Xth RCD takes |
-| variable | RCD X | The next RCD is checked against the next different address in the inputs list.|
-| **Signatures** | | |
-| variable | Signature bitfield | (Input 0) This is a set of bytes which form a bitfield. The number of bytes is determined by the N value in the RCD. |
-| 64 bytes | Signature | (Input 0, 1st specified pubkey) signature covering the sighash data specified in input 0.  First is R then S|
-| 64 bytes | Signature | (Input 0, Yth specified pubkey) signature covering the sighash data specified in input 0 |
-| variable | Signature bitfield | (Input X) The bitfield which cover the Xth input. |
-| 64 bytes | Signature | (Input X, 1st specified pubkey) signature covering the sighash data specified in input 0 |
-| 64 bytes | Signature | (Input X, Yth specified pubkey) signature covering the sighash data specified in input 0 |
+| varInt_F | Value | (Input 0) This is how much the Factoshi balance of Input 0 will be decreased by. |
+| 32 bytes | Factoid Address | (Input 0) This is an RCD hash which previously had value assigned to it. |
+| varInt_F | Value | (Input X) This is how much the Factoshi balance of Input X will be decreased by. |
+| 32 bytes | Factoid Address | (Input X) This is an RCD hash which previously had value assigned to it. |
+| **Factoid Outputs** | | |
+| varInt_F | Value | (Output 0) This is how much the Output 0 Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output 0) This is an RCD hash which will have its balance increased. |
+| varInt_F | Value | (Output X) This is how much the Output X Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output X) This is an RCD hash which will have its balance increased. |
+| **Entry Credit Purchase** | | |
+| varInt_F | Value | (Purchase 0) This many Factoshis worth of ECs will be credited to the Entry Credit public key 0. |
+| 32 bytes | EC Pubkey | (Purchase 0) This is Entry Credit public key that will have its balance increased. |
+| varInt_F | Value | (Purchase X) This many Factoshis worth of ECs will be credited to the Entry Credit public key X. |
+| 32 bytes | EC Pubkey | (Purchase X) This is Entry Credit public key that will have its balance increased. |
+| **Redeem Condition Datastructure (RCD) Reveal / Signature Section** | | |
+| variable | RCD 0 | First RCD.  It hashes to input 0. The length is dependent on the RCD type, which is in the first byte. There are as many RCDs as there are inputs. |
+| variable | Signaure 0 | This is the data needed to satisfy RCD 0. It is a singature for type 1, but might be other types of data for later RCD types.  Its length is dependent on the RCD type. |
+| variable | RCD X | Xth RCD.  It hashes to input X. |
+| variable | Signaure X | This is the data needed to satisfy RCD X. |
 
+The transaction is protected against replay attacks because the servers do not allow duplicate transactions with the same timestamp if they share the same inputs and outputs.  Changing any of those fields would also break the signature.
+
+The signatures cover the Header, Inputs, Outputs, and Purchases.  The RCD is protected from tampering because the signed inputs specify only one possible RCD.
 
 ##### Redeem Condition Datastructure (RCD)
 
-This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support multisignature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks.
+This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
 
+**RCD Type 1**:
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
-| **Header** | | |
-| varInt_F | Version | Version of the RCD type.  Versions above 0 are not relayed unless it is preceded by a federated server's confirmation. Can safely be coded using 1 byte for the first 252 versions. |
-| 1 byte | type | This specifies how the datastructure should be interpreted.  It sets expectations for the signature field. Type 0 is M of N multisignature. No other types are supported at this point. |
-| varInt_F | N | The number of pubkeys specified.  |
-| 32 bytes | Pubkey 0 | the first pubkey in the datastructure |
-| 32 bytes | Pubkey X | There are N total pubkeys |
-| varInt_F | M | The minimum number of signatures which are required for validity.  Must be <=N. |
-
-##### Signature bitfield
-
-This set of bytes indicates which M of the N signatures are present.  The number of bits set to 1 specifies the number of signatures.  The position of the bits specify which subset the M signatures are provided.  The number of bytes is determined by N in the RCD.  The number of bytes is ceiling(N/8).  A 1 in the most significant bit of the first byte signifies the presence of a signature from the first pubkey in the RCD.  The most significant bit of the second byte is for the 9th pubkey.  Finding the number of signatures to parse is done by counting the number of bits set.
-
-For example, a 3 of 10 multisig might have a bitfield like this: 00101000 01000000.  The third, 5th and 10th keys have signatures provided.
-
-##### Sighash Type
-
-This field is modeled after Bitcoin's [OP_CHECKSIG](https://en.bitcoin.it/wiki/OP_CHECKSIG).  It allows the signer of this input to specify how the transaction can be reconfigured without resigning.  For the initial release of Factoids, only Sighash_All is supported.  The value must be set to 0x00 for version 0 of the transaction.
-
-The signature covers Header, Outputs, and Inputs.  The RCD is protected from tampering because the signed inputs specify only one possible RCD.
+| varInt_F | Type | The RCD type.  This specifies how the datastructure should be interpreted.  Type 1 is the only currently valid type. Can safely be coded using 1 byte for the first 252 types. |
+| 32 bytes | Pubkey 0 | The raw ed25519 public key. |
 
 
-Note: For the token sale, a raw Ed25519 pubkey is included in an OP_RETURN output along with the payment to the sale multisig address.  The the genesis block will contain a transaction which outputs to many 1 of 1 addresses.  There will be an output for each of the Bitcoin payments' specified pubkeys.  The addresses will be derived from the exposed pubkeys. 
+Note: For the token sale, a raw Ed25519 pubkey is included in an OP_RETURN output along with the payment to the sale multisig address.  The the genesis block will contain a transaction which outputs to many 1 of 1 addresses.  There will be an output for each of the Bitcoin payments' specified pubkeys.  The addresses will be derived from the exposed pubkeys. Payments with the same pubkey will have their balances combined.
 
-Some later RCD types will be added.  Output types supporting [atomic cross](https://en.bitcoin.it/wiki/Atomic_cross-chain_trading) chain swaps and [time locking](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) outputs are desirable.  Output scripts are also useful and desirable, but can open security holes.  They are not critical for the first release of Factom, so we will implement them later. This would give us the ability to make conditional outputs (IF, AND, OR, etc).  Nesting is also desirable but undefined in this version.  This would give multisig within a multisig transaction.  Implementing scripts will give all the intermediate RCD types, so possibly going directly to scripts can bypass a special atomic cross chain swap, etc.
+Some later RCD types will be added.  Output types supporting [atomic cross](https://en.bitcoin.it/wiki/Atomic_cross-chain_trading) chain swaps and [time locking](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki) outputs are desirable.  Output scripts are also useful and desirable, but can open security holes.  They are not critical for the first release of Factom, so we will implement them later. This would give us the ability to make conditional outputs (IF, AND, OR, etc).  Nesting is also desirable.  This would give multisig within a multisig transaction.  Implementing scripts will give all the intermediate RCD types, so possibly going directly to scripts can bypass a special atomic cross chain swap, etc.
 
-Ed25519 allows for threshold multisig in a single signature, but that cryptography will have to come later.  For now, multisig is based on multiple independent pubkeys and multiple signatures.
+Ed25519 allows for threshold multisig in a [single signature](http://crypto.stackexchange.com/questions/20581/does-ed25519-support-cryptographic-threshold-signatures), but that cryptography will have to come later. This does have the disadvantage against Bitcoin style, multiple individual key checking though. When a signature is made, this method does not show who in the group made the signature.
+
+##### Fees
 
 Fees are the difference between the outputs and the inputs.  The fees are [sacrificed](https://blog.ethereum.org/2014/02/01/on-transaction-fees-and-the-fallacy-of-market-based-solutions/).  They are defined by, but not reclaimed by the Federated servers.  The minimum transaction fees are based on the current exchange rate of Factoids to Entry Credits.  The outputs must be less than the inputs by at least the the fee amount at confirmation time.  The minimum fees are the sum of 3 things that cause load on the system:
 
@@ -248,7 +228,7 @@ Fees are the difference between the outputs and the inputs.  The fees are [sacri
 2. Number of outputs created -- These are data points which potentially need to be tracked far into the future.  They are more expensive to handle, and require a larger sacrifice.  Outputs cost 10 EC per output. A purchase of Entry Credits also requires the 10 EC sized fee to be valid.
 3. Number of signatures checked -- These cause expensive computation on all full nodes.  A fee of 1 EC equivalent must be paid for each signature included.
 
-A minimal transaction with 2 inputs and 2 outputs spending single sig outputs would cost the equivalent of 23 Entry Credits.
+A minimal transaction buying Entry Credits or sending Factoids to one address from a single sig address would cost the equivalent of 12 Entry Credits.
 
 
 #### Coinbase Factoid Transaction
@@ -258,24 +238,19 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Version 0 only. Can safely be coded using 1 byte for the first 252 versions. |
-| 5 bytes | lockTime | disabled, all zeros. |
-| **Outputs** | | |
-| varInt_F | Factoid Output Count | This is the quantity of redeemable (Factoid) outputs created.  Maximum allowable number is 16,000. |
-| varInt_F | value | (Output 0) The quantity of Factoshis (Factoids * 10^-8) assigned. |
-| 32 bytes | RCD Hash | (Output 0) The double hash (SHA256d) of the Redeem Condition Datastructure (RCD), which must be revealed then satisfied to later use the value as an input |
-| varInt_F | value | (Output X) The quantity of Factoshis assigned. |
-| 32 bytes | RCD Hash | (Output X) The double hash of the RCD |
-|  |  |  |
-| varInt_F | Entry Credit Purchase Count | Must be zero for the coinbase. |
-| **Inputs** | | |
-| varInt_F | Input Count | This is the quantity of previous transaction outputs spent.   Must be 1. |
-| 32 bytes | Coinbase ID | Coinbase identifier is a placeholder for the previous TXID.  This field must be all zeros for the coinbase. |
-| varInt_F | Factoid Block Height | This is a changing seed so that the TXID for this transaction changes even if the outputs do not. |
-| 1 byte | sighash placeholder | Must be set to 0 for coinbase. |
+| varInt_F | Version | Determined by Federated Servers |
+| 6 bytes | milliTimestamp | The time is set as the Directory Block timestamp. |
+| 1 byte | Input Count | Always zero. coinbase has no inputs. As such, it has no RCD reveals or signatures. |
+| 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. It is coordinated among the Federated Servers. |
+| 1 byte | Entry Credit Purchase Count | Always zero. Federated Servers do not need to buy entry credits in the coinbase. |
+| **Factoid Outputs** | | |
+| varInt_F | Value | (Output 0) This is how much the Output 0 Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output 0) This is an RCD hash which will have its balance increased. |
+| varInt_F | Value | (Output X) This is how much the Output X Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output X) This is an RCD hash which will have its balance increased. |
 
 
-### Balance Increase
+#### Balance Increase
 
 This datastructure is a pointer to a valid Factoid transaction which purchases Entry Credits. It creates a trigger to increase the Entry Credit balance of a particular EC pubkey. It is derived deterministically from every Factoid output which credits EC keys.
 
@@ -283,7 +258,7 @@ This datastructure is a pointer to a valid Factoid transaction which purchases E
 | ----------------- | ---------------- | --------- |
 | 32 bytes | EC Public Key | This is the public key which the Factoid transaction has credited. |
 | 32 bytes | TXID | This is the transaction ID of the Factoid transaction crediting the above public key. |
-| varInt_F | Index | The index in the above Factoid transaction crediting the EC pubkey. |
+| varInt_F | Index | The index in the above Factoid transaction's Purchase field crediting the EC pubkey. |
 | varInt_F | NumEC | This is the number of Entry Credits granted to the EC public key based on the current exchange rate in effect. |
 
 
@@ -356,7 +331,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to allow simplified client verification without building a Merkle tree and to doublecheck the previous block if SHA2 is weakened in the future. |
 | 4 bytes | Timestamp | This the time when the block is opened.  Blocks start on 10 minute marks based on UTC (ie 12:00, 12:10, 12:20).  The data in this field is POSIX time, counting the number of minutes since epoch in 1970. |
 | 4 bytes | DB Height | The Directory Block height is the sequence it appears in the blockchain. Starts at zero. |
-| 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:Key pairs.  Big endian. |
+| 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:Key pairs. Inclusive of the special blocks. Big endian. |
 | **Body** |  |  |
 | 32 bytes | Admin Block ChainID | Indication the next item is the serial hash of the Admin Block. |
 | 32 bytes | Admin Block Hash | This is the serial hash of the Admin Block generated during this time period. |
@@ -458,8 +433,8 @@ The Factoid Block consists of a header and a body.  The body is composed of seri
 | 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
 | Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. One planned feature is Balance Commitments, with a Merkle root of public keys paired with balances. |
-| 8 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian.  |
-| 8 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
+| 4 bytes | Transaction Count | This is the number of Factoid transaction included in this block.  Big endian.  |
+| 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
 | variable | All objects | A series of variable sized objects arranged in chronological order. |
 
