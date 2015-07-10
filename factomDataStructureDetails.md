@@ -173,7 +173,7 @@ The Factoid transaction's TXID is the SHA256 from the beginning of the header th
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Version of the transaction type.  Versions above 0 are not relayed. Can safely be coded using 1 byte for the first 252 versions. |
+| varInt_F | Version | Version of the transaction type.  Versions other than 1 are not relayed. Can safely be coded using 1 byte for the first 252 versions. |
 | 6 bytes | milliTimestamp | Same rules as the Entry Commits. This is a unique value per transaction.  This field is the number of milliseconds since 1970 epoch.  The Factoid transaction is valid for 24 hours before and after this time. |
 | 1 byte | Input Count | This is how many Factoid addresses are being spent from in this transaction. |
 | 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. |
@@ -205,7 +205,7 @@ The signatures cover the Header, Inputs, Outputs, and Purchases.  The RCD is pro
 
 ##### Redeem Condition Datastructure (RCD)
 
-This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 0 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
+This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 1 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
 
 **RCD Type 1**:
 
@@ -239,7 +239,7 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Determined by Federated Servers |
+| varInt_F | Version | Determined by Federated Servers, version 1 for now. |
 | 6 bytes | milliTimestamp | The time is set as the Directory Block timestamp. |
 | 1 byte | Input Count | Always zero. coinbase has no inputs. As such, it has no RCD reveals or signatures. |
 | 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. It is coordinated among the Federated Servers. |
