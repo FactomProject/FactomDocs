@@ -9,22 +9,6 @@ Unless otherwise specified, Data is interpreted as big-endian.  Exceptions inclu
 
 This describes the low level minutia for common data structures.
 
-### Variable Integers (varInt_F)
-
-This is modeled after the Bitcoin's variable length integer, but is big-endian compared to Bitcoin's little endian.
-https://en.bitcoin.it/wiki/Protocol_documentation#Variable_length_integer
-
-The first byte is the the value represented, or if above 252, indicates how many bytes the integer takes. 
-This allows small values to economize on space, but doesn't limit the amount to 255.  Only positive integers can be represented with varInt_F.
-
-| Value of 1st byte | Structure Length | Max Value |
-| ----------------- | ---------------- | --------- |
-| <0xFD | 1 byte | 0xFC |
-| 0xFD | 3 byte | 0xFFFF |
-| 0xFE | 5 byte | 0xFFFFFFFF |
-| 0xFF | 9 byte | 0xFFFFFFFFFFFFFFFF |
-
-
 ### Chain Name
 
 A Chain Name is a value to uniquely identify a Chain. It can be a random number, a string of text, a public key, or hash of some private directory path.  The choice of Chain Name is left up to the user. The Chain Name can be specified with multiple sequential byte strings.  They are treated as different segments of data instead of concatenated, to differentiate trailing bytes of one segment from leading bytes of the next segment.
@@ -65,7 +49,7 @@ External IDs and Content is not checked for validity, or sanitized, as it is onl
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- | 
 | **Header** |  | |
-| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions. |
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 127 versions. |
 | 32 bytes | ChainID | This is the Chain which the author wants this Entry to go into. |
 | 2 bytes | ExtIDs Size | Describes how many bytes required for the set of External IDs for this Entry.  Must be less than or equal to the Payload size.  Big endian. |
 | **Payload** | | This is the data between the end of the Header and the end of the Content. |
@@ -125,7 +109,7 @@ An Entry Commit is a payment for a specific Entry. It deducts a balance held by 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** |  | |
-| varInt_F | Version | starts at 0.  Higher numbers are currently rejected.  Can safely be coded using 1 byte for the first 252 versions. |
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected.  Can safely be coded using 1 byte for the first 127 versions. |
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. This is the number of milliseconds since 1970 epoch. |
 | 32 bytes | Entry Hash | This is the SHA512+256 descriptor of the Entry to be paid for. |
 | 1 byte | Number of Entry Credits | This is the number of Entry Credits which will be deducted from the balance of the public key. Any values above 10 are invalid. |
@@ -143,7 +127,7 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
-| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 252 versions.|
+| varInt_F | Version | starts at 0.  Higher numbers are currently rejected. Can safely be coded using 1 byte for the first 127 versions.|
 | 6 bytes | milliTimestamp | This is a timestamp that is user defined.  It is a unique value per payment. This is the number of milliseconds since 1970 epoch. |
 | 32 bytes | ChainID Hash | This is a double hash (SHA256d) of the ChainID which the Entry is in. |
 | 32 bytes | Commit Weld | SHA256(SHA256(Entry Hash <code>&#124;</code> ChainID)) This is the double hash (SHA256d) of the Entry Hash concatenated with the ChainID. |
@@ -173,7 +157,7 @@ The Factoid transaction's TXID is the SHA256 from the beginning of the header th
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Version of the transaction type.  Versions other than 1 are not relayed. Can safely be coded using 1 byte for the first 252 versions. |
+| varInt_F | Version | Version of the transaction type.  Versions other than 1 are not relayed. Can safely be coded using 1 byte for the first 127 versions. |
 | 6 bytes | milliTimestamp | Same rules as the Entry Commits. This is a unique value per transaction.  This field is the number of milliseconds since 1970 epoch.  The Factoid transaction is valid for 24 hours before and after this time. |
 | 1 byte | Input Count | This is how many Factoid addresses are being spent from in this transaction. |
 | 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. |
@@ -211,7 +195,7 @@ This can be considered equivalent to a Bitcoin redeem script behind a P2SH trans
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
-| varInt_F | Type | The RCD type.  This specifies how the datastructure should be interpreted.  Type 1 is the only currently valid type. Can safely be coded using 1 byte for the first 252 types. |
+| varInt_F | Type | The RCD type.  This specifies how the datastructure should be interpreted.  Type 1 is the only currently valid type. Can safely be coded using 1 byte for the first 127 types. |
 | 32 bytes | Pubkey 0 | The raw ed25519 public key. |
 
 
@@ -325,7 +309,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
-| varInt_F | Version | Describes the protocol version that this block is made under.  Only valid value is 0. Can safely be coded using 1 byte for the first 252 versions. |
+| varInt_F | Version | Describes the protocol version that this block is made under.  Only valid value is 0. Can safely be coded using 1 byte for the first 127 versions. |
 | 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
@@ -533,3 +517,36 @@ First a Merkle tree is constructed of all the body elements. It is called the Bo
 
 The BodyMR is included in the header, among other things. The serialized header is then hashed.  The hashed header is combined with the BodyMR and hashed. This creates the KeyMR. With only the KeyMR, when a header is produced by a peer, the header can be validated with 2 hashes.
 
+
+
+#### Variable Integers (varInt_F)
+
+Integers can be serialized in blocks in a compact form to save space when stored indefinitely, like in a blockchain.  Factom's varInt_F is modeled after the [Protobuff](https://developers.google.com/protocol-buffers/docs/encoding)'s variable length integer, but is big-endian compared to Protobuff's little endian, and operates on the byte level rather then 4 bytes.
+
+Values 127 and below can be represented in a single byte. Only positive integers are supported. The highest number is 2^64, which takes 10 bytes.
+
+Larger numbers are represented by a sequence of bytes. The sequence length is indicated by the Most Significant Bit of each byte. If the MSB is set to one, then the next byte is considered part of the number. The number itself is held in the lower 7 bits. The LSB of the number is held in the LSB of the last byte.  Bits higher than the 7th are held in earlier bytes. 
+
+This is the algorithm to create the stream:
+Convert the value to big endian.
+Count the number of bits between the LSB and the most significant 1 bit, inclusive. Divide this number by 7 and take the cieling of the remainder. This is the byte count M.
+Create a byte sequence with M bytes.
+Take the least significant 7 bits of the number and place them in the Mth byte.  Set the highest bit of the Mth byte to zero.
+Take the bits 13 through 7 and add them to the byte M-1. Set the highest bit of byte M-1 to one.
+Continue until all the M bytes have been filled with with data.
+
+Here are some examples:
+
+| Base 10 value | Binary Value | varInt_F Serialization|
+| ----------------- | ---------------- | --------- |
+| 0 | 00000000 | 00000000 |
+| 3 | 00000011 | 00000011 |
+| 127 | 01111111 | 01111111 |
+| 128 | 10000000 | 10000001 00000000 |
+| 130 | 10000010 | 10000001 00000010 |
+| 2^16 - 1 | 11111111 11111111 | 10000011 11111111 01111111 |
+| 2^16  | 00000001 00000000 00000000 | 10000100 10000000 00000000 |
+| 2^32 - 1 | 11111111 11111111 11111111 11111111 | 10001111 11111111 11111111 11111111 01111111 |
+| 2^32 | 00000001 00000000 00000000 00000000 00000000 | 10010000 10000000 10000000 10000000 00000000 |
+| 2^63 - 1 | 01111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111 | 11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111 01111111 |
+| 2^64 - 1 | 11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111 | 10000001 11111111 11111111 11111111 11111111 11111111 11111111 11111111 11111111 01111111 |
