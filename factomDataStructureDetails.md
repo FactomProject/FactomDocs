@@ -157,7 +157,7 @@ The Factoid transaction's TXID is the SHA256 from the beginning of the header th
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Version of the transaction type.  Versions other than 1 are not relayed. Can safely be coded using 1 byte for the first 127 versions. |
+| varInt_F | Version | Version of the transaction type.  Versions other than 2 are not relayed. Can safely be coded using 1 byte for the first 127 versions. |
 | 6 bytes | milliTimestamp | Same rules as the Entry Commits. This is a unique value per transaction.  This field is the number of milliseconds since 1970 epoch.  The Factoid transaction is valid for 24 hours before and after this time. |
 | 1 byte | Input Count | This is how many Factoid addresses are being spent from in this transaction. |
 | 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. |
@@ -223,7 +223,7 @@ The coinbase transaction, like in Bitcoin, is how the servers are paid for their
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | **Header** | | |
-| varInt_F | Version | Determined by Federated Servers, version 1 for now. |
+| varInt_F | Version | Determined by Federated Servers, version 2 for now. |
 | 6 bytes | milliTimestamp | The time is set as the Directory Block timestamp. |
 | 1 byte | Input Count | Always zero. coinbase has no inputs. As such, it has no RCD reveals or signatures. |
 | 1 byte | Factoid Output Count | This is how many Factoid addresses are being spent to in this transaction. It is coordinated among the Federated Servers. |
@@ -411,9 +411,9 @@ The Factoid Block consists of a header and a body.  The body is composed of seri
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 32 bytes | Factoid ChainID | The Factoid ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000f. |
-| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  It is calculated with SHA256. |
-| 32 bytes | PrevKeyMR | Key Merkle root of previous block. This is the value of the Factoid Block's previous Key Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Factoid Block. It is calculated with SHA256. |
-| 32 bytes | PrevFullHash | This is a SHA256 checksum of the entire previous Factoid Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future and to allow simplified client verification without building a merkle tree.  First block has a PrevFullHash of 0. |
+| 32 bytes | BodyMR | This is the Merkle root of the Factoid transactions which accompany this block.  The leaves of the Merkle tree are the full Factoid transacion, from the version through the last signature, inclusive. Minute markers are also leaves of this tree. It is calculated with SHA256. |
+| 32 bytes | PrevKeyMR | Key Merkle root of previous block. This is the value of the Factoid Block's previous Key Merkle root which was placed in the Directory Block.  It is the value which is used as a key into the Directory Block. It is calculated with SHA256. |
+| 32 bytes | PrevLedgerKeyMR | This is a data structure which allows proofs with only the value transfers. A Merkle tree is constructed with the leaves being individual Factoid transactions hashed from the Version through the Entry Credit Purchase section. Neither the RCD reveals nor the signatures are included in this Merkle root.  This allows a future client to prove they recieved all the data documenting value movement, without needing to download signatures or all the public keys needed. The Merkle root of last block's value transfers is hashed with the last block's header hash to make a KeyMR, called PrevLedgerKeyMR. First block has a PrevLedgerKeyMR of 0. The minute markers are included in the tree. |
 | 8 bytes | EC Exchange Rate | This the number of Factoshis required to purchase 1 Entry Credit, and set the minimum fees. This is the exchange rate currently in force for this block.  The initial value will be about 700000, but will be re-targeted based on the factoid/$ exchange rate.  It is an integer, because it is always expected that ECs will cost more than a single Factoshi.  Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Factoid Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
