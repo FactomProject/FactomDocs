@@ -76,6 +76,8 @@ Factom is run as 3 command line programs for this version. First, there is facto
 
 Open 3 command line windows. In the first one, run `factomd`. It should show lots of technical outputs showing what it is doing. Leave it running.
 ![factomd](/images/factomd.png)
+If factomd complains about not connecting, make sure your firewall allows connections out to port 8108 (1FAC in hex).
+
 
 In the second command line window, run `fctwallet`. It will have very little output. It will show more output after factom-cli is run though.
 ![fctwallet](/images/fctwallet.png)
