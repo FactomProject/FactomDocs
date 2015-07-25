@@ -1,7 +1,7 @@
 Factom Community Tester Install Guide
 ==========
 
-Master branch is current as of **July 23, 1AM** Central Time.  If you installed before then, try doing the 'go get' steps again.  Also, delete databases as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#if-factom-is-crashing).
+Master branch is current as of **July 25, 2AM** Central Time.  If you installed before then, try doing the 'go get' steps again.  Also, delete databases as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#if-factom-is-crashing).
 
 To see how factom is doing, go to http://factomstatus.com/
 
