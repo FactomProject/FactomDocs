@@ -8,7 +8,7 @@ To see how factom is doing, go to http://factomstatus.com/
 
 ### Prepare Operating System
 
-The most testing to date has been done under Linux. To get the best testing experience, it should be done on Linux. That will also help us recreate the bugs you experience better. If you are running Windows or Mac, please install a virtual machine to run Factom. On a Mac, the only differences are with installing Hg and Git.  Installing on Windows has been known to work, but is not covered here.
+The most testing to date has been done under Linux. To get the best testing experience, it should be done on Linux. That will also help us recreate the bugs you experience better. If you are running Windows, please install a virtual machine to run Factom. On a Mac, the only differences are with installing Hg and Git.  Installing on Windows has been known to work, but is not covered here.
 
 Here are some good directions to get a virtual machine installed with Linux. http://www.instructables.com/id/Introduction-38/?ALLSTEPS
 
