@@ -150,7 +150,6 @@ Factoid transactions are similar to Bitcoin transactions, but incorporate some [
 
 Factoids are balanced based and have all the value combined to a single amount.  The address is a hash of a Redeem Condition Datastructure (RCD). The Factoid transaction is denominated in Factoshis, which is 10^-8 Factoids.
 
-The Factoid transaction's TXID is the SHA256 from the beginning of the header through the end of the RCD Reveal / Signature section.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
