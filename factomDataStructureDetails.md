@@ -310,7 +310,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
-| 32 bytes | PrevLedgerKeyMR | This is a SHA256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to allow simplified client verification without building a Merkle tree and to doublecheck the previous block if SHA2 is weakened in the future. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to allow simplified client verification without building a Merkle tree and to doublecheck the previous block if SHA2 is weakened in the future. |
 | 4 bytes | Timestamp | This the time when the block is opened.  Blocks start on 10 minute marks based on UTC (ie 12:00, 12:10, 12:20).  The data in this field is POSIX time, counting the number of minutes since epoch in 1970. |
 | 4 bytes | DB Height | The Directory Block height is the sequence it appears in the blockchain. Starts at zero. |
 | 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:Key pairs. Inclusive of the special blocks. Big endian. |
@@ -336,7 +336,7 @@ This is a special block which accompanies this Directory Block. It contains the 
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 32 bytes | Admin ChainID | The Admin ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000a. |
-| 32 bytes | PrevLedgerKeyMR | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevLedgerKeyMR of 0. |
+| 32 bytes | PrevFullHash | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
 | 4 bytes | DB Height | This is the Directory Block height which this Admin Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
 | Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. One planned feature to go in this field is a Chain Head Commitment. This would be a Merkle root of ChainIDs with their current heads.  This would allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. |
@@ -433,7 +433,7 @@ The Entry Block consists of a header and a body.  The body is composed of primar
 | 32 bytes | ChainID | All the Entries in this Entry Block have this ChainID |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  This is the value of this ChainID's previous Entry Block Merkle root which was placed in the Directory Block.  It is the value which is used as a key into databases holding the Entry Block. It is calculated with SHA256. |
-| 32 bytes | PrevLedgerKeyMR | This is a SHA256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevLedgerKeyMR of 0. |
+| 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Entry Block of this ChainID. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
 | 4 bytes | EB Sequence | This is the sequence which this block is in for this ChainID.  This number increments by 1 for every new EB with this chain ID.  First block is height 0. Big endian. |
 | 4 bytes | DB Height | This the Directory Block height which this Entry Block is located in. Big endian. |
 | 4 bytes | Entry Count | This is the number of Entry Hashes and time delimiters that the body of this block contains.  Big endian. |
