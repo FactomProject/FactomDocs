@@ -402,7 +402,7 @@ Entry Credit Identifier (ECID) bytes are single bytes which specify how to inter
 
 Factoid Block is a datastructure which packages Factoid transactions over a 10 minute period. The Factoid transactions are ordered in the Block in the order that they were received by the Federated server.
 
-The Factoid Block consists of a header and a body.  The body is composed of serialized Factoid transactions with minute markers distributed throughout the body.
+The Factoid Block consists of a header and a body.  The body is composed of serialized Factoid transactions with minute markers distributed throughout the body. The minute markers consist of a single byte 0x00.  There are 10 of them, each being placed at a minute boundary, and the 10th marker being the last item in the block. Factoid transactions begin with a version number above zero, which is how they can be differentiated from transactions. The minute markers are included in both the body and ledger Merkle roots.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
