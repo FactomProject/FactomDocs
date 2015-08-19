@@ -1,9 +1,11 @@
 Factom Community Tester Install Guide
 ==========
 
-Master branch is current as of **July 25, 2AM** Central Time.  If you installed before then, try doing the 'go get' steps again.  Also, delete databases as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#if-factom-is-crashing).
+Master branch is current as of **Aug 19, 2AM** Central Time.  If you installed before then, try doing the 'go get' steps again.  Also, delete databases as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#if-factom-is-crashing).  Also, copy over the latest factomd.conf file as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#install-factom)
 
 To see how factom is doing, go to http://factomstatus.com/
+
+To examine your local factomd status, point your browser to: http://localhost:8090/controlpanel
 
 
 ### Prepare Operating System
@@ -61,7 +63,7 @@ export PATH=$PATH:$GOPATH/bin
 Factom is currently developed in two different channels in Github. The bleeding edge is in the development branch, which may not even compile.  The version intended for testing is in the master branch. These directions install the master branch.
 ```
 go get -v -u github.com/FactomProject/FactomCode/factomd
-go get -v -u github.com/FactomProject/factoid/fctwallet
+go get -v -u github.com/FactomProject/fctwallet
 go get -v -u github.com/FactomProject/factom-cli
 ```
 copy the config file
@@ -84,22 +86,36 @@ In the second command line window, run `fctwallet`. It will have very little out
 
 In the third window, the factom-cli program will be run. You should run the trans.sh script to buy Entry Credits, move Factoids, and generally prep to place Entries. 
 
-Run the scripts: 
-`~/go/src/github.com/FactomProject/factom-cli/trans.sh` and 
-`~/go/src/github.com/FactomProject/factom-cli/example.sh`.
+Run this script: 
+`~/go/src/github.com/FactomProject/factom-cli/example.sh`.  After the hour passes a 10 minute mark (ie 11:39 -> 11:40) run `factom-cli balances` to see if your app EC address has a balance.  This is the number of Entry Credits you can use to place Entries.
 ![factom-cli](/images/factom-cli.png)
 
 After the script has been run, you can now create your own Chains:
 
-`echo "hello" | factom-cli mkchain -e thisisanexternalid jane` makes a new Chain with Chain Name "thisisanexternalid" paid for with the Entry Credit key named jane.  (Sorry the example would have been clearer if the Chain Name wasn't thisisanexternalid.  The ExternalID of the first Entry is interpreted as the Chain Name)  In the Entry's payload is the text string "hello". It returns "Chain: dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc" which is the ChainID for the chain name thisisanexternalid. Note, hello = "68 65 6C 6C 6F 0A" and thisisanexternalid = "74 68 69 73 69 73 61 6E 65 78 74 65 72 6E 61 6C 69 64" when the ascii is decoded.
+`echo "hello world" | factom-cli mkchain -e thisIsAChainName -e moreChainNameHere app` makes a new Chain with Chain Name "thisIsAChainName" combined with "moreChainNameHere", paid for with the Entry Credit key named app.  In the Entry's payload is the text string "hello world". It returns "Creating Chain: 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8" which is the ChainID for the chain name "thisIsAChainName" + "moreChainNameHere".
 
-`factom-cli get chain dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc` asks for the hash of the latest Entry Block with the ChainID of dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc. In this example it returned cbac3993cf69795cb8916197c11d78de625c6ed80f048a1878a104df5312d350.
+Wait until a 10 minute window passes on the clock.
 
-`factom-cli get eblock cbac3993cf69795cb8916197c11d78de625c6ed80f048a1878a104df5312d350` asks for the Entry Block with a hash of cbac3993cf69795cb8916197c11d78de625c6ed80f048a1878a104df5312d350. It returns: "&{{0 dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc 0000000000000000000000000000000000000000000000000000000000000000 0} [{0 ab47e3cd7f1730f24e6f1633501eb73f787a69e75c6f4b501846cc8699716cb9}]}" with dbe... being the ChainID, 000... being the previous Entry Block hash. This value would be used with get eblock again to retrieve the preceeding block. It is 000... in this case because it is the first block in this Chain.  ab47... is the Entry Hash of the Entry in this block. 
+`factom-cli get chain 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8` asks for the hash of the latest Entry Block with the ChainID of 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8. In this example it returned 791e3308911d7076ea2d8732f6ba723eaa027a51e76fca42fd9355062e4fe5d5.
 
-`factom-cli get entry ab47e3cd7f1730f24e6f1633501eb73f787a69e75c6f4b501846cc8699716cb9` asks for the Entry learned about querying the Entry Block. It returns "&{dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc [746869736973616e65787465726e616c6964] 68656c6c6f0a}"  with dbe... being the ChainID, 746869... being ascii decoding of the Chain Name, and 6865... being ascii decoding of the Entry payload.
+`factom-cli get eblock 791e3308911d7076ea2d8732f6ba723eaa027a51e76fca42fd9355062e4fe5d5` asks for the Entry Block with a hash of 791e3308911d7076ea2d8732f6ba723eaa027a51e76fca42fd9355062e4fe5d5. It returns: "BlockSequenceNumber: 0
+ChainID: 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8
+PrevKeyMR: 0000000000000000000000000000000000000000000000000000000000000000
+TimeStamp: 1439967000
+EBEntry {
+	TimeStamp 1439967420
+	EntryHash 162fbef6320b28281b585f03a7d38e46ea7d9df14c7a7672df189c6fb0620c68
+}
+" with 2398... being the ChainID, 000... being the previous Entry Block hash. This value would be used with get eblock again to retrieve the preceeding block. It is 000... in this case because it is the first block in this Chain.  162f... is the Entry Hash of the Entry in this block. 
 
-`echo "hello2" | factom-cli put -e newextid -e anotherextid -c dbe18345132e9f1bd248b7f41da64bd2fad1479452ad509fa8a4b00ca3714fcc jane` adds another Entry into the Chain dbe... Nothing is returned.
+`factom-cli get entry 162fbef6320b28281b585f03a7d38e46ea7d9df14c7a7672df189c6fb0620c68` asks for the Entry learned about querying the Entry Block. It returns "ChainID: 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8
+ExtID: 74686973497341436861696e4e616d65
+ExtID: 6d6f7265436861696e4e616d6548657265
+Content:
+68 65 6c 6c 6f 20 77 6f | 72 6c 64 0a              || "hello world\n"
+"
+
+`echo "hello2" | factom-cli put -e newextid -e anotherextid -c 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8 app` adds another Entry into the Chain 239... It returns "Creating Entry: 7e25ca2e41cd03782aa3337a98f4a261aa2c00b904b7da2e67d96262a2f5a034".  
 
 
 ##### More Examples
@@ -132,25 +148,18 @@ The value 13ea4eb2b6...42285c638a is paired with 0d52eff...60264683d4, which is 
 
 demo.factom.org and explorer.factom.org are not connected in with the experimental server this guide operates on. Do not expect to see your entries there.
 
-At the current time, blocks are set to be generated every 1 minute.
+At the current time, blocks are set to be generated every 10 minute.
 
 the factom-cli operations mkchain and put both wait 10 seconds between commit and reveal operations.
 
-Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait 1 minute between a mkchain or put and when reading the data back.
+Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait until the 10 minute has passed between a mkchain or put and when reading the data back.
 
-All the clients share a wallet. You will see Factoid transactions that you did not make yourself.
+All the clients share the fountain addresses. The other addresses created will be unique to you.
 
 #### If Factom is Crashing
 
-This version of factomd downloads the blockchain from the server. The server is restarted regularly and the blockchain is reset. Local factomd does not work when the blockchain is reset on the server. The way to fix this is to delete the Factom database files from the /tmp/ directory.  These are the files and folders to delete:
-```
-/tmp/ldb9/
-/tmp/store/
-/tmp/factoid_bolt.db
-/tmp/factoid_wallet_bolt.db
-/tmp/factom-d.log
-/tmp/ldb9.ver
-```
+This version of factomd downloads the blockchain from the server. The server is restarted regularly and the blockchain is reset. Local factomd does not work when the blockchain is reset on the server. The way to fix this is to delete the Factom database files from the /tmp/ directory.  Run this code to delete the databases run `~/go/src/github.com/FactomProject/FactomCode/cleandb.sh`
+
 
 
 
