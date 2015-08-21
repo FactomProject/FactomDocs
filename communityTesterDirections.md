@@ -87,7 +87,7 @@ In the second command line window, run `fctwallet`. It will have very little out
 In the third window, the factom-cli program will be run. You should run the trans.sh script to buy Entry Credits, move Factoids, and generally prep to place Entries. 
 
 Run this script: 
-`~/go/src/github.com/FactomProject/factom-cli/example.sh`.  After the time passes a 10 minute mark (ie 11:39 -> 11:40) run `factom-cli balances` to see if your app EC address has a balance.  This is the number of Entry Credits you can use to place Entries.
+`~/go/src/github.com/FactomProject/factom-cli/setup.sh`.  After the time passes a 10 minute mark (ie 11:39 -> 11:40) run `factom-cli balances` to see if your app EC address has a balance.  This is the number of Entry Credits you can use to place Entries.
 ![factom-cli](/images/factom-cli.png)
 
 After the script has been run, you can now create your own Chains:
