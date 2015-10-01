@@ -353,7 +353,7 @@ Generate an Entry Credit address, and create an entry in your wallet to hold sai
   ```
   Adds an output to the given address to the transaction trans.  The number of factoids (13) will be presented in fixpoint notation, i.e. (1300000000)
 
-	Post **http://localhost:8089/v1/factoid-add-ecoutput/(.*)**
++ Post **http://localhost:8089/v1/factoid-add-ecoutput/(.*)**
 
   Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
   ```
