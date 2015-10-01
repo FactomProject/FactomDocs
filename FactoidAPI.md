@@ -255,9 +255,9 @@ fctwallet
   ```
   will create an address fctAddress0001, and assign it a new private key.
   
-+	Get **http://localhost:8089/v1/factoid-generate-ec-address/([^/]+)**
++ Get **http://localhost:8089/v1/factoid-generate-ec-address/([^/]+)**
  
-Generate an Entry Credit address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  Generate an Entry Credit address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
   
   The call:
   ```
