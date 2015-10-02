@@ -410,3 +410,7 @@ fctwallet
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
 
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.	
+
++	Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
+
+  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
