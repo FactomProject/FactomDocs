@@ -8,7 +8,7 @@ commerical wallet solution.
 The first step is to install the factom client and factom wallet helpers.  See the [How To](http://factom.org/howto) 
 guides for setting up in your environment.  You will need to run factomd and fctwallet.  Note that from time to 
 time over the next few months you will need to update factomd to continue to communicate 
-with the network.  Watch our[technical blog](http://blog.factom.org/) for notifications and updates.
+with the network.  Watch our [technical blog](http://blog.factom.org/) for notifications and updates.
 
 The two APIs that are of interest are implemented by factomd and fctwallet.  The first, **factomd**, is the client
 program that actually participates in the Factom Network.  The second, **fctwallet**, provides common wallet
