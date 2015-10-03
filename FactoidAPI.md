@@ -73,6 +73,17 @@ This is a summery of the factomd API as pertains to trading Factoids.  We will a
   ```
   {"KeyMR":"f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642"}
   ```
++ Get **http://localhost:8088/v1/directory-block-height/?**
+ 
+  Returns the current directory block height.
+  ```
+  http://localhost:8088/v1/directory-block-height/
+  ```
+  Returned at the time of writing:
+  ```
+  {"Height":4585}
+  ```
+  
 + Get **http://localhost:8088/v1/get-raw-data/([^/]+)**
   
   Returns the block assoicated with the given hash.  
