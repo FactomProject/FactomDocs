@@ -305,14 +305,6 @@ fctwallet
   ```
   Returns the public key
   
-  
-	// New Transaction
-	// localhost:8089/v1/factoid-new-transaction/<key>
-	// Use the key in subsequent calls to add inputs, outputs, ecoutputs, and to
-	// sign and submit the transaction. Returns Success == true if all is well.
-	// Multiple transactions can be in process.  Only one transaction per key.
-	// Once the transaction has been submitted or deleted, the key can be
-	// reused.
 +	Post **http://localhost:8089/v1/factoid-new-transaction/([^/]+)**
 
   Creates a new transaction, and assoicates that transaction with a key.  This key is used in other operations to add inputs, add outputs, add entry credit outputs, pay the fee, sign the transaction, and submit it. Example:
@@ -371,11 +363,9 @@ fctwallet
   
 + Post **http://localhost:8089/v1/factoid-setup/(.*)**
 
-	// Commit Chain
-	// localhost:8089/v1/commit-chain/
-	// sign a binary Chain Commit with an entry credit key and submit it to the
-	// factomd server
-+	Post **http://localhost:8089/v1/commit-chain/([^/]+)**
+  Takes a random character sequence as a parameter along with the current timestamp.  This sets a new base key for address generation.  If you make this call on a wallet, you need to back up your wallet.  Because this replaces the seed for address generation, you must back up this new seed, or you will not be able to recover your addresses should you lose your wallet. 
+
++ Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
   Sign a binary Chain Commit with the specified entry credit key and submit it to the factomd server 
 
@@ -385,11 +375,14 @@ fctwallet
 
 +	Post **http://localhost:8089/v1/factoid-submit/(.*)**
 
-  Submit a transaction to Factom. 
+  Submit a transaction to Factom. This call takes a named JSON parameter.  For example, to submit a transaction named trans, you need the following call:
+  ```
+  http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
+  ```
 
 +	Get **http://localhost:8089/v1/factoid-validate/(.*)**
 
-  Validate a transaction.
+  Not currently implemented.
 
 +	Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
 
