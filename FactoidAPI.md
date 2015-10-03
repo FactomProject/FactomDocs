@@ -8,7 +8,7 @@ commerical wallet solution.
 The first step is to install the factom client and factom wallet helpers.  See the [How To](http://factom.org/howto) 
 guides for setting up in your environment.  You will need to run factomd and fctwallet.  Note that from time to 
 time over the next few months you will need to update factomd to continue to communicate 
-with the network.  Watch our[technical blog](http://blog.factom.org/) for notifications and updates.
+with the network.  Watch our [technical blog](http://blog.factom.org/) for notifications and updates.
 
 The two APIs that are of interest are implemented by factomd and fctwallet.  The first, **factomd**, is the client
 program that actually participates in the Factom Network.  The second, **fctwallet**, provides common wallet
@@ -195,7 +195,7 @@ This is the structure of an Entry block, broken out into JSON.
   ```
   indicating that .001 Factoids will purchase 1 Entry Credit.   
   
-+ Get **http://localhost:8088/v1/properties/",handleProperties)
++ Get **http://localhost:8088/v1/properties/",handleProperties)**
 
   Returns the version numbers of various components of Factom.  For example at the time of writing, the call:
   ```
@@ -209,3 +209,201 @@ This is the structure of an Entry block, broken out into JSON.
     "Fctwallet_Version":0
   }
   ```
+
+fctwallet
+---------
+
++	Get **http://localhost:8089/v1/factoid-balance/([^/]+)**
+
+  Return the factoid balance at the given Factoid address.  The call can take an address name known by your wallet, a Factoid address, or a hex representation of the address (less base 58 and checksums).
+  
+  For example, for a given wallet, the following calls:
+  ```
+  http://localhost:8089/v1/factoid-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
+  http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534  
+  http://localhost:8089/v1/factoid-balance/FactomAddress01
+  ```
+  Will return:
+  ```
+  {"Response":"1210680000","Success":true}
+  ```
+  Should all retrieve the same balance from the same address, assuming that your address book had an entry FactomAddress01 with the private key for FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb.
+  
++	Get **http://localhost:8089/v1/entry-credit-balance/([^/]+)**
+
+  Return the Entry Credit balance for the specified address.  The call can take an address name known by your wallet, an Entry Credit address, or a hex representation of the address (less base 58 and checksum).
+  
+  For example, for a given wallet and Entry Credit address, the calls:
+  ```
+  http://localhost:8089/v1/entry-credit-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
+  http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
+  http://localhost:8090/EntryCreditAddress001
+  ```
+  Will Return
+  ```
+  {"Response":"4000","Success":true}
+  ```
+  Assuming that your wallet had an entry EntryCreditAddress001 with the private key for the given public address.
+  
++	Get **http://localhost:8089/v1/factoid-generate-address/([^/]+)**
+
+  Generate an address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  
+  The call:
+  ```
+  localhost:8089/v1/factoid-generate-address/fctAddress0001
+  ```
+  will create an address fctAddress0001, and assign it a new private key.
+  
++ Get **http://localhost:8089/v1/factoid-generate-ec-address/([^/]+)**
+ 
+  Generate an Entry Credit address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  
+  The call:
+  ```
+  localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
+  ```
+  will create an address ECAddress0001, and assign it a new private key.
+ 
++	Get **http://localhost:8089/v1/factoid-generate-address-from-private-key/(.*)**
+	
+  This call is used to import a factoid private key in hex from another source.  Provided a private key and a name. For example:
+  ...
+  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
+  ...
+  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  
++	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/(.*)**
+
+  This call is used to import an entry credit private key in hex from another source.  Provided a private key and a name. For example:
+  ...
+  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
+  ...
+  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+
++	Get **http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/(.*)**
+	
+  This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
+  ...
+  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj 
+  ...
+  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+	
++	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-human-readable-private-key/(.*)**
+
+  This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
+  ...
+  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
+  ...
+  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+
++	Get **http://localhost:8089/v1/factoid-generate-address-from-token-sale/(.*)**
+
+  Accepts the 12 words provided by Koinify during the crowd sale, and generates the corosponding entry in the wallet. For example:
+  ```
+  http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name="koinifyAddr",mnemonic="<12 words separated by single spaces in quotes>"
+  ```
+  Returns the public key
+  
++	Post **http://localhost:8089/v1/factoid-new-transaction/([^/]+)**
+
+  Creates a new transaction, and assoicates that transaction with a key.  This key is used in other operations to add inputs, add outputs, add entry credit outputs, pay the fee, sign the transaction, and submit it. Example:
+  ```
+  http://localhost:8089/v1/factoid-new-transaction/trans
+  ```
+  Which creates a transaction named 'trans'.  We will use this transaction in the following commands.
+  
++	Post **http://localhost:8089/v1/factoid-delete-transaction/([^/]+)**
+  
+  Delete the specified transaction under construction by name.
+  ```
+  http://localhost:8089/v1/factoid-delete-transaction/trans
+  ```
+  Removes the transaction 'trans'.  To continue to build a transaction named trans, you would need to recreate 'trans'.
+  
++	Post **http://localhost:8089/v1/factoid-add-fee/(.*)**
+  
+  Add the needed fee to the given transaction.  This call calculates the needed fee, and adds it to the specified input.  The inputs and outputs must be exactly balanced, because this call isn't going to mess with unbalanced transactions as how to balance can be tricky.
+  ```
+  http://localhost:8089/v1/factoid-add-fee/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb
+  ```
+  Assuming the given Factoid address is an input to trans, this adds the fee to that address.
+  
++	Post **http://localhost:8089/v1/factoid-add-input/(.*)**
+
+  Add the given input to the transaction specified.
+  ```
+  http://localhost:8089/v1/factoid-add-input/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb&amount=12
+  ```
+  Adds an input from the given address to the transaction trans.  The number of factoids (12) will be presented in fixpoint notation, i.e. (1200000000)
+
++	Post **http://localhost:8089/v1/factoid-add-output/(.*)**
+
+  Add the given output to the transaction specified.
+  ```
+  http://localhost:8089/v1/factoid-add-output/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb&amount=13
+  ```
+  Adds an output to the given address to the transaction trans.  The number of factoids (13) will be presented in fixpoint notation, i.e. (1300000000)
+
++ Post **http://localhost:8089/v1/factoid-add-ecoutput/(.*)**
+
+  Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
+  ```
+  http://localhost:8089/v1/factoid-add-input/?key=trans&name=EC37gStncNiNdJnrDsH3o8fRvSYZXQAhUVs26zFYaE49vbbpCpgK&amount=1
+  ```
+  Adds an ecoutput to the given entry credit address to the transaction trans. Assume a factoid to Entry Credit exchange rate of .001.  Then the number of Entry Credits (1000) will be determined by the factoids in the output (1) divided by the factoid to entry credit rate (.001).  The factoids converted to entry credits will be presented in fixpoint notation, i.e. (100000000 == 1 factoid)
+
++	Post **http://localhost:8089/v1/factoid-sign-transaction/(.*)**
+  
+  Sign the given transaction.
+  ```
+  http://localhost:8089/v1/factoid-sign-transaction/trans
+  ```
+  Signs the transaction 'trans'.
+  
++ Post **http://localhost:8089/v1/factoid-setup/(.*)**
+
+  Takes a random character sequence as a parameter along with the current timestamp.  This sets a new base key for address generation.  If you make this call on a wallet, you need to back up your wallet.  Because this replaces the seed for address generation, you must back up this new seed, or you will not be able to recover your addresses should you lose your wallet. 
+
++ Post **http://localhost:8089/v1/commit-chain/([^/]+)**
+ 
+  Sign a binary Chain Commit with the specified entry credit key and submit it to the factomd server 
+
++	Post **http://localhost:8089/v1/commit-entry/([^/]+)**
+ 
+  Commit an entry to an Entry Chain 
+
++	Post **http://localhost:8089/v1/factoid-submit/(.*)**
+
+  Submit a transaction to Factom. This call takes a named JSON parameter.  For example, to submit a transaction named trans, you need the following call:
+  ```
+  http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
+  ```
+
++	Get **http://localhost:8089/v1/factoid-validate/(.*)**
+
+  Not currently implemented.
+
++	Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
+
+  Get the current exchange rate in number of Factoids per Entry Credit
+  
++	Get **http://localhost:8089"/v1/properties/**
+
+  Get the version numbers of all the components of the Factom client, fctwallet, factomd, and the protocol	
+
++	Get **http://localhost:8089/v1/factoid-get-addresses/**
+
+  Get the address list held in the wallet
+  
++	Get **http://localhost:8089/v1/factoid-get-transactions/**
+
+  Get all the transactions currently under construction, along with the key used to reference them.
+  
++	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
+
+  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.	
+
++	Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
+
+  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
