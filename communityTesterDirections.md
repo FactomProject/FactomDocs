@@ -1,8 +1,6 @@
 Factom Community Tester Install Guide
 ==========
 
-Master branch is current as of **Aug 19, 2AM** Central Time.  If you installed before then, try doing the 'go get' steps again.  Also, delete databases as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#if-factom-is-crashing).  Also, copy over the latest factomd.conf file as shown [here](https://github.com/FactomProject/FactomDocs/blob/master/communityTesterDirections.md#install-factom)
-
 To see how factom is doing, go to http://factomstatus.com/
 
 To examine your local factomd status, point your browser to: http://localhost:8090/controlpanel
@@ -33,9 +31,9 @@ https://confluence.atlassian.com/pages/viewpage.action?pageId=269981802
 
 ###### Install Golang
 
-Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.4.2 is the latest version.
+Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.5.1 is the latest version.
 ```
-sudo tar -C /usr/local -xzf go1.4.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.5.1.linux-amd64.tar.gz
 ```
 
 On Mac, installing go this way should work:
@@ -146,19 +144,18 @@ The value 13ea4eb2b6...42285c638a is paired with 0d52eff...60264683d4, which is 
 
 #### Notes
 
-demo.factom.org and explorer.factom.org are not connected in with the experimental server this guide operates on. Do not expect to see your entries there.
-
-At the current time, blocks are set to be generated every 10 minute.
+explorer.factom.org shows entries into the system.  It is a good method of diagnosing problems and seeing what the system is doing.
 
 the factom-cli operations mkchain and put both wait 10 seconds between commit and reveal operations.
 
 Intra-block acknowledgements are not generated and passed back to the local factomd yet. The local node waits for finished blocks before showing results. Wait until the 10 minute has passed between a mkchain or put and when reading the data back.
 
-All the clients share the fountain addresses. The other addresses created will be unique to you.
 
 #### If Factom is Crashing
 
 This version of factomd downloads the blockchain from the server. The server is restarted regularly and the blockchain is reset. Local factomd does not work when the blockchain is reset on the server. The way to fix this is to delete the Factom database files from the /tmp/ directory.  Run this code to delete the databases run `~/go/src/github.com/FactomProject/FactomCode/cleandb.sh`
+
+Backup the factoid_wallet_bolt.db in the .factom directory if you made any new Entry Credit or Factoid addresses. It is a good practice to backup this file after creating every address. 
 
 
 
