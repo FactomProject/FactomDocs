@@ -17,3 +17,6 @@ So for example, an identity could be:
 - EC315Akp8ayYcqTJWd4xqBn1NJ62yuEdVYg3apzQsT8ywLhEsSfh
 - EC315Akp8ayYcqTJWd4xqBn1NJ62yuEdVYg3apzQsT8ywLhEsSfh
 
+Any key can invalidate a key at the same level or lower.  This is done by signing an entry with that key to that effect.  For example, The entry
+
+Replace EC315Akp8ayYcqTJWd4xqBn1NJ62yuEdVYg3apzQsT8ywLhEsSfh with EC2Q2BrHg9R8rt9FRc8553C4FhHtBNafscZU9u4mP1gFaPrVyN89
