@@ -32,7 +32,7 @@ of offline transaction to the factom network.  We will soon be releasing a GUI t
 The factom commandline wallet **factom-cli** is a wallet that supports factoid transactions, as well as 
 general access to the Factom protocol. *factom-cli* uses the interfaces to *factomd* and *fctwallet* to 
 implement its functionality.  The main purpose of this program is to demonstrate the use of the factom
-APIs.  It can also be used to script transction processes against Factom.
+APIs.  It can also be used to script transaction processes against Factom.
 
 factomd
 -------
