@@ -63,6 +63,7 @@ Factom is currently developed in two different channels in Github. The bleeding 
 go get -v -u github.com/FactomProject/FactomCode/factomd
 go get -v -u github.com/FactomProject/fctwallet
 go get -v -u github.com/FactomProject/factom-cli
+go get -v -u github.com/FactomProject/walletapp
 ```
 copy the config file
 ```
