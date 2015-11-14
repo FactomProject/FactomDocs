@@ -146,7 +146,7 @@ This is a summery of the factomd API as pertains to trading Factoids.  We will a
 ```
 This is the structure of an Entry block, broken out into JSON.
 
-+ Get http://localhost:8088/v1/entry-by-hash/([^/]+)", handleEntry)
++ Get **http://localhost:8088/v1/entry-by-hash/([^/]+)", handleEntry)**
 
   Returns an Entry broken out into JSON.  The following call:
   ```
