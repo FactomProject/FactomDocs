@@ -6,21 +6,37 @@ This is the Factom equivalent of Testnet3 in bitcoin, but doesn't require findin
 Use Factoids with private key `Fs3E9gV6DXsYzf7Fqx1fVBQPQXV695eP3k5XbmHEZVRLkMdD9qCK`
 
 
-There are two options for running a sandbox.
+There are three options for running a sandbox.
 
-1. Run only a local sandbox server
+1. Run a Dockerized Factom sandbox
+  * Zero setup
+  * Good if you are already familiar with Docker
+  * Almost the same as running a local sandbox server
+
+2. Run only a local sandbox server
   * Minimal setup
   * good for quickly testing APIs
   * Better feedback metrics
   * Golang compilation of Factom not needed (can use precompiled factomd binaries)
 
 
-2. Run a test server and client
+3. Run a test server and client
   * Much closer to production experience
   * Needed if multiple clients are used
   * Factom setup needed on two different computers
   * Need to install Golang and modify and recompile factomd
 
+### Run a Dockerized Factom sandbox
+
+Just execute
+```
+docker run -d --name factom-sandbox 31z4/factom-sandbox
+```
+and you are all set. You can now for example use `factom-cli`:
+```
+docker exec -it factom-sandbox factom-cli properties
+```
+See other details [here](https://github.com/31z4/factom-sandbox-docker).
 
 ### Setup a Local Sandbox Factom Server
 
