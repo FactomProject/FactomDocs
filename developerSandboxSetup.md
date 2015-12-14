@@ -45,7 +45,6 @@ Three programs are installed: factomd, fctwallet, and factom-cli.
 
 Create a folder in your user home folder. The folder should be called `.factom`. If factomd has been run on your computer before you may need to first delete the database and store that is already there: `` rm -r ~/.factom/ldb9 ~/.factom/store ``
 
-
 In a terminal Linux and Mac: `mkdir ~/.factom`or Windows: `mkdir %HOMEDRIVE%%HOMEPATH%\.factom`
 
 Save the configuration file [factomd.conf](https://raw.githubusercontent.com/FactomProject/FactomCode/master/factomd/factomd.conf) to your `.factom` directory.
