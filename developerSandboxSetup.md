@@ -46,6 +46,8 @@ Create a folder in your user home folder. The folder should be called `.factom`.
 
 In a terminal Linux and Mac: `mkdir ~/.factom`or Windows: `mkdir %HOMEDRIVE%%HOMEPATH%\.factom`
 
+If factomd has been run on your computer before you may need to delete the database and store: `` rm -r ~/.factom/ldb9 ~/.factom/store ``
+
 Save the configuration file [factomd.conf](https://raw.githubusercontent.com/FactomProject/FactomCode/master/factomd/factomd.conf) to your `.factom` directory.
 
 * Open `factomd.conf`
