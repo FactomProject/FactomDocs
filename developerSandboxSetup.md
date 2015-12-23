@@ -173,7 +173,68 @@ Content:
 
 ### Setup a Factom Sandbox Server and Client
 
-The public key which signs the blocks needs to be changed in the client.  It is hard coded into the program. SERVER_PUB_KEY in /FactomCode/common/ needs to be changed to 8cee85c62a9e48039d4ac294da97943c2001be1539809ea5f54721f0c5477a0a to stop panic errors.
+To operate in this mode, the server can be run with the distributed binaries, but the clients must be recompiled to use the test server.  Clients will panic if they try to download blocks signed with the sandbox key.
+
+#### Setup a Factom Remote Server
+
+On a remote machine, setup a Factom server. Use the same directions as [Install Factom Binaries](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#setup-a-local-sandbox-factom-server) and [Configure Factomd for Sandbox use](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#configure-factomd-for-sandbox-use).  Run factomd.  Make sure that port 8108 is open on the server.  Only factomd needs to be running on the remote server.
+
+#### Setup Client to use Sandbox Server
+
+##### Install Golang
+On the local machine, Install golang.  Here are some commands for Ubuntu:
+
+```
+sudo apt-get install git mercurial
+
+```
+Download latest version of go https://golang.org/dl/ This example uses 64 bit Linux and 1.5.2 is the latest version.
+```
+sudo tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz
+```
+Setup Paths.  Open the file `~/.profile` and add these lines to the bottom. If they are not exact, then your Linux may not be bootable.
+```
+export PATH=$PATH:/usr/local/go/bin
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+```
+**logout and login**.  This is the most straightforward way to run/test these changes.
+
+##### Install Local Factom
+
+```
+go get -v -u github.com/FactomProject/FactomCode/factomd
+go get -v -u github.com/FactomProject/fctwallet
+go get -v -u github.com/FactomProject/factom-cli
+go get -v -u github.com/FactomProject/walletapp
+```
+copy the config file
+```
+mkdir ~/.factom
+cp ~/go/src/github.com/FactomProject/FactomCode/factomd/factomd.conf ~/.factom/factomd.conf
+```
+##### Modify Local Factomd
+
+Open the file `~/go/src/github.com/FactomProject/FactomCode/common/constants.go`
+
+On the line `SERVER_PUB_KEY` replace `0426a802617848d4d16d87830fc521f4d136bb2d0c352850919c2679f189613a` with `8cee85c62a9e48039d4ac294da97943c2001be1539809ea5f54721f0c5477a0a`
+
+Recompile factomd
+```
+go install github.com/FactomProject/FactomCode/factomd
+```
+
+##### Connect Local Factomd to Sandbox Server
+
+The local machine should be set as a client in the factomd.conf, which is default.
+
+run factomd this way, but use the remote factom server's IP address instead.
+```
+factomd --connect=123.456.789.100
+```
+
+The rest of the steps with [fctwallet and factom-cli](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#run-factomd) should work on the local machine.
+
 
 
 ### Resetting the Blockchain
