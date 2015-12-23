@@ -173,7 +173,7 @@ Content:
 
 ### Setup a Factom Sandbox Server and Client
 
-To operate in this mode, the server can be run with the distributed binaries, but the clients must be recompiled to use the test server.  Clients will panic if they try to download blocks signed with the sandbox key.
+To operate in this mode, the server can be run with the distributed binaries, but the clients must be recompiled to use the test server.  Binary installed clients will panic if they try to download blocks signed with the sandbox key.
 
 #### Setup a Factom Remote Server
 
