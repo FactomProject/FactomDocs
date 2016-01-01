@@ -8,35 +8,24 @@ Use Factoids with private key `Fs3E9gV6DXsYzf7Fqx1fVBQPQXV695eP3k5XbmHEZVRLkMdD9
 
 There are three options for running a sandbox.
 
-1. Run a Dockerized Factom sandbox
-  * Zero setup
-  * Good if you are already familiar with Docker
-  * Almost the same as running a local sandbox server
 
-2. Run only a local sandbox server
+1. Run only a local sandbox server
   * Minimal setup
   * good for quickly testing APIs
   * Better feedback metrics
   * Golang compilation of Factom not needed (can use precompiled factomd binaries)
 
 
-3. Run a test server and client
+2. Run a test server and client
   * Much closer to production experience
   * Needed if multiple clients are used
   * Factom setup needed on two different computers
   * Need to install Golang and modify and recompile factomd
-
-### Run a Dockerized Factom sandbox
-
-Just execute
-```
-docker run -d --name factom-sandbox 31z4/factom-sandbox
-```
-and you are all set. You can now for example use `factom-cli`:
-```
-docker exec -it factom-sandbox factom-cli properties
-```
-See other details [here](https://github.com/31z4/factom-sandbox-docker).
+  
+3. Run a Dockerized Factom sandbox
+  * Zero setup
+  * Good if you are already familiar with Docker
+  * Almost the same as running a local sandbox server
 
 ### Setup a Local Sandbox Factom Server
 
@@ -251,6 +240,19 @@ factomd --connect=123.456.789.100
 
 The rest of the steps with [fctwallet and factom-cli](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#run-factomd) should work on the local machine.
 
+### Run a Dockerized Factom sandbox
+
+A community member graciously maintains a docker image for a Factom sandbox. 
+
+Just execute
+```
+docker run -d --name factom-sandbox 31z4/factom-sandbox
+```
+and you are all set. You can now for example use `factom-cli`:
+```
+docker exec -it factom-sandbox factom-cli properties
+```
+See other details [here](https://github.com/31z4/factom-sandbox-docker).
 
 
 ### Resetting the Blockchain
