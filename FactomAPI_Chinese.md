@@ -27,7 +27,7 @@ factomd
   
 + Post **http://localhost:8088/v1/reveal-chain/?**
 
-  提示链中的第一个记录，需要完成一个新链的构建
+  显示链中的第一个记录，需要完成一个新链的构建
   
 + Post **http://localhost:8088/v1/commit-entry/?**
 
@@ -325,94 +325,94 @@ fctwallet
   {"Response":"Success deleting transaction","Success":true}
   ```
   
-  Removes the transaction 'trans'.  To continue to build a transaction named trans, you would need to recreate 'trans'.
+  移除‘trans’交易后。若要继续以trans交易名进行交易，需要重新创造交易‘trans’。
   
 +	Post **http://localhost:8089/v1/factoid-add-fee/(.*)**
   
-  Add the needed fee to the given transaction.  This call calculates the needed fee, and adds it to the specified input.  The inputs and outputs must be exactly balanced, because this call isn't going to mess with unbalanced transactions as how to balance can be tricky.
+  对于指定交易增添费用。这项请求计算需要支付的费用，并把它添入特定的输入。输入和输出必须完全相等，因为这项调用不会处理不等的交易，由于校对金额一致会相当的棘手。
   ```
   curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb"
   ```
-  Response 
+  返回 
   ```
   {"Response":"Added             0.153318 to FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb","Success":true}
   ```
   
-  Assuming the given Factoid address is an input to trans, this adds the fee to that address.
+  假定Factoid地址是该项交易的输入，那么所需要的费用将会被添加到该地址
   
 +	Post **http://localhost:8089/v1/factoid-add-input/(.*)**
 
-  Add the given input to the transaction specified.
+  添加给定的输入信息到特定的交易
   ```
   curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb&amount=10000000"
   ```
-  Response
+  返回
   ```
   {"Response":"Success adding Input","Success":true}
   ```
-  Adds an input from the given address to the transaction trans.  The number of factoids (12) will be presented in fixpoint notation, i.e. (1200000000)
+  添加某项给定地址的输入信息到“trans”交易， Factoids数量 (12)将会以定点表示法列示 (1200000000)
 
 +	Post **http://localhost:8089/v1/factoid-add-output/(.*)**
 
-  Add the given output to the transaction specified.
+  将给定的输出信息添加到特定的交易
   ```
   curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FA3SXWH3x3HJCjNd3LGrvZnZKJhmdSFKEYd1BgjeHeFPiTvwfw8N&amount=10000000"
   ```
-  Response
+  返回
   ```
   {"Response":"Success adding output","Success":true}
   ```
   
-  Adds an output to the given address to the transaction trans.  The number of factoids (13) will be presented in fixpoint notation, i.e. (1300000000)
+  将一项给定地址的输出信息添加到trans交易。Factoids数量 (13)将会以定点表示法列示 (1300000000)
 
 + Post **http://localhost:8089/v1/factoid-add-ecoutput/(.*)**
 
-  Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
+  添加条目信用输出信息到特定的交易。需要注意的是，条目信用信息的固定输出形式是Factoids。具体分配的条目信用的数量取决于交易发生时factoid转换为条目信用的折换率。
   ```
   curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=EC2ENydo4tjz5rMiZVDiM1k315m3ZanSm6LFDYcQyn5edBXNnrva&amount=10000000"
   ```
-  Response
+  返回
   ```
   {"Response":"Success adding Entry Credit Output","Success":true}
   ```
-  Adds an ecoutput to the given entry credit address to the transaction trans. Assume a factoid to Entry Credit exchange rate of .001.  Then the number of Entry Credits (1000) will be determined by the factoids in the output (1) divided by the factoid to entry credit rate (.001).  The factoids converted to entry credits will be presented in fixpoint notation, i.e. (100000000 == 1 factoid)
+  添加某个给定条目信用地址的输出信息到trans交易。假定factoid与条目信用的转换率.001。那么1000条条目信用将转换为1个factoid作为输出信息1000，factoids以固定形式列示(100000000 == 1 factoid)
 
 +	Post **http://localhost:8089/v1/factoid-sign-transaction/(.*)**
   
-  Sign the given transaction.
+  对特定交易签名.
   ```
   http://localhost:8089/v1/factoid-sign-transaction/trans
   ```
-  Response
+  返回
   ```
   {"Response":"Success signing transaction","Success":true}
   ```
-  Signs the transaction 'trans'.
+  对trans交易签名.
   
   + Post **http://localhost:8089/v1/compose-submit-chain/([^/]+)**
 
-Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
+创建一个JSON对象，用于通过Factomd请求，生成链和显示链
 
 	$ curl -X POST -H 'Content-Type: application/json'" -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
 	
-Returns
+返回
 	
 	{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
 
 + Post **http://localhost:8089/v1/compose-submit-entry/([^/]+)**
 
-Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
+创建一个JSON对象，用于通过Factomd请求，生成记录和显示记录
 
 	$ curl -i -X POST -H 'Content-Type: application/json'" -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
 
-Returns
+返回
 
 	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
 
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
-  Sign a binary Chain Commit with the specified entry credit key and submit it to the factomd server 
+  对一个特定的条目信用钥匙以二进制形式签署并递交至Factomd服务器 
 
 +	Post **http://localhost:8089/v1/commit-entry/([^/]+)**
  
