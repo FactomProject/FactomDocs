@@ -326,6 +326,10 @@ fctwallet
   ```
   http://localhost:8089/v1/factoid-new-transaction/trans
   ```
+  Response 
+  ```
+  {"Response":"Success building a transaction","Success":true}
+  ```
   Which creates a transaction named 'trans'.  We will use this transaction in the following commands.
   
 +	Post **http://localhost:8089/v1/factoid-delete-transaction/([^/]+)**
@@ -334,21 +338,35 @@ fctwallet
   ```
   http://localhost:8089/v1/factoid-delete-transaction/trans
   ```
+  Response
+  ```
+  {"Response":"Success deleting transaction","Success":true}
+  ```
+  
   Removes the transaction 'trans'.  To continue to build a transaction named trans, you would need to recreate 'trans'.
   
 +	Post **http://localhost:8089/v1/factoid-add-fee/(.*)**
   
   Add the needed fee to the given transaction.  This call calculates the needed fee, and adds it to the specified input.  The inputs and outputs must be exactly balanced, because this call isn't going to mess with unbalanced transactions as how to balance can be tricky.
   ```
-  http://localhost:8089/v1/factoid-add-fee/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb
+  curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb"
   ```
+  Response 
+  ```
+  {"Response":"Added             0.153318 to FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb","Success":true}
+  ```
+  
   Assuming the given Factoid address is an input to trans, this adds the fee to that address.
   
 +	Post **http://localhost:8089/v1/factoid-add-input/(.*)**
 
   Add the given input to the transaction specified.
   ```
-  http://localhost:8089/v1/factoid-add-input/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb&amount=12
+  curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb&amount=10000000"
+  ```
+  Response
+  ```
+  {"Response":"Success adding Input","Success":true}
   ```
   Adds an input from the given address to the transaction trans.  The number of factoids (12) will be presented in fixpoint notation, i.e. (1200000000)
 
@@ -356,15 +374,24 @@ fctwallet
 
   Add the given output to the transaction specified.
   ```
-  http://localhost:8089/v1/factoid-add-output/?key=trans&name=FA2dAYismYSSaT5yopvquNm7e15KG8KVyYVkMDxgs5XrmiY4wERb&amount=13
+  curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FA3SXWH3x3HJCjNd3LGrvZnZKJhmdSFKEYd1BgjeHeFPiTvwfw8N&amount=10000000"
   ```
+  Response
+  ```
+  {"Response":"Success adding output","Success":true}
+  ```
+  
   Adds an output to the given address to the transaction trans.  The number of factoids (13) will be presented in fixpoint notation, i.e. (1300000000)
 
 + Post **http://localhost:8089/v1/factoid-add-ecoutput/(.*)**
 
   Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
   ```
-  http://localhost:8089/v1/factoid-add-input/?key=trans&name=EC37gStncNiNdJnrDsH3o8fRvSYZXQAhUVs26zFYaE49vbbpCpgK&amount=1
+  curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=EC2ENydo4tjz5rMiZVDiM1k315m3ZanSm6LFDYcQyn5edBXNnrva&amount=10000000"
+  ```
+  Response
+  ```
+  {"Response":"Success adding Entry Credit Output","Success":true}
   ```
   Adds an ecoutput to the given entry credit address to the transaction trans. Assume a factoid to Entry Credit exchange rate of .001.  Then the number of Entry Credits (1000) will be determined by the factoids in the output (1) divided by the factoid to entry credit rate (.001).  The factoids converted to entry credits will be presented in fixpoint notation, i.e. (100000000 == 1 factoid)
 
@@ -373,6 +400,10 @@ fctwallet
   Sign the given transaction.
   ```
   http://localhost:8089/v1/factoid-sign-transaction/trans
+  ```
+  Response
+  ```
+  {"Response":"Success signing transaction","Success":true}
   ```
   Signs the transaction 'trans'.
   
