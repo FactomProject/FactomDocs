@@ -230,7 +230,7 @@ fctwallet
   
   For example, for a given wallet, the following calls:
   ```
-  curl -X GET "http://localhost:8089/v1/factoid-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb"
+  curl -X GET "http://localhost:8089/v1/factoid-balance/FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   curl -X GET "http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534"  
   curl -X GET "http://localhost:8089/v1/factoid-balance/FactomAddress01"
   ```
@@ -246,7 +246,7 @@ fctwallet
   
   For example, for a given wallet and Entry Credit address, the calls:
   ```
-  curl -X GET "http://localhost:8089/v1/entry-credit-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb"
+  curl -X GET "http://localhost:8089/v1/entry-credit-balance/ECxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   curl -X GET "http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b"
   curl -X GET "http://localhost:8090/EntryCreditAddress001"
   ```
@@ -299,7 +299,7 @@ fctwallet
   This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
 
  ```
- curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj"
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fsxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
  ```
 
   would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
@@ -308,7 +308,7 @@ fctwallet
 
   This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
   ```
-  curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG"
+  curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Esxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   ```
   would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 
@@ -349,11 +349,11 @@ fctwallet
   
   Add the needed fee to the given transaction.  This call calculates the needed fee, and adds it to the specified input.  The inputs and outputs must be exactly balanced, because this call isn't going to mess with unbalanced transactions as how to balance can be tricky.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb"
+  curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   ```
   Response 
   ```
-  {"Response":"Added             0.153318 to FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb","Success":true}
+  {"Response":"Added             0.153318 to FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","Success":true}
   ```
   
   Assuming the given Factoid address is an input to trans, this adds the fee to that address.
@@ -362,7 +362,7 @@ fctwallet
 
   Add the given input to the transaction specified.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -374,7 +374,7 @@ fctwallet
 
   Add the given output to the transaction specified.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FA3SXWH3x3HJCjNd3LGrvZnZKJhmdSFKEYd1BgjeHeFPiTvwfw8N&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -387,7 +387,7 @@ fctwallet
 
   Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=EC2ENydo4tjz5rMiZVDiM1k315m3ZanSm6LFDYcQyn5edBXNnrva&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=ECxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -479,7 +479,7 @@ fctwallet
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.
   For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FA2opZ5tRQET3LNRPfXFR2dWDRD1Sgc1aEYNStTXtkPWQtEvoAiY"
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=<addrname>"
 curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cmd=all"
 ```
@@ -489,7 +489,7 @@ curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cm
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
   For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FA3RrKWJLQeDuzC9YzxcSwenU1qDzzwjR1uHMpp1SQbs8wH9Qbbr"
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=<addrname>"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "cmd=all"
    ```
