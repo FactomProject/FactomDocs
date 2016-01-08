@@ -37,7 +37,7 @@ APIs.  It can also be used to script transaction processes against Factom.
 factomd
 -------
 
-This is a summery of the factomd API as pertains to trading Factoids.  We will add detail on other calls as we go forward.
+This is a summary of the factomd API as pertains to trading Factoids.  We will add detail on other calls as we go forward.
 
 + Post **http://localhost:8088/v1/commit-chain/?**
 
@@ -262,7 +262,7 @@ fctwallet
   
   The call:
   ```
-  localhost:8089/v1/factoid-generate-address/fctAddress0001
+  http://localhost:8089/v1/factoid-generate-address/fctAddress0001
   ```
   will create an address fctAddress0001, and assign it a new private key.
   
@@ -272,47 +272,51 @@ fctwallet
   
   The call:
   ```
-  localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
+  http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
   ```
   will create an address ECAddress0001, and assign it a new private key.
  
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-private-key/(.*)**
 	
   This call is used to import a factoid private key in hex from another source.  Provided a private key and a name. For example:
-  ...
-  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
-  ...
-  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+
+ ```
+ http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
+ ```
+ would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
   
 +	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/(.*)**
 
   This call is used to import an entry credit private key in hex from another source.  Provided a private key and a name. For example:
-  ...
-  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
-  ...
-  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  
+   ```
+   http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
+   ```
+  would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/(.*)**
 	
   This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
-  ...
-  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj 
-  ...
-  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+
+ ```
+ http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj
+ ```
+
+  would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 	
 +	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-human-readable-private-key/(.*)**
 
   This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
-  ...
-  /v1/factoid-generate-address-from-human-readable-private-key/?name=addr001,privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
-  ...
-  would import the given private key, and store it in the wallet under addr001.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  ```
+  http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
+  ```
+  would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-token-sale/(.*)**
 
-  Accepts the 12 words provided by Koinify during the crowd sale, and generates the corosponding entry in the wallet. For example:
+  Accepts the 12 words provided by Koinify during the crowd sale, and generates the corresponding entry in the wallet. For example:
   ```
-  http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name="koinifyAddr",mnemonic="<12 words separated by single spaces in quotes>"
+  http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
   ```
   Returns the public key
   
