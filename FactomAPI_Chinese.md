@@ -278,49 +278,49 @@ fctwallet
   
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/(.*)**
 	
-  这项请求是从另一个源导入可阅读的factoid私钥，提供了一个私钥和名字。例如：This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入可读的factoid私钥，提供了一个私钥和名字。例如：
 
  ```
  http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj
  ```
 
-  would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
 	
 +	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-human-readable-private-key/(.*)**
 
-  This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入可读的信用条目私钥，提供了一个私钥和名字。例如：
   ```
   http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
   ```
-  would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
 
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-token-sale/(.*)**
 
-  Accepts the 12 words provided by Koinify during the crowd sale, and generates the corresponding entry in the wallet. For example:
+  在销售过程中接受Koinfiy的信息，并在钱包中生成相应的记录，例如：
   ```
   http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
   ```
-  Returns the public key
+  返回公钥
   
 +	Post **http://localhost:8089/v1/factoid-new-transaction/([^/]+)**
 
-  Creates a new transaction, and assoicates that transaction with a key.  This key is used in other operations to add inputs, add outputs, add entry credit outputs, pay the fee, sign the transaction, and submit it. Example:
+  创建一项新的交易以及对应的钥匙，该钥匙将在其他操作过程中用于添加输入或输出，添加信用条目输出，支付费用，签署交易，以及传递。例如：
   ```
   http://localhost:8089/v1/factoid-new-transaction/trans
   ```
-  Response 
+  返回 
   ```
   {"Response":"Success building a transaction","Success":true}
   ```
-  Which creates a transaction named 'trans'.  We will use this transaction in the following commands.
+ 生成了一项新交易，交易名为‘trans’ 我们将在接下来的命令中使用该项交易。
   
 +	Post **http://localhost:8089/v1/factoid-delete-transaction/([^/]+)**
   
-  Delete the specified transaction under construction by name.
+  根据名字删除特定的交易
   ```
   http://localhost:8089/v1/factoid-delete-transaction/trans
   ```
-  Response
+  返回
   ```
   {"Response":"Success deleting transaction","Success":true}
   ```
