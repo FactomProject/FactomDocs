@@ -425,31 +425,71 @@ fctwallet
   ```
   http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
   ```
+  Response
+  ```
+  {"Response":"Success Submitting transaction","Success":true}
+  ```
 
-+	Get **http://localhost:8089/v1/factoid-validate/(.*)**
++	Get **http://localhost:8089/v1/factoid-validate/(.*)**	
 
   Not currently implemented.
 
 +	Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
 
   Get the current exchange rate in number of Factoids per Entry Credit
+  For example:
+  ```
+  http://localhost:8089/v1/factoid-get-fee/
+  ```
+  Response
+  ```
+  {"Response":"0.006666","Success":true}
+  ```
   
 +	Get **http://localhost:8089"/v1/properties/**
 
-  Get the version numbers of all the components of the Factom client, fctwallet, factomd, and the protocol	
-
+  Get the version numbers of all the components of the Factom client, fctwallet, factomd, and the protocol
+  For example:
+  ```
+  http://localhost:8089/v1/properties/
+  ```
+  Response
+  ```
+  {"Response":"Protocol Version:   0.1.5\nfactomd Version:    0.3.4\nfctwallet Version:  0.1.4\n","Success":true}
+  ```
+  
 +	Get **http://localhost:8089/v1/factoid-get-addresses/**
 
   Get the address list held in the wallet
+  For example:
+  ```
+  http://localhost:8089/v1/factoid-get-addresses/
+  ```
   
 +	Get **http://localhost:8089/v1/factoid-get-transactions/**
 
   Get all the transactions currently under construction, along with the key used to reference them.
+  For example:
+  ```
+  http://localhost:8089/v1/factoid-get-transactions/
+  ```
   
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
 
-  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.	
+  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.
+  For example:
+  ```
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FA2opZ5tRQET3LNRPfXFR2dWDRD1Sgc1aEYNStTXtkPWQtEvoAiY"
+curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=<addrname>"
+curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cmd=all"
+```
 
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
 
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
+  For example:
+  ```
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FA3RrKWJLQeDuzC9YzxcSwenU1qDzzwjR1uHMpp1SQbs8wH9Qbbr"
+   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=<addrname>"
+   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "cmd=all"
+   ```
