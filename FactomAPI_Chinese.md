@@ -1,64 +1,45 @@
 
-Factoid API
+Factoid 应用程序接口(API)
 ===========
 
-This document does a quick summary of the API for Factoids and the Factoid wallet.   At this point in time
-the wallet is a commandline driven program, intended to demonstrate the API more than to be a viable 
-commerical wallet solution.
+这是份关于Factoids币和Facoid钱包的应用程序接口(API)的摘要。此时此刻，钱包(Wallet)是一个命令行驱动程序，旨在演示API而非商业钱包解决方案。
 
-The first step is to install the factom client and factom wallet helpers.  See the [How To](http://factom.org/howto) 
-guides for setting up in your environment.  You will need to run factomd and fctwallet.  Note that from time to 
-time over the next few months you will need to update factomd to continue to communicate 
-with the network.  Watch our [technical blog](http://blog.factom.org/) for notifications and updates.
+第一步需要安装Factom客户端和Factom钱包帮手。参见[如何安装]指引，设定你的运行环境(http://factom.org/howto)并需要运行Factomd和Fctwallet。请注意在今后的几个月内，可能需要对Factomd不定期的进行更新，以持续与网络对接。具体通知更新，请参见我们的[技术博客](http://blog.factom.org/) 
 
-The two APIs that are of interest are implemented by factomd and fctwallet.  The first, **factomd**, is the client
-program that actually participates in the Factom Network.  The second, **fctwallet**, provides common wallet
-functions, and it maintains the address book where private keys are kept.  A third program, **walletapp**, provides
-for cold wallets, the generation of offline transactions, and the submission of offline transactions to 
-the factom network.
+关于这两个应用程序的接口，**Factomd**是加入Factom网络的客户端，另一个**fctwallet**提供通用的钱包功能，并维护私钥所存放的地址簿。此外，第三个程序**walletapp**提供线下钱包(cold wallet)功能，生成线下交易并其上传Factom网络。
 
-The factom client **factomd** provides a RESTful interface found at http://localhost:8088 by default.  None of the calls to 
-factomd present any security issues, so factomd does not have to be colocated with programs creating and
-submitting transactions.
+Fatcom客户端**Factomd**提供表征性状态传输(RESTful)接口,默认存放地址http://localhost:8088 任何向Factomd发出的请求都不会产生安全性问题，因此Factomd无需位于同一位置进行程序创建和提交事务。
 
-The factom wallet **fctwallet** provides a RESTful interface found at http://localhost:8089 by default.  Calls to 
-fctwallet allow for the creation of transactions against factoid addresses held in its wallet.  Access to the 
-API then must be kept secure.
+Factom钱包**Fctwallet**亦提供表征性状态传输(RESTful)接口,默认存放地址http://localhost:8089 针对钱包中的Factoid地址，向Fctwallet发出请求会产生并建立交易，因此需要保证安全的访问接口。
 
-The factom wallet **walletapp** is an alternative that only supports factoid functions.  It communicates only 
-with factomd.  The *walletapp* supports cold storage, construction of offline transactions, and the submission
-of offline transaction to the factom network.  We will soon be releasing a GUI that will run on top of the
-*walletapp* that will provide support for general factoid users.
+Factom钱包**walletapp**是替代方案，仅支持Factoid功能，并只与Factomd进行通信。*walletapp*用于冷存储，创建线下交易，并将线下交易传输到Factom网络。我们很快会基于*walletapp*发布图形用户界面(GUI),向Factoid用户提供支持。
 
-The factom commandline wallet **factom-cli** is a wallet that supports factoid transactions, as well as 
-general access to the Factom protocol. *factom-cli* uses the interfaces to *factomd* and *fctwallet* to 
-implement its functionality.  The main purpose of this program is to demonstrate the use of the factom
-APIs.  It can also be used to script transaction processes against Factom.
+Factom钱包命令行**factom-cli**用于支持Factoid的交易，并接入Factom通用协议。*factom-cli*通过连接到*factomd*和*fctwallet*的接口，执行相应的功能。这个程序的主要用来证明Factom API的使用，也可以作为Factom脚本交易处理。
 
 factomd
 -------
 
-This is a summary of the factomd API as pertains to trading Factoids.  We will add detail on other calls as we go forward.
+这份摘要，有关Factoids交易的factomd应用程序接口。我们在今后将会添加更多的细节。
 
 + Post **http://localhost:8088/v1/commit-chain/?**
 
-  Commits a chain.  The first step towards creating a new chain.
+  生成链，创建一个新链的第一步
   
 + Post **http://localhost:8088/v1/reveal-chain/?**
 
-  Reveal the first entry in a chain.  Required to complete the construction of a new chain.
+  提示链中的第一个记录，需要完成一个新链的构建
   
 + Post **http://localhost:8088/v1/commit-entry/?**
 
-  Commits an entry.  The first step in writing an entry to a chain.
+ 生成记录，写入链中记录的第一步
   
 + Post **http://localhost:8088/v1/reveal-entry/?**
 
-  Reveal a new entry.  Required to complete the writing of an entry into a chain.
+  提示新的条目，需要完成写入链中的记录
   
 + Post **http://localhost:8088/v1/factoid-submit/?**
 
-  Submit transaction.  Requires the encoded transaction as part of the call.  For example, creating a transaction that sends 10 factoids from xxx to yyy might be encoded as:
+  提交事务。需要对交易进行编码，作为请求的一部分。例如，生成一个从xxx账户向yyy账户转10个Factoids币的一项交易，可以编码为
   ```
   http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
   a1a1e5eac31af88cdbb886f34470cc0415d1968d8637814cfac482f283dceb940025edb8b25808b6e6d
@@ -66,44 +47,44 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
   f6074573f570b8b25a9d424b1d955d2caaa4d2cfe30eb8217844f8b28b8a47ce6dc3e5eecd03f30954c
   a3f0b64a63e0687f667bc3300bb33a0638953d442db2cd6fb4d27045318ec09463542c66305
   ```
-  That seems like a pretty complex construction of data.  Most users will use fctwallet to construct this call.
+  这看上去是很复杂的数据结构。很多用户会使用fctwallet建立这项请求。
   
 + Get **http://localhost:8088/v1/directory-block-head/?**
 
-  Returns the hash of the directory block head.  No parameters are needed. Returns a JSON string of the form:
+  返回目录区块头目的哈希值。无需任何参数，返回一个JSON形式的字符串。
   ```
   {"KeyMR":"f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642"}
   ```
 + Get **http://localhost:8088/v1/directory-block-height/?**
  
-  Returns the current directory block height.
+  返回当前目录区块的高度：
   ```
   http://localhost:8088/v1/directory-block-height/
   ```
-  Returned at the time of writing:
+  返回写入时间：
   ```
   {"Height":4585}
   ```
   
 + Get **http://localhost:8088/v1/get-raw-data/([^/]+)**
   
-  Returns the block assoicated with the given hash.  
+  返回指定哈希值的区块  
   ```
   http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
-  returns:
+  返回：
   ```
   {"Data":"00fa92e5a291592f5f78c547560edceb8bc5ef142f20e9689fcd587557a2f3d18406d6e5ece9eacaa1c31d1371af60d6a9d5ea65654d1ff5698f7fb181d0ae4bc8582c093186dd2a14e83bbf53bb7cab230b1d0e2cefbb0d93d16c09c39ea13e338d0a8c0a016f279a000010c100000004000000000000000000000000000000000000000000000000000000000000000a98f7817976ed8ff9aa306834d98c145d7c0334d7057f89dd2f035df1b37946ae000000000000000000000000000000000000000000000000000000000000000c9432448e6c7f56450804b42ed9c1653182efb6f48a5d8da2c22d1789e7dbff44000000000000000000000000000000000000000000000000000000000000000fb642daa292af42dda109bc87cddd31647da6fef9f3f25129c3740ef4d72761a0df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9"}
   ```
-  This data can be unmarshalled into the directory block struct used by Factom.
+  这些数据能被分散到Factom的目录区块机构中。
 
 + Get **http://localhost:8088/v1/directory-block-by-keymr/([^/]+)**
 
-  Returns the directory block assoicated with the given hash.  
+  返回指定哈希值的区块  
   ```
   http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
-  returns:
+  返回：
   ```
   {"Header":{
      "PrevBlockKeyMR":"e9eacaa1c31d1371af60d6a9d5ea65654d1ff5698f7fb181d0ae4bc8582c0931",
@@ -121,15 +102,15 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
     ]
   }
   ```
-  This call returns the data held in a Directory Block digested into a JSON structure.
+  这项调用返回目录区块中的数据，并转化为JSON结构。
 
 + Get **http://localhost:8088/v1/entry-block-by-keymr/([^/]+)**
 
-  Returns an Entry Block structure. The call:
+  返回记录区块机构。这项调用为：
   ```
   http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
   ```
-  Returns 
+  返回
   ```
   {
     "Header":{
@@ -145,75 +126,75 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
     ]
   }
 ```
-This is the structure of an Entry block, broken out into JSON.
+这是一个记录区块的结构，分拆成JSON结构
 
 + Get **http://localhost:8088/v1/entry-by-hash/([^/]+)", handleEntry)**
 
-  Returns an Entry broken out into JSON.  The following call:
+  返回一项分拆成JSON的记录：
   ```
   http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
   ```
-  Returns:
+  返回:
   ```
   {"ChainID":"df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604",
   "Content":"7b22416e63686f725265636f7264566572223a312c224442486569676874223a343238382c224b65794d52223a2265396561636161316333316431333731616636306436613964356561363536353464316666353639386637666231383164306165346263383538326330393331222c225265636f7264486569676874223a343238382c22426974636f696e223a7b2241646472657373223a22314b3253586741706d6f39755a6f79616876736253616e705657627a5a5756564d46222c2254584944223a2263323363623932303764356266643863376539656565303438316338333563663463373665626132363565393832656330623032353964636666323536636134222c22426c6f636b486569676874223a3337373031312c22426c6f636b48617368223a2230303030303030303030303030303030303466396138653735343065383135316336373231653131646264343166633936663931653432313661373161356334222c224f6666736574223a3835317d7d6234643966633530343564653635313532353664623337316463633138636266653761616537383664326262336565633466316334373966636132393762373266363330633261313439366436653737653139633631626165663030326233396133633064656534636439323963396335393836326331366639646136353033","ExtIDs":null}
   ```
-  Returns a particiular Entry's construction broken out into JSON.
+  返回一项特定记录，并分拆成JSON格式
   
 + Get **http://localhost:8088/v1/chain-head/([^/]+)**
 
-  Returns the KeyMR of the first Entry in an Entry Chain.  The call:
+  返回条目链中第一项记录的梅克尔根(KeyMR)。请求：
   ```
   http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
   ```
-  Returns
+  返回：
   ```
   {"ChainHead":"bfd814a3b9a4356e04c816fe4ce1a53198953ab321912d60dacba766950e5591"}
   ```
 
 + Get **http://localhost:8088/v1/entry-credit-balance/([^/]+)**
 
-  Returns the balance at the given Entry Credit address.  For example, the call:
+  返回指定数据条目信用地址的余额。例如，请求:
   ```
   http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
   ```
-  Might return (depending on the balance at that address at the time):
+  可能返回（取决于该地址该时刻的余额）:
   ```
   {"Response":"4000","Success":true}
   ```
-  This would indicate that the decoded Entry Credit address (EC2eUoDPupuQXm5gxs1sCBCv3bbZBCYFDTjaFQ6iRaAKfyXNqjEJ) decodes to the hex: 748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b and has a balance of 4000 entry credits.
+  这表明该数据条目信用地址 (EC2eUoDPupuQXm5gxs1sCBCv3bbZBCYFDTjaFQ6iRaAKfyXNqjEJ)解码为:748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b 并有4000的条目信用积分。
   
 + Get **http://localhost:8088/v1/factoid-balance/([^/]+)**
 
-  Returns the Factoid balance at the given address.  For example, the call:
+  返回指定地址的Factoid余额。例如，该项请求：
   ```
   http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
   ```
-  Returns:
+  返回:
   ```
   {"Response":"1210268000","Success":true}
   ```
-  Note that, like Bitcoin, Factoids use fixed point to indicate parts of a coin.  so 12.10268000 represents 12.10268 factoids.
+  需要注意的是，类似于比特币，Factoids使用固定小数点反映货币数量。如 12.10268000 表示 12.10268 枚factoids币.
   
 + Get **http://localhost:8088/v1/factoid-get-fee/**
   
-  Returns the current exchange rate for Entry Credits.  So the call:
+  返回数据条目信用与Factoids币的现行折换率:
   ```
   http://localhost:8088/v1/factoid-get-fee/
   ```
-  might return
+  或许返回
   ```
   {"Fee":100000}
   ```
-  indicating that .001 Factoids will purchase 1 Entry Credit.   
+  表明.001 Factoids 可以购买1条条目信用.   
   
 + Get **http://localhost:8088/v1/properties/",handleProperties)**
 
-  Returns the version numbers of various components of Factom.  For example at the time of writing, the call:
+  返回Factom不同组成部分版本号：
   ```
   http://localhost:8088/v1/properties/
   ```
-  Returns:
+  返回:
   ```
   {
     "Protocol_Version":1005,
@@ -227,39 +208,39 @@ fctwallet
 
 +	Get **http://localhost:8089/v1/factoid-balance/([^/]+)**
 
-  Return the factoid balance at the given Factoid address.  The call can take an address name known by your wallet, a Factoid address, or a hex representation of the address (less base 58 and checksums).
+  返回指定Factoid地址的Factoid的余额。这项请求可以使用钱包地址名，Factoid地址，或者该地址对应的16进制
   
-  For example, for a given wallet, the following calls:
+  举例:
   ```
   http://localhost:8089/v1/factoid-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
   http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534  
   http://localhost:8089/v1/factoid-balance/FactomAddress01
   ```
-  Will return:
+  会返回:
   ```
   {"Response":"1210680000","Success":true}
   ```
-  Should all retrieve the same balance from the same address, assuming that your address book had an entry FactomAddress01 with the private key for FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb.
+  若从以上相同地址返回的余额相等，表明你的地址簿有一项记录FactomAddress01，它的私钥是FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb.
   
 +	Get **http://localhost:8089/v1/entry-credit-balance/([^/]+)**
 
-  Return the Entry Credit balance for the specified address.  The call can take an address name known by your wallet, an Entry Credit address, or a hex representation of the address (less base 58 and checksum).
+  返回指定地址的条目信用余额。这项请求可以使用已知的钱包的地址名，条目信用的地址，或者该地址对应的16进制
   
-  For example, for a given wallet and Entry Credit address, the calls:
+  举例：对于一个指定的钱包和条目信用地址:
   ```
   http://localhost:8089/v1/entry-credit-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
   http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
   http://localhost:8090/EntryCreditAddress001
   ```
-  Will Return
+  将返回
   ```
   {"Response":"4000","Success":true}
   ```
-  Assuming that your wallet had an entry EntryCreditAddress001 with the private key for the given public address.
+  假定你的钱包有一项条目记录 EntryCreditAddress001 对应所给定的公共地址的私钥。
   
 +	Get **http://localhost:8089/v1/factoid-generate-address/([^/]+)**
 
-  Generate an address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  生成地址，并在钱包中创造一个条目保存该地址。地址是从确定的散列中创建。因此，即使你备份钱包，Generate an address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
   
   The call:
   ```
