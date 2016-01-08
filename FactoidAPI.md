@@ -406,10 +406,6 @@ fctwallet
   {"Response":"Success signing transaction","Success":true}
   ```
   Signs the transaction 'trans'.
-  
-+ Post **http://localhost:8089/v1/factoid-setup/(.*)**
-
-  Takes a random character sequence as a parameter along with the current timestamp.  This sets a new base key for address generation.  If you make this call on a wallet, you need to back up your wallet.  Because this replaces the seed for address generation, you must back up this new seed, or you will not be able to recover your addresses should you lose your wallet. 
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
