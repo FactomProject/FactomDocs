@@ -16,8 +16,7 @@ Factom钱包**walletapp**是替代方案，仅支持Factoid功能，并只与Fac
 
 Factom钱包命令行**factom-cli**用于支持Factoid的交易，并接入Factom通用协议。*factom-cli*通过连接到*factomd*和*fctwallet*的接口，执行相应的功能。这个程序的主要用来证明Factom API的使用，也可以作为Factom脚本交易处理。
 
-Note: Examples of the API calls provided below can be executed in command line directly if curl is installed. The API calls have been prefixed with curl -X POST or curl -X GET depending on method.
-
+请注意：如果安装了curl，以下API调用的案例可以在命令行中直接运行，并根据具体情况，API的调用以curl -X POST 或者 curl -X GET作为前缀。
 
 factomd
 -------
@@ -415,71 +414,71 @@ fctwallet
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
-  对一个特定的条目信用钥匙以二进制形式签署并递交至Factomd服务器 
+  对一个特定的条目信用钥匙以二进制形式签署，并递交至Factomd服务器 
 
 +	Post **http://localhost:8089/v1/commit-entry/([^/]+)**
  
-  Commit an entry to an Entry Chain 
+  在记录链中提交记录 
 
 +	Post **http://localhost:8089/v1/factoid-submit/(.*)**
 
-  Submit a transaction to Factom. This call takes a named JSON parameter.  For example, to submit a transaction named trans, you need the following call:
+  向Factom递交交易。该请求需要一个JSON参数。例如：递交一个名为trans的交易:
   ```
   curl -X POST http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
   ```
-  Response
+  返回
   ```
   {"Response":"Success Submitting transaction","Success":true}
   ```
 
 +	Get **http://localhost:8089/v1/factoid-validate/(.*)**	
 
-  Not currently implemented.
+  目前未实现
 
 +	Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
 
-  Get the current exchange rate in number of Factoids per Entry Credit
-  For example:
+  获取每条信用条目对应的Factoid的换算率
+  例如：
   ```
   curl -X GET http://localhost:8089/v1/factoid-get-fee/
   ```
-  Response
+  返回
   ```
   {"Response":"0.006666","Success":true}
   ```
   
 +	Get **http://localhost:8089"/v1/properties/**
 
-  Get the version numbers of all the components of the Factom client, fctwallet, factomd, and the protocol
-  For example:
+  获取Factom客户端，fctwallet，factomd和协议的版本号
+  例如:
   ```
   http://localhost:8089/v1/properties/
   ```
-  Response
+  返回
   ```
   {"Response":"Protocol Version:   0.1.5\nfactomd Version:    0.3.4\nfctwallet Version:  0.1.4\n","Success":true}
   ```
   
 +	Get **http://localhost:8089/v1/factoid-get-addresses/**
 
-  Get the address list held in the wallet
-  For example:
+  获取钱包的地址列表
+  例如:
   ```
   curl -X GET http://localhost:8089/v1/factoid-get-addresses/
   ```
   
 +	Get **http://localhost:8089/v1/factoid-get-transactions/**
 
-  Get all the transactions currently under construction, along with the key used to reference them.
-  For example:
+  获取在建过程中的交易以及对应的钥匙
+  例如：
   ```
   curl -X GET http://localhost:8089/v1/factoid-get-transactions/
   ```
   
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
 
-  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.
-  For example:
+  如果键入‘all’，会返回所有交易。如果键入一个地址，会返回所有使用该地址作为输入信息，输出信息，或作为信用条目输出的交易，并以文本形式返回。
+  例如:
   ```
   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FA2opZ5tRQET3LNRPfXFR2dWDRD1Sgc1aEYNStTXtkPWQtEvoAiY"
 curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=<addrname>"
@@ -488,8 +487,8 @@ curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cm
 
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
 
-  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
-  For example:
+  如果键入‘all’，会返回所有交易。如果键入一个地址，会返回所有使用该地址作为输入信息，输出信息，或作为信用条目输出的交易，并以一串JSON对象的数组返回。
+  例如:
   ```
   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FA3RrKWJLQeDuzC9YzxcSwenU1qDzzwjR1uHMpp1SQbs8wH9Qbbr"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=<addrname>"
