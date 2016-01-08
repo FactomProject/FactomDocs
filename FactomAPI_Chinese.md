@@ -240,87 +240,87 @@ fctwallet
   
 +	Get **http://localhost:8089/v1/factoid-generate-address/([^/]+)**
 
-  生成地址，并在钱包中创造一个条目保存该地址。地址是从确定的散列中创建。因此，即使你备份钱包，Generate an address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  生成地址，并在钱包中创建一个条目保存该地址。地址是从确定的散列中创建。因此，当你备份钱包时，即使有些地址是备份后被创建，但是你的钱包也能够有效恢复。
   
-  The call:
+  调用:
   ```
   http://localhost:8089/v1/factoid-generate-address/fctAddress0001
   ```
-  will create an address fctAddress0001, and assign it a new private key.
+  会生成一个新的地址fctAddress0001, 并为其分配一个新的私钥。
   
 + Get **http://localhost:8089/v1/factoid-generate-ec-address/([^/]+)**
  
-  Generate an Entry Credit address, and create an entry in your wallet to hold said address.  Addresses are created from a deterministic hash, so if you back up your wallet, then your wallet can be restored even if some of the addresses were created after the backup.
+  生成信用条目地址，并在钱包中创建一个条目保存该地址。地址是从确定的散列中创建。因此，当你备份钱包时，即使有些地址是备份后被创建，但是你的钱包也能够有效恢复。
   
-  The call:
+  调用:
   ```
   http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
   ```
-  will create an address ECAddress0001, and assign it a new private key.
+ 会生成一个新的地址 ECAddress0001, 并为其分配一个新的私钥。
  
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-private-key/(.*)**
 	
-  This call is used to import a factoid private key in hex from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入十六进制的factoid私钥，提供了一个私钥和名字。例如：
 
  ```
  http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
  ```
- would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+ 会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
   
 +	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/(.*)**
 
-  This call is used to import an entry credit private key in hex from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入十六进制的信用条目私钥，提供了一个私钥和名字。例如：
   
    ```
    http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
    ```
-  would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
-
+  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
+  
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/(.*)**
 	
-  This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入可读的factoid私钥，提供了一个私钥和名字。例如：
 
  ```
  http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj
  ```
 
-  would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
 	
 +	Get **http://localhost:8089/v1/factoid-generate-ec-address-from-human-readable-private-key/(.*)**
 
-  This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
+  这项请求是从另一个源导入可读的信用条目私钥，提供了一个私钥和名字。例如：
   ```
   http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
   ```
-  would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
+  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
 
 +	Get **http://localhost:8089/v1/factoid-generate-address-from-token-sale/(.*)**
 
-  Accepts the 12 words provided by Koinify during the crowd sale, and generates the corresponding entry in the wallet. For example:
+  在销售过程中接受Koinfiy的信息，并在钱包中生成相应的记录，例如：
   ```
   http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
   ```
-  Returns the public key
+  返回公钥
   
 +	Post **http://localhost:8089/v1/factoid-new-transaction/([^/]+)**
 
-  Creates a new transaction, and assoicates that transaction with a key.  This key is used in other operations to add inputs, add outputs, add entry credit outputs, pay the fee, sign the transaction, and submit it. Example:
+  创建一项新的交易以及对应的钥匙，该钥匙将在其他操作过程中用于添加输入或输出，添加信用条目输出，支付费用，签署交易，以及传递。例如：
   ```
   http://localhost:8089/v1/factoid-new-transaction/trans
   ```
-  Response 
+  返回 
   ```
   {"Response":"Success building a transaction","Success":true}
   ```
-  Which creates a transaction named 'trans'.  We will use this transaction in the following commands.
+ 生成了一项新交易，交易名为‘trans’ 我们将在接下来的命令中使用该项交易。
   
 +	Post **http://localhost:8089/v1/factoid-delete-transaction/([^/]+)**
   
-  Delete the specified transaction under construction by name.
+  根据名字删除特定的交易
   ```
   http://localhost:8089/v1/factoid-delete-transaction/trans
   ```
-  Response
+  返回
   ```
   {"Response":"Success deleting transaction","Success":true}
   ```
@@ -389,9 +389,26 @@ fctwallet
   ```
   Signs the transaction 'trans'.
   
-+ Post **http://localhost:8089/v1/factoid-setup/(.*)**
+  + Post **http://localhost:8089/v1/compose-submit-chain/([^/]+)**
 
-  Takes a random character sequence as a parameter along with the current timestamp.  This sets a new base key for address generation.  If you make this call on a wallet, you need to back up your wallet.  Because this replaces the seed for address generation, you must back up this new seed, or you will not be able to recover your addresses should you lose your wallet. 
+Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
+
+	$ curl -X POST -H 'Content-Type: application/json'" -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
+	
+Returns
+	
+	{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+
++ Post **http://localhost:8089/v1/compose-submit-entry/([^/]+)**
+
+Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
+
+	$ curl -i -X POST -H 'Content-Type: application/json'" -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
+
+Returns
+
+	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
