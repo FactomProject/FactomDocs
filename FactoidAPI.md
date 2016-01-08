@@ -34,6 +34,8 @@ general access to the Factom protocol. *factom-cli* uses the interfaces to *fact
 implement its functionality.  The main purpose of this program is to demonstrate the use of the factom
 APIs.  It can also be used to script transaction processes against Factom.
 
+Note: Examples of the API calls provided below can be executed in command line directly if curl is installed. The API calls have been prefixed with curl -X POST or curl -X GET depending on method.
+
 factomd
 -------
 
@@ -59,7 +61,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Submit transaction.  Requires the encoded transaction as part of the call.  For example, creating a transaction that sends 10 factoids from xxx to yyy might be encoded as:
   ```
-  http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
+  curl -X GET http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
   a1a1e5eac31af88cdbb886f34470cc0415d1968d8637814cfac482f283dceb940025edb8b25808b6e6d
   48ad5ba67d0843eaf962c40f63c9b4df91b8fe7364ae872014b776d236585f2ed658ec9d24a4a65e08e
   f6074573f570b8b25a9d424b1d955d2caaa4d2cfe30eb8217844f8b28b8a47ce6dc3e5eecd03f30954c
@@ -77,7 +79,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
  
   Returns the current directory block height.
   ```
-  http://localhost:8088/v1/directory-block-height/
+  curl -X GET http://localhost:8088/v1/directory-block-height/
   ```
   Returned at the time of writing:
   ```
@@ -88,7 +90,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
   
   Returns the block assoicated with the given hash.  
   ```
-  http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   returns:
   ```
@@ -100,7 +102,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Returns the directory block assoicated with the given hash.  
   ```
-  http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   returns:
   ```
@@ -126,7 +128,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Returns an Entry Block structure. The call:
   ```
-  http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
+  curl -X GET http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
   ```
   Returns 
   ```
@@ -150,7 +152,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns an Entry broken out into JSON.  The following call:
   ```
-  http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
+  curl -X GET http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
   ```
   Returns:
   ```
@@ -163,7 +165,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the KeyMR of the first Entry in an Entry Chain.  The call:
   ```
-  http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
+  curl -X GET http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
   ```
   Returns
   ```
@@ -174,7 +176,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the balance at the given Entry Credit address.  For example, the call:
   ```
-  http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
+  curl -X GET http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
   ```
   Might return (depending on the balance at that address at the time):
   ```
@@ -186,7 +188,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the Factoid balance at the given address.  For example, the call:
   ```
-  http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
+  curl -X GET http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
   ```
   Returns:
   ```
@@ -198,7 +200,7 @@ This is the structure of an Entry block, broken out into JSON.
   
   Returns the current exchange rate for Entry Credits.  So the call:
   ```
-  http://localhost:8088/v1/factoid-get-fee/
+  curl -X GET http://localhost:8088/v1/factoid-get-fee/
   ```
   might return
   ```
@@ -210,7 +212,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the version numbers of various components of Factom.  For example at the time of writing, the call:
   ```
-  http://localhost:8088/v1/properties/
+  curl -X GET http://localhost:8088/v1/properties/
   ```
   Returns:
   ```
