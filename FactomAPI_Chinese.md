@@ -16,6 +16,9 @@ Factom钱包**walletapp**是替代方案，仅支持Factoid功能，并只与Fac
 
 Factom钱包命令行**factom-cli**用于支持Factoid的交易，并接入Factom通用协议。*factom-cli*通过连接到*factomd*和*fctwallet*的接口，执行相应的功能。这个程序的主要用来证明Factom API的使用，也可以作为Factom脚本交易处理。
 
+Note: Examples of the API calls provided below can be executed in command line directly if curl is installed. The API calls have been prefixed with curl -X POST or curl -X GET depending on method.
+
+
 factomd
 -------
 
@@ -41,7 +44,7 @@ factomd
 
   提交事务。需要对交易进行编码，作为请求的一部分。例如，生成一个从xxx账户向yyy账户转10个Factoids币的一项交易，可以编码为
   ```
-  http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
+  curl -X GET http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
   a1a1e5eac31af88cdbb886f34470cc0415d1968d8637814cfac482f283dceb940025edb8b25808b6e6d
   48ad5ba67d0843eaf962c40f63c9b4df91b8fe7364ae872014b776d236585f2ed658ec9d24a4a65e08e
   f6074573f570b8b25a9d424b1d955d2caaa4d2cfe30eb8217844f8b28b8a47ce6dc3e5eecd03f30954c
@@ -59,7 +62,7 @@ factomd
  
   返回当前目录区块的高度：
   ```
-  http://localhost:8088/v1/directory-block-height/
+  curl -X GET http://localhost:8088/v1/directory-block-height/
   ```
   返回写入时间：
   ```
@@ -70,7 +73,7 @@ factomd
   
   返回指定哈希值的区块  
   ```
-  http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   返回：
   ```
@@ -82,7 +85,7 @@ factomd
 
   返回指定哈希值的区块  
   ```
-  http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   返回：
   ```
@@ -108,7 +111,7 @@ factomd
 
   返回记录区块机构。这项调用为：
   ```
-  http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
+  curl -X GET http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
   ```
   返回
   ```
@@ -132,7 +135,7 @@ factomd
 
   返回一项分拆成JSON的记录：
   ```
-  http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
+  curl -X GET http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
   ```
   返回:
   ```
@@ -145,7 +148,7 @@ factomd
 
   返回条目链中第一项记录的梅克尔根(KeyMR)。请求：
   ```
-  http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
+  curl -X GET http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
   ```
   返回：
   ```
@@ -156,7 +159,7 @@ factomd
 
   返回指定数据条目信用地址的余额。例如，请求:
   ```
-  http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
+  curl -X GET http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
   ```
   可能返回（取决于该地址该时刻的余额）:
   ```
@@ -168,7 +171,7 @@ factomd
 
   返回指定地址的Factoid余额。例如，该项请求：
   ```
-  http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
+  curl -X GET http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
   ```
   返回:
   ```
@@ -180,7 +183,7 @@ factomd
   
   返回数据条目信用与Factoids币的现行折换率:
   ```
-  http://localhost:8088/v1/factoid-get-fee/
+  curl -X GET http://localhost:8088/v1/factoid-get-fee/
   ```
   或许返回
   ```
@@ -192,7 +195,7 @@ factomd
 
   返回Factom不同组成部分版本号：
   ```
-  http://localhost:8088/v1/properties/
+  curl -X GET http://localhost:8088/v1/properties/
   ```
   返回:
   ```
@@ -212,9 +215,9 @@ fctwallet
   
   举例:
   ```
-  http://localhost:8089/v1/factoid-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
-  http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534  
-  http://localhost:8089/v1/factoid-balance/FactomAddress01
+  curl -X GET "http://localhost:8089/v1/factoid-balance/FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  curl -X GET "http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534"  
+  curl -X GET "http://localhost:8089/v1/factoid-balance/FactomAddress01"
   ```
   会返回:
   ```
@@ -228,9 +231,9 @@ fctwallet
   
   举例：对于一个指定的钱包和条目信用地址:
   ```
-  http://localhost:8089/v1/entry-credit-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
-  http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
-  http://localhost:8090/EntryCreditAddress001
+  curl -X GET "http://localhost:8089/v1/entry-credit-balance/ECxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  curl -X GET "http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b"
+  curl -X GET "http://localhost:8090/EntryCreditAddress001"
   ```
   将返回
   ```
@@ -244,7 +247,7 @@ fctwallet
   
   调用:
   ```
-  http://localhost:8089/v1/factoid-generate-address/fctAddress0001
+  curl -X GET http://localhost:8089/v1/factoid-generate-address/fctAddress0001
   ```
   会生成一个新的地址fctAddress0001, 并为其分配一个新的私钥。
   
@@ -254,7 +257,7 @@ fctwallet
   
   调用:
   ```
-  http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
+  curl -X GET http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
   ```
  会生成一个新的地址 ECAddress0001, 并为其分配一个新的私钥。
  
@@ -263,7 +266,7 @@ fctwallet
   这项请求是从另一个源导入十六进制的factoid私钥，提供了一个私钥和名字。例如：
 
  ```
- http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
+ curl -X GET http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
  ```
  会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
   
@@ -272,7 +275,7 @@ fctwallet
   这项请求是从另一个源导入十六进制的信用条目私钥，提供了一个私钥和名字。例如：
   
    ```
-   http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
+   curl -X GET http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
    ```
   会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
   
@@ -281,7 +284,7 @@ fctwallet
   这项请求是从另一个源导入可读的factoid私钥，提供了一个私钥和名字。例如：
 
  ```
- http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fsxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
  ```
 
   会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
@@ -290,7 +293,7 @@ fctwallet
 
   这项请求是从另一个源导入可读的信用条目私钥，提供了一个私钥和名字。例如：
   ```
-  http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
+  curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Esxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   ```
   会导入给定的私钥，保存在钱包地址addr001下，并返回一个公钥。需要注意的是,以这种形式导入的私钥需要立即备份，以保证安全性。
 
@@ -298,7 +301,7 @@ fctwallet
 
   在销售过程中接受Koinfiy的信息，并在钱包中生成相应的记录，例如：
   ```
-  http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
+  curl -X GET http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
   ```
   返回公钥
   
@@ -306,7 +309,7 @@ fctwallet
 
   创建一项新的交易以及对应的钥匙，该钥匙将在其他操作过程中用于添加输入或输出，添加信用条目输出，支付费用，签署交易，以及传递。例如：
   ```
-  http://localhost:8089/v1/factoid-new-transaction/trans
+  curl -X POST http://localhost:8089/v1/factoid-new-transaction/trans
   ```
   返回 
   ```
@@ -318,7 +321,7 @@ fctwallet
   
   根据名字删除特定的交易
   ```
-  http://localhost:8089/v1/factoid-delete-transaction/trans
+  curl -X POST http://localhost:8089/v1/factoid-delete-transaction/trans
   ```
   返回
   ```
@@ -422,7 +425,7 @@ fctwallet
 
   Submit a transaction to Factom. This call takes a named JSON parameter.  For example, to submit a transaction named trans, you need the following call:
   ```
-  http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
+  curl -X POST http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
   ```
   Response
   ```
@@ -438,7 +441,7 @@ fctwallet
   Get the current exchange rate in number of Factoids per Entry Credit
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-fee/
+  curl -X GET http://localhost:8089/v1/factoid-get-fee/
   ```
   Response
   ```
@@ -462,7 +465,7 @@ fctwallet
   Get the address list held in the wallet
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-addresses/
+  curl -X GET http://localhost:8089/v1/factoid-get-addresses/
   ```
   
 +	Get **http://localhost:8089/v1/factoid-get-transactions/**
@@ -470,7 +473,7 @@ fctwallet
   Get all the transactions currently under construction, along with the key used to reference them.
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-transactions/
+  curl -X GET http://localhost:8089/v1/factoid-get-transactions/
   ```
   
 +	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
