@@ -4,7 +4,7 @@ Factoid 应用程序接口(API)
 
 这是份关于Factoids币和Facoid钱包的应用程序接口(API)的摘要。此时此刻，钱包(Wallet)是一个命令行驱动程序，旨在演示API而非商业钱包解决方案。
 
-第一步需要安装Factom客户端和Factom钱包帮手。参见[如何安装]指引，设定你的运行环境(http://factom.org/howto)并需要运行Factomd和Fctwallet。请注意在今后的几个月内，可能需要对Factomd不定期的进行更新，以持续与网络对接。具体通知更新，请参见我们的[技术博客](http://blog.factom.org/) 
+第一步需要安装Factom客户端和Factom钱包帮手。参见[如何安装]指引，设定你的运行环境(http://factom.org/howto) 并需要运行Factomd和Fctwallet。请注意在今后的几个月内，可能需要对Factomd不定期的进行更新，以持续与网络对接。具体通知更新，请参见我们的[技术博客](http://blog.factom.org/) 
 
 关于这两个应用程序的接口，**Factomd**是加入Factom网络的客户端，另一个**fctwallet**提供通用的钱包功能，并维护私钥所存放的地址簿。此外，第三个程序**walletapp**提供线下钱包(cold wallet)功能，生成线下交易并其上传Factom网络。
 
