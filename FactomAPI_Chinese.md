@@ -395,7 +395,7 @@ fctwallet
 
 创建一个JSON对象，用于通过Factomd请求，生成链和显示链
 
-	$ curl -X POST -H 'Content-Type: application/json'" -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
+	$ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
 	
 返回
 	
@@ -405,7 +405,7 @@ fctwallet
 
 创建一个JSON对象，用于通过Factomd请求，生成记录和显示记录
 
-	$ curl -i -X POST -H 'Content-Type: application/json'" -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
+	$ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
 
 返回
 
