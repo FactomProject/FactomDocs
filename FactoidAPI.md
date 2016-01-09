@@ -34,6 +34,8 @@ general access to the Factom protocol. *factom-cli* uses the interfaces to *fact
 implement its functionality.  The main purpose of this program is to demonstrate the use of the factom
 APIs.  It can also be used to script transaction processes against Factom.
 
+Note: Examples of the API calls provided below can be executed in command line directly if curl is installed. The API calls have been prefixed with curl -X POST or curl -X GET depending on method.
+
 factomd
 -------
 
@@ -59,7 +61,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Submit transaction.  Requires the encoded transaction as part of the call.  For example, creating a transaction that sends 10 factoids from xxx to yyy might be encoded as:
   ```
-  http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
+  curl -X GET http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
   a1a1e5eac31af88cdbb886f34470cc0415d1968d8637814cfac482f283dceb940025edb8b25808b6e6d
   48ad5ba67d0843eaf962c40f63c9b4df91b8fe7364ae872014b776d236585f2ed658ec9d24a4a65e08e
   f6074573f570b8b25a9d424b1d955d2caaa4d2cfe30eb8217844f8b28b8a47ce6dc3e5eecd03f30954c
@@ -77,7 +79,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
  
   Returns the current directory block height.
   ```
-  http://localhost:8088/v1/directory-block-height/
+  curl -X GET http://localhost:8088/v1/directory-block-height/
   ```
   Returned at the time of writing:
   ```
@@ -88,7 +90,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
   
   Returns the block assoicated with the given hash.  
   ```
-  http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/get-raw-data/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   returns:
   ```
@@ -100,7 +102,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Returns the directory block assoicated with the given hash.  
   ```
-  http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
+  curl -X GET http://localhost:8088/v1/directory-block-by-keymr/f7eb0456b30b1a4b50867a5307532e92ddee7279ffc955ce1284cd142f94d642
   ```
   returns:
   ```
@@ -126,7 +128,7 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Returns an Entry Block structure. The call:
   ```
-  http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
+  curl -X GET http://localhost:8088/v1/entry-block-by-keymr/789b0103e5f8358d7f8402264837986a2b29ac59be8a796dbbe75eecf6a853d9
   ```
   Returns 
   ```
@@ -150,7 +152,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns an Entry broken out into JSON.  The following call:
   ```
-  http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
+  curl -X GET http://localhost:8088/v1/entry-by-hash/c8f4936962836cda0d8bf712653d97f8d8b5cbe675e495b6dfab6b2395c8b80a
   ```
   Returns:
   ```
@@ -163,7 +165,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the KeyMR of the first Entry in an Entry Chain.  The call:
   ```
-  http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
+  curl -X GET http://localhost:8088/v1/chain-head/df3ade9eec4b08d5379cc64270c30ea7315d8a8a1a69efe2b98a60ecdd69e604
   ```
   Returns
   ```
@@ -174,7 +176,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the balance at the given Entry Credit address.  For example, the call:
   ```
-  http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
+  curl -X GET http://localhost:8088/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
   ```
   Might return (depending on the balance at that address at the time):
   ```
@@ -186,7 +188,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the Factoid balance at the given address.  For example, the call:
   ```
-  http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
+  curl -X GET http://localhost:8088/v1/factoid-balance/f6e117ea838cb652e9cfc3b29552d5887800a7ba614df0bd8c13e171eddc5897
   ```
   Returns:
   ```
@@ -198,7 +200,7 @@ This is the structure of an Entry block, broken out into JSON.
   
   Returns the current exchange rate for Entry Credits.  So the call:
   ```
-  http://localhost:8088/v1/factoid-get-fee/
+  curl -X GET http://localhost:8088/v1/factoid-get-fee/
   ```
   might return
   ```
@@ -210,7 +212,7 @@ This is the structure of an Entry block, broken out into JSON.
 
   Returns the version numbers of various components of Factom.  For example at the time of writing, the call:
   ```
-  http://localhost:8088/v1/properties/
+  curl -X GET http://localhost:8088/v1/properties/
   ```
   Returns:
   ```
@@ -230,9 +232,9 @@ fctwallet
   
   For example, for a given wallet, the following calls:
   ```
-  http://localhost:8089/v1/factoid-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
-  http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534  
-  http://localhost:8089/v1/factoid-balance/FactomAddress01
+  curl -X GET "http://localhost:8089/v1/factoid-balance/FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  curl -X GET "http://localhost:8089/v1/factoid-balance/9e72fa1dbdac30b557c857a1dcdca04b4ae748e52dc492e1f85f6af6f29f6534"  
+  curl -X GET "http://localhost:8089/v1/factoid-balance/FactomAddress01"
   ```
   Will return:
   ```
@@ -246,9 +248,9 @@ fctwallet
   
   For example, for a given wallet and Entry Credit address, the calls:
   ```
-  http://localhost:8089/v1/entry-credit-balance/FA3ArvkijVcgrFVj45PBgGBfWm1MWAEjV1SbVxSFiUNT6s9F7AQb
-  http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b
-  http://localhost:8090/EntryCreditAddress001
+  curl -X GET "http://localhost:8089/v1/entry-credit-balance/ECxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  curl -X GET "http://localhost:8089/v1/entry-credit-balance/748be8327d20fee4365e6b5a3dca7df1e59da47e9ebd99129ba84d58d4d0726b"
+  curl -X GET "http://localhost:8090/EntryCreditAddress001"
   ```
   Will Return
   ```
@@ -262,7 +264,7 @@ fctwallet
   
   The call:
   ```
-  http://localhost:8089/v1/factoid-generate-address/fctAddress0001
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address/fctAddress0001"
   ```
   will create an address fctAddress0001, and assign it a new private key.
   
@@ -272,7 +274,7 @@ fctwallet
   
   The call:
   ```
-  http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001
+  curl -X GET "http://localhost:8089/v1/factoid-generate-ec-address/ECAddress0001"
   ```
   will create an address ECAddress0001, and assign it a new private key.
  
@@ -281,7 +283,7 @@ fctwallet
   This call is used to import a factoid private key in hex from another source.  Provided a private key and a name. For example:
 
  ```
- http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88"
  ```
  would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
   
@@ -290,7 +292,7 @@ fctwallet
   This call is used to import an entry credit private key in hex from another source.  Provided a private key and a name. For example:
   
    ```
-   http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57
+   curl -X GET "http://localhost:8089/v1/factoid-generate-ec-address-from-private-key/?name=addr001&privateKey=3ffa892f2445286a06c0dc591d7fa557d16701e44ec1cbee2930f7d7dfb62d57"
    ```
   would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 
@@ -299,7 +301,7 @@ fctwallet
   This call is used to import a factoid private key in human readable form from another source.  Provided a private key and a name. For example:
 
  ```
- http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Fsxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
  ```
 
   would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
@@ -308,7 +310,7 @@ fctwallet
 
   This call is used to import an Entry Credit private key in human readable form from another source.  Provided a private key and a name. For example:
   ```
-  http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG
+  curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-human-readable-private-key/?name=addr001&privateKey=Esxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   ```
   would import the given private key, and store it in the wallet under addr001 and return the public key. Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
 
@@ -316,7 +318,7 @@ fctwallet
 
   Accepts the 12 words provided by Koinify during the crowd sale, and generates the corresponding entry in the wallet. For example:
   ```
-  http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>
+  curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-token-sale/?name=koinifyAddr&mnemonic=<12 words separated by %20>"
   ```
   Returns the public key
   
@@ -324,7 +326,7 @@ fctwallet
 
   Creates a new transaction, and assoicates that transaction with a key.  This key is used in other operations to add inputs, add outputs, add entry credit outputs, pay the fee, sign the transaction, and submit it. Example:
   ```
-  http://localhost:8089/v1/factoid-new-transaction/trans
+  curl -X POST "http://localhost:8089/v1/factoid-new-transaction/trans"
   ```
   Response 
   ```
@@ -336,7 +338,7 @@ fctwallet
   
   Delete the specified transaction under construction by name.
   ```
-  http://localhost:8089/v1/factoid-delete-transaction/trans
+  curl -X POST "http://localhost:8089/v1/factoid-delete-transaction/trans"
   ```
   Response
   ```
@@ -349,11 +351,11 @@ fctwallet
   
   Add the needed fee to the given transaction.  This call calculates the needed fee, and adds it to the specified input.  The inputs and outputs must be exactly balanced, because this call isn't going to mess with unbalanced transactions as how to balance can be tricky.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb"
+  curl -X POST http://localhost:8089/v1/factoid-add-fee/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
   ```
   Response 
   ```
-  {"Response":"Added             0.153318 to FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb","Success":true}
+  {"Response":"Added             0.153318 to FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","Success":true}
   ```
   
   Assuming the given Factoid address is an input to trans, this adds the fee to that address.
@@ -362,7 +364,7 @@ fctwallet
 
   Add the given input to the transaction specified.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FA3EPZYqodgyEGXNMbiZKE5TS2x2J9wF8J9MvPZb52iGR78xMgCb&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-input/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -374,7 +376,7 @@ fctwallet
 
   Add the given output to the transaction specified.
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FA3SXWH3x3HJCjNd3LGrvZnZKJhmdSFKEYd1BgjeHeFPiTvwfw8N&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-output/ -d "key=trans&name=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -387,7 +389,7 @@ fctwallet
 
   Add the given Entry Credit Output to the transaction specified.  Note that Entry Credit Outputs are denominated in Factoids.  How many Entry Credits are alloted depends upon the exchage rate of factoids to entry credits in place at the time of the transaction.  For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=EC2ENydo4tjz5rMiZVDiM1k315m3ZanSm6LFDYcQyn5edBXNnrva&amount=10000000"
+  curl -X POST http://localhost:8089/v1/factoid-add-ecoutput/  -d "key=trans&name=ECxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amount=10000000"
   ```
   Response
   ```
@@ -395,101 +397,117 @@ fctwallet
   ```
   Adds an ecoutput to the given entry credit address to the transaction trans. Assume a factoid to Entry Credit exchange rate of .001.  Then the number of Entry Credits (1000) will be determined by the factoids in the output (1) divided by the factoid to entry credit rate (.001).  The factoids converted to entry credits will be presented in fixpoint notation, i.e. (100000000 == 1 factoid)
 
-+	Post **http://localhost:8089/v1/factoid-sign-transaction/(.*)**
++ Post **http://localhost:8089/v1/factoid-sign-transaction/(.*)**
   
   Sign the given transaction.
   ```
-  http://localhost:8089/v1/factoid-sign-transaction/trans
+  curl -X POST "http://localhost:8089/v1/factoid-sign-transaction/trans"
   ```
   Response
   ```
   {"Response":"Success signing transaction","Success":true}
   ```
   Signs the transaction 'trans'.
-  
-+ Post **http://localhost:8089/v1/factoid-setup/(.*)**
 
-  Takes a random character sequence as a parameter along with the current timestamp.  This sets a new base key for address generation.  If you make this call on a wallet, you need to back up your wallet.  Because this replaces the seed for address generation, you must back up this new seed, or you will not be able to recover your addresses should you lose your wallet. 
++ Post **http://localhost:8089/v1/compose-submit-chain/([^/]+)**
+
+Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
+
+	$ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
+	
+Returns
+	
+	{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+
++ Post **http://localhost:8089/v1/compose-submit-entry/([^/]+)**
+
+Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
+
+	$ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
+
+Returns
+
+	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
   Sign a binary Chain Commit with the specified entry credit key and submit it to the factomd server 
 
-+	Post **http://localhost:8089/v1/commit-entry/([^/]+)**
++ Post **http://localhost:8089/v1/commit-entry/([^/]+)**
  
   Commit an entry to an Entry Chain 
 
-+	Post **http://localhost:8089/v1/factoid-submit/(.*)**
++ Post **http://localhost:8089/v1/factoid-submit/(.*)**
 
   Submit a transaction to Factom. This call takes a named JSON parameter.  For example, to submit a transaction named trans, you need the following call:
   ```
-  http://localhost:8089/v1/factoid-submit/{"Transaction":"trans"}
+  curl -X POST http://localhost:8089/v1/factoid-submit/\\{\"Transaction\":\"trans\"\\}
   ```
   Response
   ```
   {"Response":"Success Submitting transaction","Success":true}
   ```
 
-+	Get **http://localhost:8089/v1/factoid-validate/(.*)**	
++ Get **http://localhost:8089/v1/factoid-validate/(.*)**	
 
   Not currently implemented.
 
-+	Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
++ Get **http://localhost:8089"/v1/factoid-get-fee/(.*)**
 
   Get the current exchange rate in number of Factoids per Entry Credit
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-fee/
+  curl -X GET "http://localhost:8089/v1/factoid-get-fee/"
   ```
   Response
   ```
   {"Response":"0.006666","Success":true}
   ```
   
-+	Get **http://localhost:8089"/v1/properties/**
++ Get **http://localhost:8089"/v1/properties/**
 
   Get the version numbers of all the components of the Factom client, fctwallet, factomd, and the protocol
   For example:
   ```
-  http://localhost:8089/v1/properties/
+  curl -X GET "http://localhost:8089/v1/properties/"
   ```
   Response
   ```
   {"Response":"Protocol Version:   0.1.5\nfactomd Version:    0.3.4\nfctwallet Version:  0.1.4\n","Success":true}
   ```
   
-+	Get **http://localhost:8089/v1/factoid-get-addresses/**
++ Get **http://localhost:8089/v1/factoid-get-addresses/**
 
   Get the address list held in the wallet
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-addresses/
+  curl -X GET "http://localhost:8089/v1/factoid-get-addresses/"
   ```
   
-+	Get **http://localhost:8089/v1/factoid-get-transactions/**
++ Get **http://localhost:8089/v1/factoid-get-transactions/**
 
   Get all the transactions currently under construction, along with the key used to reference them.
   For example:
   ```
-  http://localhost:8089/v1/factoid-get-transactions/
+  curl -X GET "http://localhost:8089/v1/factoid-get-transactions/"
   ```
   
-+	Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
++ Post **http://localhost:8089/v1/factoid-get-processed-transactions/(.*)**
 
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as text.
   For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FA2opZ5tRQET3LNRPfXFR2dWDRD1Sgc1aEYNStTXtkPWQtEvoAiY"
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "address=<addrname>"
 curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cmd=all"
 ```
 
-+	Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
++ Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
 
   If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
   For example:
   ```
-  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FA3RrKWJLQeDuzC9YzxcSwenU1qDzzwjR1uHMpp1SQbs8wH9Qbbr"
+  curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=<addrname>"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "cmd=all"
    ```
