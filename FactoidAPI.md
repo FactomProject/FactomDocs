@@ -423,7 +423,7 @@ Returns
 
 Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
 
-	$ curl -i -X POST -H 'Content-Type: application/json'" -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
+	$ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
 
 Returns
 
