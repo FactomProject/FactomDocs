@@ -37,7 +37,7 @@ factomd
   
 + Post **http://localhost:8088/v1/reveal-entry/?**
 
-  提示新的条目，需要完成写入链中的记录
+  显示新的条目，需要完成写入链中的记录
   
 + Post **http://localhost:8088/v1/factoid-submit/?**
 
