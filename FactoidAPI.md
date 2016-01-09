@@ -409,7 +409,7 @@ fctwallet
   ```
   Signs the transaction 'trans'.
 
-+ Post **http://localhost:8089/v1/compose-submit-chain/([^/]+)**
++ Post **http://localhost:8089/v1/compose-chain-submit/([^/]+)**
 
 Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
 
@@ -419,7 +419,7 @@ Returns
 	
 	{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
 
-+ Post **http://localhost:8089/v1/compose-submit-entry/([^/]+)**
++ Post **http://localhost:8089/v1/compose-entry-submit/([^/]+)**
 
 Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
 
