@@ -413,7 +413,7 @@ fctwallet
 
 Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
 
-	$ curl -X POST -H 'Content-Type: application/json'" -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
+	$ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
 	
 Returns
 	
