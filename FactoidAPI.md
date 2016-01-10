@@ -45,17 +45,75 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
 
   Commits a chain.  The first step towards creating a new chain.
   
+  fctwallet API 'compose-chain-submit' needs to be called first to get the CommitChainMsg which is the input for this API.
+  For Example:
+  
+  A call to compose-entry-submit API returns a JSON object
+  
+   ```
+   $ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/entrycreditaddressname
+   ```
+   Returns	
+
+  {"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+   
+  The return value contains both the ChainCommit and the Entry Reveal. 
+  To Commit the Entry:
+  
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"}' localhost:8088/v1/commit-chain
+  
+  To Reveal the First Entry:
+
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+  
+  The Chain gets committed and first entry is made.
+  
 + Post **http://localhost:8088/v1/reveal-chain/?**
 
   Reveal the first entry in a chain.  Required to complete the construction of a new chain.
+  The format of the API call is covered above.
   
 + Post **http://localhost:8088/v1/commit-entry/?**
 
   Commits an entry.  The first step in writing an entry to a chain.
   
+  fctwallet API 'compose-entry-submit' needs to be called first to get the CommitEntryMsg which is the input for this API.
+  For Example:
+  
+  A call to compose-entry-submit API returns a JSON object
+  
+  ```
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/entrycreditaddressname
+  ```
+  
+  Returns
+
+	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+
+  The return value contains both the EntryCommit and the Entry Reveal. 
+  To Commit the Entry:
+
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"}' localhost:8088/v1/commit-entry
+
+ Then Reveal the Entry:
+
+ $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+
+The entries are made to the ChainID provided. 
+
+Note: ChainName can be provided instead of ChainID. However if the ChainID field has data, the ChainName field will be ignored.
+
+example json entry: 
+{"ChainName":["foo", "bar"], "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+
+is the same as
+
+{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d", "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+
 + Post **http://localhost:8088/v1/reveal-entry/?**
 
   Reveal a new entry.  Required to complete the writing of an entry into a chain.
+  Format of the API call is covered above.
   
 + Post **http://localhost:8088/v1/factoid-submit/?**
 
