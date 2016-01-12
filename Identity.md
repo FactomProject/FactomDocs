@@ -52,22 +52,22 @@ First, 4 random 32 bytes are chosen.  These are the 4 different private keys of 
 
 | Level | Four Random Keys | Human Readable Equivalent |
 | ---- | ----------------- | ----------------- |
-| 1 | f84a80f204c8e5e4369a80336919f55885d0b093505d84b80d12f9c08b81cd5e | sk000000000000000000000000000000000000000000000000000 |
-| 2 | 2bb967a78b081fafef17818c2a4c2ba8dbefcd89664ff18f6ba926b55e00b601 | sk000000000000000000000000000000000000000000000000000 |
-| 3 | 09d51ae7cc0dbc597356ab1ada078457277875c81989c5db0ae6f4bf86ccea5f | sk000000000000000000000000000000000000000000000000000 |
-| 4 | 72644033bdd70b8fec7aa1fea50b0c5f7dfadb1bce76aa15d9564bf71c62b160 | sk000000000000000000000000000000000000000000000000000 |
+| 1 | f84a80f204c8e5e4369a80336919f55885d0b093505d84b80d12f9c08b81cd5e | sk13iLKJfxNQg8vpSmjacEgEQAnXkn7rbjd5ewexc1Un5wVPa7KTk |
+| 2 | 2bb967a78b081fafef17818c2a4c2ba8dbefcd89664ff18f6ba926b55e00b601 | sk22UaDys2Mzg2pUCsToo9aKgxubJFnZN5Bc2LXfV59VxMvXXKwXa |
+| 3 | 09d51ae7cc0dbc597356ab1ada078457277875c81989c5db0ae6f4bf86ccea5f | sk32Xyo9kmjtNqRUfRd3ZhU56NZd8M1nR61tdBaCLSQRdhUCk4yiM |
+| 4 | 72644033bdd70b8fec7aa1fea50b0c5f7dfadb1bce76aa15d9564bf71c62b160 | sk43eMusQuvvChoGNn1VZZwbAH8BtKJSZNC7ZWoz1Vc4Y3greLA45 |
 
 Raw public keys are created from those private keys.  These are treated similar to Factoid RCDs.  The pubkeys are prepended with a byte 0x01 and hashed with SHA256d.
 
 The four keys above would result in these identity keys:
 | Level | Four Identity Keys | Human Readable Equivalent |
 | ---- | ----------------- | ----------------- |
-| 1 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | id000000000000000000000000000000000000000000000000000 |
-| 2 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | id000000000000000000000000000000000000000000000000000 |
-| 3 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | id000000000000000000000000000000000000000000000000000 |
-| 4 | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx | id000000000000000000000000000000000000000000000000000 |
+| 1 | 3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0 | id12K4tCXKcJJYxJmZ1UY9EuKPvtGVAjo32xySMKNUahbmRcsqFgW |
+| 2 | 58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72 | id22pNvsaMWf9qxWFrmfQpwFJiKQoWfKmBwVgQtdvqVZuqzGmrFNY |
+| 3 | b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23 | id33pRgpm8ufXNGxtW7n5FgdGP6afXKjU4LfVmgfC8Yaq6LyYq2wA |
+| 4 | 12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6 | id42vYqBB63eoSz8DHozEwtCaLbEwvBTG9pWgD3D5CCaHWy1gCjF5 |
 
 A Chain Name is constructed with 6 elements. The first element is three ascii bytes "ID0" with the 0 signifying a version. The second element is the level 1 identity key in hex. Elements 3-5 are levels 2-4. The 6th element is a nonce which is iterated until the first 6 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
 
-Chain Name = [ID0] [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] [xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx] [nonce]
+Chain Name = [ID0] [3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72] [b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23] [12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6] [nonce]
 
