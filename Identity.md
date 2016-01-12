@@ -72,5 +72,7 @@ The four keys above would result in these identity keys:
 
 A Chain Name is constructed with 6 elements. The first element is three ascii bytes "ID0" with the 0 signifying a version. The second element is the level 1 identity key in hex. Elements 3-5 are levels 2-4. The 6th element is a nonce which is iterated until the first 6 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
 
-Chain Name = [ID0] [3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72] [b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23] [12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6] [nonce]
+Chain Name = [494430] [3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72] [b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23] [12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6] [nonce]
+
+After iterating and finding a nonce 0000000000502cb9 we have a chainID 888888d00082a172e4f0c8d03a83d327b4197e68bcc36e88eeefb00b6cec7936
 
