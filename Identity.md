@@ -22,6 +22,7 @@ The conversion is very similar to Entry Credit keys, and only differs by having 
 The prefixes and key ranges are shown here:
 
 The secret part of the identity keys:
+
 | prefix | All Zeros | All Ones |
 | ----------------- | ---------------- | --------------- | 
 | 4db6c9 | sk11pz4AG9XgB1eNVkbppYAWsgyg7sftDXqBASsagKJqvVRKYodCU | sk13mjEPiBP6rEnC5TWQSY7qUTtnjbKb4QcpEZ7jNDJVvsupCg9DV |
@@ -31,6 +32,7 @@ The secret part of the identity keys:
 
 
 The public part of the identity keys:
+
 | prefix | All Zeros | All Ones |
 | ----------------- | ---------------- | --------------- | 
 | 3fbeba | id11qFJ7fe26N29hrY3f1gUQC7UYArUg2GEy1rpPp2ExbnJdSj3mN | id13mzUM7fsX3FHXSExEdgRintPena8Ns92c5y4YVvEccAoEttNTG |
@@ -60,6 +62,7 @@ First, 4 random 32 bytes are chosen.  These are the 4 different private keys of 
 Raw public keys are created from those private keys.  These are treated similar to Factoid RCDs.  The pubkeys are prepended with a byte 0x01 and hashed with SHA256d.
 
 The four keys above would result in these identity keys:
+
 | Level | Four Identity Keys | Human Readable Equivalent |
 | ---- | ----------------- | ----------------- |
 | 1 | 3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0 | id12K4tCXKcJJYxJmZ1UY9EuKPvtGVAjo32xySMKNUahbmRcsqFgW |
