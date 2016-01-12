@@ -27,14 +27,70 @@ factomd
 
   生成链，创建一个新链的第一步
   
+  首先需要调用 fctwallet API 'compose-chain-submit' ，以获取作为该API输入的CommitChainMsg
+  例如：
+  
+  向compose-entry-submit API发送请求，返回一个JSON对象
+  
+   ```
+   $ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/entrycreditaddressname
+   ```
+   返回	
+
+  {"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+   
+  返回值包括ChainCommit和 Entry Reveal. 
+  生成记录:
+  
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"}' localhost:8088/v1/commit-chain
+  
+  显示第一项记录:
+
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+  
+  生成链并记录第一项记录
+  
 + Post **http://localhost:8088/v1/reveal-chain/?**
 
-  显示链中的第一个记录，需要完成一个新链的构建
+  在链中显示第一项记录。需要完成链的构建。API调用的格式如上所示
   
 + Post **http://localhost:8088/v1/commit-entry/?**
 
- 生成记录，写入链中记录的第一步
+  生成记录 在链中写入记录的第一步  
   
+  需要首先调用fctwallet API 'compose-entry-submit'，以获取作为该API输入的CommitEntryMsg
+  例如:
+  
+  向compose-entry-submit API发送请求，返回一个JSON对象
+  
+  ```
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/entrycreditaddressname
+  ```
+  
+  返回
+
+	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+
+  返回值包括生成记录和显示记录. 
+  生成记录:
+
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"}' localhost:8088/v1/commit-entry
+
+ 显示记录:
+
+ $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+
+根据提供的ChainID写入记录
+
+请注意：ChainName可用来替代ChainID。但如果ChainID的域有数据，ChainName的域会被忽略。
+
+例如 json 记录: 
+{"ChainName":["foo", "bar"], "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+
+与以下一致：
+
+{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d", "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+
 + Post **http://localhost:8088/v1/reveal-entry/?**
 
   显示新的条目，需要完成写入链中的记录
