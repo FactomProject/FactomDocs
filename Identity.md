@@ -42,7 +42,7 @@ The public part of the identity keys:
 
 
 
-#### Factom Identity Chains
+#### Factom Identity Chain Creation
 
 Messages and updates for an identity occur within an identity chain.  There is a single chain per identity, and the 32 byte ChainID of the identity is how the identity is referenced. A Factom identity is not explicitly tied to any real world human/organizational entity. A real world entity can claim an identity, but it is not necessary. 
 
@@ -70,9 +70,22 @@ The four keys above would result in these identity keys:
 | 3 | b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23 | id33pRgpm8ufXNGxtW7n5FgdGP6afXKjU4LfVmgfC8Yaq6LyYq2wA |
 | 4 | 12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6 | id42vYqBB63eoSz8DHozEwtCaLbEwvBTG9pWgD3D5CCaHWy1gCjF5 |
 
-A Chain Name is constructed with 6 elements. The first element is three ascii bytes "ID0" with the 0 signifying a version. The second element is the level 1 identity key in hex. Elements 3-5 are levels 2-4. The 6th element is a nonce which is iterated until the first 6 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
+A Chain Name is constructed with 6 elements. The first element is three ASCII bytes "ID0" with the 0 signifying a version. The second element is the level 1 identity key in hex. Elements 3-5 are levels 2-4. The 6th element is a nonce which is iterated until the first 6 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
 
 Chain Name = [494430] [3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72] [b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23] [12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6] [nonce]
 
 After iterating and finding a nonce 0000000000502cb9 we have a chainID 888888d00082a172e4f0c8d03a83d327b4197e68bcc36e88eeefb00b6cec7936
+
+
+
+#### Factom Identity Registration
+
+In order for Factom to pay attention to any individual identity, the identity must register itself.  The registration should occur after after the chain creation to prevent a 12 hour long denial-of-chain attack (detailed elsewhere).  For the registration to take effect, the chain must be created within 144 blocks (normally 24 hours).  Any updates to the identity (such as adding EC keys or updating keys) must occur during or after the block it was registered in.  This prevents events being reinterpreted retroactively.  Most people will only need to link an EC key and lend support.  
+
+An identity only needs to be registered once, and cannot be unregistered.
+
+The registration message has 5 ExtIDs.  The first ExtID has 4 ASCII bytes "REG0", with 0 signifying the version.  The second ExtID is the binary encoded ChainID of the identity.  It will start with 888888.  The 3rd ExtID is a byte which indicates which level key matches the 4th ExtID.  The 4th ExtID is the preimage to the identity key.  It includes the prefix and the pubkey.  The 5th ExtID is the signature of the first and second ExtIDs concatenated together.
+
+
+
 
