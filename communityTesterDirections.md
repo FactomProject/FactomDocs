@@ -83,15 +83,13 @@ If factomd complains about not connecting, make sure your firewall allows connec
 In the second command line window, run `fctwallet`. It will have very little output. It will show more output after factom-cli is run though.
 ![fctwallet](/images/fctwallet.png)
 
-In the third window, the factom-cli program will be run. You should run the trans.sh script to buy Entry Credits, move Factoids, and generally prep to place Entries. 
-
-Run this script: 
-`~/go/src/github.com/FactomProject/factom-cli/setup.sh`.  After the time passes a 10 minute mark (ie 11:39 -> 11:40) run `factom-cli balances` to see if your app EC address has a balance.  This is the number of Entry Credits you can use to place Entries.
+In a sandbox, run this script to purchase ECs: 
+`~/go/src/github.com/FactomProject/factom-cli/setup.sh`.  After the time passes a 10 minute mark (ie 11:39 -> 11:40) run `factom-cli balances` to see if your zeros EC address has a balance.  This is the number of Entry Credits you can use to place Entries.  This may take a while to parse the blockchain.
 ![factom-cli](/images/factom-cli.png)
 
 After the script has been run, you can now create your own Chains:
 
-`echo "hello world" | factom-cli mkchain -e thisIsAChainName -e moreChainNameHere app` makes a new Chain with Chain Name "thisIsAChainName" combined with "moreChainNameHere", paid for with the Entry Credit key named app.  In the Entry's payload is the text string "hello world". It returns "Creating Chain: 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8" which is the ChainID for the chain name "thisIsAChainName" + "moreChainNameHere".
+`echo "hello world" | factom-cli mkchain -e thisIsAChainName -e moreChainNameHere zeros` makes a new Chain with Chain Name "thisIsAChainName" combined with "moreChainNameHere", paid for with the Entry Credit key named zeros.  In the Entry's payload is the text string "hello world". It returns "Creating Chain: 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8" which is the ChainID for the chain name "thisIsAChainName" + "moreChainNameHere".
 
 Wait until a 10 minute window passes on the clock.
 
@@ -114,7 +112,7 @@ Content:
 68 65 6c 6c 6f 20 77 6f | 72 6c 64 0a              || "hello world\n"
 "
 
-`echo "hello2" | factom-cli put -e newextid -e anotherextid -c 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8 app` adds another Entry into the Chain 239... It returns "Creating Entry: 7e25ca2e41cd03782aa3337a98f4a261aa2c00b904b7da2e67d96262a2f5a034".  
+`echo "hello2" | factom-cli put -e newextid -e anotherextid -c 23985c922e9cdd5ec09c7f52a7c715bc9e26295778ead5d54e30a0a6215783c8 zeros` adds another Entry into the Chain 239... It returns "Creating Entry: 7e25ca2e41cd03782aa3337a98f4a261aa2c00b904b7da2e67d96262a2f5a034".  
 
 
 ##### More Examples
@@ -136,7 +134,7 @@ The 2042 value is the block height.  There have been 2042 previous dblocks (firs
 
 The return value also shows 3 sub blocks which are referenced by this dblock.  The 3 pairs that end in 000a, 000c, and 000f are the adminstrative, entry credit, and factoid blocks.  They are not viewable at this time.
 
-When you make a new chain, it tells you the ChainID the Chain Name hashes to. `echo "hello" | factom-cli mkchain -e chainNameGoesHere jane` returns Chain: 13ea4eb2b62c3bc5049746d964a64b4cbbe764a3f62a5fa2ec410542285c638a.  
+When you make a new chain, it tells you the ChainID the Chain Name hashes to. `echo "hello" | factom-cli mkchain -e chainNameGoesHere zeros` returns Chain: 13ea4eb2b62c3bc5049746d964a64b4cbbe764a3f62a5fa2ec410542285c638a.  
 
 After a minute, When you run `factom-cli get dblock 7e2e77727019369585e9ac0299110e90393f2edb9b078633467409e73d4027c9` it returns 
 `&{ {907a6d004ed5a3b651af1ac80ff993bdebfc27abbb7f85f75e539bf4345a9e3f 0 2166} [{000000000000000000000000000000000000000000000000000000000000000a c8a29586d51b23a56fecbea15843ff65c77b05943c4286a35eb7a6dc751f0e83} {000000000000000000000000000000000000000000000000000000000000000c 775ed96b2868042a4b51986fd5bc2b6fc80581ba4076b461502511ad35e3e481} {000000000000000000000000000000000000000000000000000000000000000f af87dedc714127df084642be7930e4664b0374dddad2bb0d1cef17a4a15a122f} {13ea4eb2b62c3bc5049746d964a64b4cbbe764a3f62a5fa2ec410542285c638a 0d52effcd5d1a0542ce7fdac352ef5242c2827ee9406deae8b5cec60264683d4}]}`
