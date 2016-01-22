@@ -46,7 +46,7 @@ The public part of the identity keys:
 
 Messages and updates for an identity occur within an identity chain.  There is a single chain per identity, and the 32 byte ChainID of the identity is how the identity is referenced. A Factom identity is not explicitly tied to any real world human/organizational entity. A real world entity can claim an identity, but it is not necessary. 
 
-An identity is established with the first entry in the chain.  It is updated with entries signed with keys placed in the first entry.  The public keys are placed in the Chain Name, so the identity keys largely what makes up the identity.  
+An identity is established with the first entry in the chain.  It is updated with entries signed with keys placed in the first entry.  The public keys are placed in the Chain Name, so the identity keys largely what makes up the identity.
 
 There is something akin to mining in the identity creation.  This marginally rate limits identity creation.  It also makes future P2P network segmentation possible based solely on the ChainID.  All the chains related to voting would share the first few bytes and be on the same network segment.  All the ChainIDs related to identity start with 0x888888.
 
@@ -84,8 +84,21 @@ In order for Factom to pay attention to any individual identity, the identity mu
 
 An identity only needs to be registered once, and cannot be unregistered.
 
-The registration message has 5 ExtIDs.  The first ExtID has 4 ASCII bytes "REG0", with 0 signifying the version.  The second ExtID is the binary encoded ChainID of the identity.  It will start with 888888.  The 3rd ExtID is a byte which indicates which level key matches the 4th ExtID.  The 4th ExtID is the preimage to the identity key.  It includes the prefix and the pubkey.  The 5th ExtID is the signature of the first and second ExtIDs concatenated together.
+The registration message has 6 ExtIDs.  The first ExtID is a single byte of 0 signifying the version.  The second ExtID has 24 ASCII bytes "Register Factom Identity".  The third ExtID is the binary encoded ChainID of the identity.  It will start with 888888.  The 4th ExtID is a byte which indicates which level key matches the 5th ExtID.  The 5th ExtID is the preimage to the identity key.  It includes the type prefix and the pubkey.  The 6th ExtID is the signature of the first, second, and third ExtIDs serialized together.
+
+The entry would consist of only ExtIDs and look like this:
+
+[0 (version)] [Register Factom Identity] [identity ChainID] [key level signing this] [identity key prefix and pubkey] [signature of version and ChainID]
+
+[00] [526567697374657220466163746F6D204964656E74697479] [888888d00082a172e4f0c8d03a83d327b4197e68bcc36e88eeefb00b6cec7936] [01] [013f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [aab1cbbd72c8b7db32f45cb89e511793f8d47e0551665679a25ef8444248e045f858701351e0cc17aeb74e4f6aa425ee71663d3a4ca6abfe6fac88d66e0c2c01]
 
 
+
+
+#### Link Entry Credit Key to Identity
+
+Factom identities exist largely to organize and direct votes (Entry Credit purchases) to elect particular Federated servers.  The users can publish messages in their identity chain to switch votes from one server to another.  The Entry Credits the user buys can be linked to an identity. The votes garnered can be delegated multiple times until they are eventually come to rest at a candidate server's identity.
+
+To begin the vote collecting process, the EC keys need to be linked to an identity.  EC keys can only ever be linked to one identity, and subsequent link messages are ignored.
 
 
