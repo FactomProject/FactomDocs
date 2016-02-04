@@ -43,7 +43,13 @@ Once the Factom Binaries have been installed successfully run ``$ factomd`` and 
 
 Buying Factoids
 ===
-Section comming soon.
+If you have a Factoid or Entry Credit private key (a Factoid private key will begin with Fs, an Entry Credit key, with Es) you may import the address into your wallet using factom-cli.
+
+	$ factom-cli importaddress myFactoids01 'Fs...'
+
+If you participated in the original factoid sale on Koinify you may import your 12 words.
+
+	$ factom-cli importaddress myFactoids02 'yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow yellow'
 
 Converting Factoids into Entry Credits
 ===
@@ -62,7 +68,7 @@ Create a new transaction 'a'.
 
 Add 10 factoids as an input to the transaction from the factoid address we created earlier.
 
-	$ factom-cli addinput a fct01 10
+	$ factom-cli addinput a myFactoids01 10
 
 Add 10 factoids as the ammout to convert into Entry Credits.
 
@@ -70,7 +76,7 @@ Add 10 factoids as the ammout to convert into Entry Credits.
 
 Pay the transaction fee from the same factoid address
 
-	$ factom-cli addfee a fct01
+	$ factom-cli addfee a myFactoids01
 
 Sign and submit the transaction to the Factom network.
 
@@ -91,6 +97,10 @@ Entries
 ---
 User data in the Factom network is organized into Entries and Chains. A Factom Entry is composed of a ChainID, 0 or more External IDs, and the Entry Content. The External IDs and Content are binary data but it is most common to write decoded text into these fields. It is up to the application to interperate the Entries. A Factom application might wright any data into the External IDs and Entry Content then parse or interperate the data any way it likes.
 
+Entry Blocks
+---
+Comming Soon!
+
 Chains
 ---
 Factom Chains are a series of Factom Entries. When a new Entry is commited and revealed to the Factom network it is added to the an Entry Block for its specified Chain. At the end of the 10 minute period all of the new Entry Blocks are combined into the directory block, then anchored into the Bitcoin Blockchain.
@@ -100,7 +110,7 @@ Hello World!
 
 Creating a new Factom Entry
 ---
-In the first example a new Entry is constructed then sent to the Factom network.
+In the first example a new Entry is constructed then sent to the Factom network. Notice that the ExtIDs, and Entry Content are []byte not string. This allows the Entries to contain binary data. For example an ExtID may be a key or a key signature.
 
 	package main
 	
