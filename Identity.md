@@ -99,11 +99,11 @@ The entry would consist of only ExtIDs and look like this:
 
 #### Server Management Subchain
 
-Messages related to being a Federated, Audit, or Candidate server would live in this subchain.  The root identity chain links to it.  This chain is only needed if the identity wants to be a server.
+Messages related to being a Federated, Audit, or Candidate server would live in this subchain.  The root identity chain links to it.  This chain is only needed if the identity wants to be a server.  It adds keys which are used to sign the Bitcoin anchors as well as to sign the directory blocks.
 
 ### Server Management Subchain Creation
 
-This chain is created after the identity chain is known.  The Chain Name first element is a version, 0.  The second is the ASCII string "Server Management".  The 3rd consists of the root identity chainID.  The 4th is a nonce which makes the first 6 bytes of the chainID match 0x888888.  Since the root identity chainID would be known at this point, the management subchain would be susceptible to a denial-of-chain attack.  To counter this, a random starting nonce can be chosen.  This makes it far less likely that an attacker could predict which subchain you were creating.
+This chain is created after the identity chain is known.  The Chain Name first element is a version, 0.  The second is the ASCII string "Server Management".  The 3rd consists of the root identity chainID.  The 4th is a nonce which makes the first 6 bytes of the chainID match 0x888888.  Since the root identity chainID would be known at this point, the management subchain would be susceptible to a denial-of-chain attack.  To counter this, a random starting nonce can be chosen.  This makes it far less likely that an attacker could predict which subchain you are about to create.
 
 Chain Name = [00] [536572766572204D616E6167656D656E74] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [nonce]
 
@@ -120,6 +120,22 @@ It is very similar to the Factom identity registration message.
 [00] [526567697374657220536572766572204D616E6167656D656E74] [8888881d59de393d9acc2b89116bc5a2dd0d0377af7a5e04bc7394149a6dbe23] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [fcb3b9dd3cc9f09b61a07e859d13a569d481508f0d5e672f9412080255ee398428fb2c488e0c3d291218f573612badf84efa63439bbcdd3ca265a31074107e04]
 
 This message is then placed into the root identity chain.  Only one server management subchain is allowed.  In the case of multiple messages, the valid one is the first message that also has a Chain which exists.  For example, if there are two messages registering Chain B and A in that order, but Chain A is created first, then Chain A is considered the valid one.  The chain must be created within 144 blocks (normally 24 hours) of being registered.
+
+### Add New Block Signing Key
+
+The Factom blockchain is signed by a key by each server.  This key signs the Directory blocks, and those signatures are held in the Admin blocks.  They are associated with the identity, but do not sign things other than the blocks.  The public key is added to the Admin block by the Federated servers as part of the server promotion process.  Before promotion, the key needs to be published to the server management subchain.  Keys are not removed, but new keys replace older keys.  To prevent replay attacks, a timestamp is included.  To be valid, the key update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.  (note: backup block signing key authorizations can be presigned offline in advance.  Only 365 pre-prepared, signed messages would need to be held ready for broadcast to cover a year.)  If a higher level key signs a New Block Signing Key message, no new messages will be allowed by lower level keys until the lower level keys are replaced in the root identity chain.
+
+The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version byte 0.  The second is the ASCII string "New Block Signing Key".  The third is the root identity ChainID.  Forth is the new key being asserted.  5th is the timestamp with a 8 byte epoch time.  Next are the identity key level and the pubkey.  8th is the signature of the serialized version, text, chainID, new key, and the timestamp.
+
+[0 (version)] [New Block Signing Key] [identity ChainID] [new key] [timestamp] [identity key level signing this] [identity key prefix and pubkey] [signature of version through timestamp]
+
+[00] [4E657720426C6F636B205369676E696E67204B6579] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [8473745873ec04073ecf005b0d2b6cfe2f05f88f025e0c0a83a40d1de696a9cb] [00000000495EAA80] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [0bb2cab2904a014bd915b276c350821620edb432ddfbceed3896e87e591a412712b7db6d8dad1a8313138ea919bbc9b7a1bd4ffe1d84d558b8a78ef7746f480d]
+
+
+
+
+
+
 
 
 
