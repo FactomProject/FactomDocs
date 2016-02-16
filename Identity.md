@@ -132,6 +132,35 @@ The message is a Factom Entry with several extIDs holding the various parts.  Th
 [00] [4E657720426C6F636B205369676E696E67204B6579] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [8473745873ec04073ecf005b0d2b6cfe2f05f88f025e0c0a83a40d1de696a9cb] [00000000495EAA80] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [0bb2cab2904a014bd915b276c350821620edb432ddfbceed3896e87e591a412712b7db6d8dad1a8313138ea919bbc9b7a1bd4ffe1d84d558b8a78ef7746f480d]
 
 
+### Add New Bitcoin Key
+
+Factom uses the Bitcoin blockchain as a sibyl resistant communication channel, as well as a method to detect alterations to history.  The bitcoin keys are initially published in the identity's server management subchain.  When the server is promoted, or when a new key is added, the new Bitcoin key is published in the Admin block.  If a Federated server publishes an update, it goes in the next Admin block.
+
+Like the identity keys, there are multiple levels of authority for the Bitcoin keys.  This allows servers to have an out of band backup signaling method when Bitcoin keys are stolen.  Anchors placed by higher level keys will alert clients that the lower level Bitcoin key(s) are considered compromised, and not to trust anchors from lower level keys.
+
+Multiple levels of bitcoin keys are specified, but only 1 level is need initially.  The initial max is 4.  The same rules for timing and priority level apply to this message as apply to the New Block Signing message.
+
+Bitcoin keys can either be P2PKH or P2SH.  The address type byte is set as follows:  0=P2PKH 1=P2SH.
+
+The message is an entry with multiple extIDs.  It has a version, a text string saying "New Bitcoin Key".  It specifies the root identity chainID.  Next is a byte signifying the bitcoin key level.  It is 1 origin indexed, so with only 1 key it would be 0x01.  The next extID specifies what type of Bitcoin key is used. Next is the 20 byte Bitcoin key.  Seventh is a timestamp, which prevents replay attacks.  Eights and ninth are the root identity key material.  Last is the signature of the serialized version through the timestamp.
+
+[0 (version)] [New Bitcoin Key] [identity ChainID] [Bitcoin key level] [type byte] [new key] [timestamp] [identity key level signing this] [identity key prefix and pubkey] [signature of version through timestamp]
+
+[00] [4e657720426974636f696e204b6579] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [01] [00] [c5b7fd920dce5f61934e792c7e6fcc829aff533d] [00000000495EAA80] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [facb33316c529ed71ebbba7205388ce12ce7b000cb74fba89de435565ebec6e41f69d8ce30ba668b74d0815a8ebbeac725b0305ce78fd0750cbc340f7c19b70c]
+
+
+
+### Add New Matryoshka Hash
+
+Factom gets a set of randomness from a series of revealed SHA256 hash preimages.  To enforce these to be hash preimages, the last hash in a long hash chain is published.  A server will reveal sequential preimages, which are called Matryoshka hashes or M-hashes.  This message publishes the outermost hash, which is placed in the Admin block when the server is promoted.
+
+The new m-hash message has the same timing and priority level rules at the block signing key message.
+
+It starts with the version and the text "New Matryoshka Hash".  Next is the root identity chainID.  Forth is the outermost m-hash.  Fifth is a timestamp.  Sixth and Seventh are the root identity key level and pubkey.  ast is the signature of the version through the timestamp.
+
+[0 (version)] [New Matryoshka Hash] [identity ChainID] [new SHA256 M-hash] [timestamp] [identity key level signing this] [identity key prefix and pubkey] [signature of version through timestamp]
+
+[00] [4e6577204d617472796f73686b612048617368] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [bf1e78e5755851242a2ebf703e8bf6aca1af9dbae09ebc495cd2da220e5d370f] [00000000495EAA80] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [b1bc034cf75d4ebf7c4025a6b6b15c8f11a4384dcb043160711f19da9f4efb1315d84811b2247bb703732c2116b464781daf5efe75efd4adc641fee220ec660c]
 
 
 
@@ -142,9 +171,9 @@ The message is a Factom Entry with several extIDs holding the various parts.  Th
 
 
 
+### For Voting in Milestone3
 
-
-#### Link Entry Credit Key to Identity
+## Link Entry Credit Key to Identity
 
 Factom identities exist largely to organize and direct votes (Entry Credit purchases) to elect particular Federated servers.  The users can publish messages in their identity chain to switch votes from one server to another.  The Entry Credits the user buys can be linked to an identity. The votes garnered can be delegated multiple times until they are eventually come to rest at a Candidate server's identity.
 
