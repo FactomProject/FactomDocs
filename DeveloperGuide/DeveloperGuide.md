@@ -39,13 +39,13 @@ The fastest way to install Factom is to use the Factom installation package prov
 	$ which factom-cli
 	/usr/bin/factom-cli
 
-- Once the Factom Binaries have been installed successfully, run ``$ factomd`` and let it sync with the Factom Network. This may take a little time if it is the first time running factomd on a new machine.
+- Once the Factom Binaries have been installed successfully, run ``$ factomd`` and let it sync with the Factom network. This may take a little time if it is the first time running factomd on a new machine.
 
 Buying Factoids
 ===
-If you have a Factoid or Entry Credit private key (a Factoid private key will begin with Fs, an Entry Credit key, with Es) you may import the address into your wallet using factom-cli.
+If you have a Factoid or Entry Credit private key (a Factoid private key will begin with FS, an Entry Credit key, with ES) you may import the address into your wallet using factom-cli.
 
-	$ factom-cli importaddress myFactoids01 'Fs...'
+	$ factom-cli importaddress myFactoids01 'FS...'
 
 If you participated in the original factoid sale on Koinify you may import your 12 words.
 
@@ -53,11 +53,11 @@ If you participated in the original factoid sale on Koinify you may import your 
 
 Converting Factoids into Entry Credits
 ===
-Entry Credits allow data to be written into Factom. Each Entry Credit Address represents a key pair that allows signing of payments for data to be written into the Factom newtork. Factoids are converted into Entry Credits by adding 1 or more ecoutputs to a transaction.
+Entry Credits allow data to be written into Factom. Each Entry Credit address represents a key pair that allows signing of payments for data to be written into the Factom network. Factoids are converted into Entry Credits by adding 1 or more ecoutputs to a transaction.
 
 Run ``$ factomd`` and ``$ fctwallet``.
 
-Use factomcli to create an Entry Credit address. The ec address in this example will be called app01.
+Use factomcli to create an Entry Credit address. The EC address in this example will be called app01.
 
 	$ factom-cli generateaddress ec app01
 	ec  =  EC2gigrpHsADYXbnGDhBf58z8isuiT8HffZT1gFfcQERzon4SD44
@@ -66,15 +66,15 @@ Create a new transaction 'a'.
 
 	$ factom-cli newtransaction a
 
-Add 10 factoids as an input to the transaction from the factoid address we created earlier.
+Add 10 factoids as an input to the transaction from the Factoid address we created earlier.
 
 	$ factom-cli addinput a myFactoids01 10
 
-Add 10 factoids as the ammout to convert into Entry Credits.
+Add 10 Factoids as the amount to convert into Entry Credits.
 
 	$ factom-cli addecoutput a app01 10
 
-Pay the transaction fee from the same factoid address
+Pay the transaction fee from the same Factoid address
 
 	$ factom-cli addfee a myFactoids01
 
@@ -95,7 +95,7 @@ Understanding Factom data structures.
 
 Entries
 ---
-User data in the Factom network is organized into Entries and Chains. A Factom Entry is composed of a ChainID, 0 or more External IDs, and the Entry Content. The External IDs and Content are binary data but it is most common to write decoded text into these fields. It is up to the application to interperate the Entries. A Factom application might wright any data into the External IDs and Entry Content then parse or interperate the data any way it likes.
+User data in the Factom network is organized into Entries and Chains. A Factom Entry is composed of a ChainID, 0 or more External IDs, and the Entry Content. The External IDs and Content are binary data but it is most common to write decoded text into these fields. It is up to the application to interpret the Entries. A Factom application may write data into the External IDs and Entry Content and then parse or interpret the data any way it likes.
 
 Entry Blocks
 ---
@@ -103,7 +103,7 @@ Comming Soon!
 
 Chains
 ---
-Factom Chains are a series of Factom Entries. When a new Entry is commited and revealed to the Factom network it is added to the an Entry Block for its specified Chain. At the end of the 10 minute period all of the new Entry Blocks are combined into the directory block, then anchored into the Bitcoin Blockchain.
+A Factom Chain is a series of Factom Entries. When a new Entry is commited and revealed to the Factom network, it is added to the an Entry Block for its specified Chain. At the end of each 10 minute period all of the new Entry Blocks are combined into the Directory Block, then anchored into the Bitcoin Blockchain.
 
 Hello World!
 ===
@@ -150,7 +150,7 @@ Create a new ``factom.Entry`` and fill in the relevent data. We will be adding t
 	e.ExtIDs = append(e.ExtIDs, []byte("hello"))
 	e.Content = []byte("Hello Factom!")
 
-Once the Entry is ready we send the Commit Message to the Factom network. The Commit is process by fctwallet and signed with the Entry Credit Address specified here.
+Once the Entry is ready we send the Commit Message to the Factom network. The Commit is process by fctwallet and signed with the Entry Credit address specified here.
 
 	if err := factom.CommitEntry(e, "app01"); err != nil {
 		log.Fatal(err)
@@ -162,11 +162,11 @@ It is not strictly nessesary to wait between the Commit Message and the Reveal, 
 		log.Fatal(err)
 	}
 
-If there are no errors, the Entry will be included in the current 10 minute Entry Block for the specified chain. After the end of the current 10 minutes the Entry Block containing the Entry will be hashed and included into the Directory Block which will be anchored into the Bitcoin Blockchain.
+If there are no errors, the Entry will be included in the current 10 minute Entry Block for the specified Chain. After the end of the current 10 minutes the Entry Block containing the Entry will be hashed and included into the Directory Block which will then be anchored into the Bitcoin Blockchain.
 
 Creating a new Factom Chain
 ---
-A new Factom Chain is created by constructing an Entry to be the first Entry of the new Chain, then constructing the Chain from the Entry. The Chain is then commited and revealed to the Factom network.
+A new Factom Chain is created by constructing an Entry to be the first Entry of the new Chain, then constructing the Chain from the Entry. The Chain is then Commited and Revealed to the Factom network.
 
 	package main
 	
@@ -194,7 +194,7 @@ A new Factom Chain is created by constructing an Entry to be the first Entry of 
 		}
 	}
 
-Since a new Chain is being created the Entry may be constructed without the ChainID field. The new ChainID will be computed using the ExtIDs of the Entry. Remember that the ExtIDs of the first Entry of a Chain must be unique among all first Entries (A new Chain cannot be created if a Chain with the same ID already exists). 
+Since a new Chain is being created the Entry may be constructed without the ChainID field. The new ChainID will be computed using the ExtIDs of the Entry. Remember that the ExtIDs of the first Entry of a Chain must be unique among all first Entries. A new Chain cannot be created if a Chain with the same ChainID already exists. 
 
 	e := factom.NewEntry()
 	e.ExtIDs = append(e.ExtIDs, []byte("MyChain"), []byte("12345"))
