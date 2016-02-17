@@ -1,9 +1,11 @@
 Hello World!
 ===
 
+The easiest way to create Factom entries and chains programatically is to use the [factom library](http://github.com/FactomProject/factom) for golang. Install and setup the Go environment using the [installation instructions](https://golang.org/doc/install) provided by [golang.org](). Import the [factom package](github.com/FactomProject/factom) with ``go get github.com/FactomProject/factom``.
+
 Creating a new Factom Entry
 ---
-In the first example a new Entry is constructed then sent to the Factom network. Notice that the ExtIDs, and Entry Content are []byte not string. This allows the Entries to contain binary data. For example an ExtID may be a key or a key signature.
+In the first example a new Entry is constructed then sent to the Factom network. Notice that the ExtIDs, and Entry Content are ``[]byte`` not ``string``. This allows the Entries to contain binary data. For example an ExtID may be a key or a key signature.
 
 	package main
 	
@@ -29,7 +31,7 @@ In the first example a new Entry is constructed then sent to the Factom network.
 		}
 	}
 	
-The easiest way to create Factom applications in golang is to import the factom package.
+The easiest way to create Factom applications in golang is to import the factom package by running ``go get github.com/FactomProject/factom``
 
 	import (
 		//...		
