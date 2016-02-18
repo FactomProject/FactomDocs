@@ -31,7 +31,7 @@ In the first example a new Entry is constructed then sent to the Factom network.
 		}
 	}
 	
-Create a new ``factom.Entry`` and fill in the relevent data. We will be adding this Entry to a testing Chain ``5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81``. the first External ID for the Entry will be "hello" and the Entry Content will be "Hello Factom!".
+Create a new ``factom.Entry`` and fill in the relevent data. We will be adding this Entry to a testing Chain ``5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81``. The first External ID for the Entry will be "hello" and the Entry Content will be "Hello Factom!".
 
 	e := factom.NewEntry()
 	e.ChainID = "5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81"
