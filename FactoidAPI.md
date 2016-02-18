@@ -341,7 +341,7 @@ fctwallet
   This call is used to import a factoid private key in hex from another source.  Provided a private key and a name. For example:
 
  ```
- curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr01&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88"
+ curl -X GET "http://localhost:8089/v1/factoid-generate-address-from-private-key/?name=addr001&privateKey=85d6755c286c6f139b1696ca74b0c14da473beadc37b2ec6273f2a92ce8d7c88"
  ```
  would import the given private key, and store it in the wallet under addr001 and return the public key.  Note that importing private keys in this fashion requires a fresh backup of the wallet for safety.
   
