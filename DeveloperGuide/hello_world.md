@@ -1,7 +1,7 @@
 Hello World!
 ===
 
-The easiest way to create Factom entries and chains programatically is to use the [factom library](http://github.com/FactomProject/factom) for golang. Install and setup the Go environment using the [installation instructions](https://golang.org/doc/install) provided by [golang.org](). Import the [factom package](github.com/FactomProject/factom) with ``go get github.com/FactomProject/factom``.
+The easiest way to create Factom entries and chains programatically is to use the [factom library](http://github.com/FactomProject/factom) for golang. Install and setup the Go environment using the [installation instructions](https://golang.org/doc/install) provided by [golang.org](http://golang.org). Import the [factom package](https://github.com/FactomProject/factom) with ``go get github.com/FactomProject/factom``.
 
 Creating a new Factom Entry
 ---
