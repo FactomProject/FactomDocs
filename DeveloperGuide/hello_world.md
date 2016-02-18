@@ -31,13 +31,6 @@ In the first example a new Entry is constructed then sent to the Factom network.
 		}
 	}
 	
-The easiest way to create Factom applications in golang is to import the factom package by running ``go get github.com/FactomProject/factom``
-
-	import (
-		//...		
-		"github.com/FactomProject/factom"
-	)
-
 Create a new ``factom.Entry`` and fill in the relevent data. We will be adding this Entry to a testing Chain ``5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81``. the first External ID for the Entry will be "hello" and the Entry Content will be "Hello Factom!".
 
 	e := factom.NewEntry()
