@@ -44,6 +44,7 @@ Get the most recent Entries in a Chain.
 Get all of the Entries in a Chain in order.
 
 	% factom-cli get allentries 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
+	Entry [0] {
 	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
 	ExtID: Factom
 	ExtID: Project Gutenberg
@@ -88,8 +89,8 @@ Get all of the Entries in a Chain in order.
 	=3NSj
 	-----END PGP PUBLIC KEY BLOCK-----
 	
-	
-	
+	}
+	Entry [1] {
 	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
 	ExtID: Lucius Seneca
 	ExtID: Apocolocyntosis
@@ -110,8 +111,8 @@ Get all of the Entries in a Chain in order.
 	=u5Lp
 	-----END PGP SIGNATURE-----
 	
-	
-	
+	}
+	Entry [2] {
 	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
 	ExtID: William Hope Hodgson
 	ExtID: The House on the Borderland
@@ -132,7 +133,9 @@ Get all of the Entries in a Chain in order.
 	=B4K2
 	-----END PGP SIGNATURE-----
 	
+	}
 	#...
+	
 
 Creating new Chains and Entries
 ---
