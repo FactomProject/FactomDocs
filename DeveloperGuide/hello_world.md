@@ -22,7 +22,7 @@ In the first example a new Entry is constructed then sent to the Factom network.
 		e.ExtIDs = append(e.ExtIDs, []byte("hello"))
 		e.Content = []byte("Hello Factom!")
 		
-		if err := factom.CommitEntry(e, "app01"); err != nil {
+		if err := factom.CommitEntry(e, "App-01"); err != nil {
 			log.Fatal(err)
 		}
 		time.Sleep(10 * time.Second)
@@ -40,7 +40,7 @@ Create a new ``factom.Entry`` and fill in the relevent data. We will be adding t
 
 Once the Entry is ready we send the Commit Message to the Factom network. The Commit is process by fctwallet and signed with the Entry Credit Address specified here.
 
-	if err := factom.CommitEntry(e, "app01"); err != nil {
+	if err := factom.CommitEntry(e, "App-01"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -73,7 +73,7 @@ A new Factom Chain is created by constructing an Entry to be the first Entry of 
 		c := factom.NewChain(e)
 		log.Println("Creating new Chain:", c.ChainID)
 		
-		if err := factom.CommitChain(c, "app01"); err != nil {
+		if err := factom.CommitChain(c, "App-01"); err != nil {
 			log.Fatal(err)
 		}
 		time.Sleep(10 * time.Second)

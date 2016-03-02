@@ -139,4 +139,4 @@ Get all of the Entries in a Chain in order.
 
 Creating new Chains and Entries
 ---
-TODO
+
