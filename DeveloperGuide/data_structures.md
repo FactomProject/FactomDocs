@@ -1,5 +1,9 @@
 Understanding Factom data structures.
 ===
+![chain-structure]
+[chain-structure]: https://github.com/FactomProject/FactomDocs/tree/master/DeveloperGuide/chain-structure.png  "Logo Title Text 1"
+
+
 User data in the Factom network is organized into Entries and Chains. Entries hold the user data, and Chains associate Entries with one another over time.
 
 * Anyone may write an Entry into any existing Chain
