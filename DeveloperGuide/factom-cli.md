@@ -1,9 +1,20 @@
 Using factom-cli
 ===
 
-factom-cli is the command line tool for using Factom. It may be used in conjunction with fctwallet to create or import Factoid and Entry Credit Addresses, and create and send Factoid transactions. In this guide factom-cli will be used to read data from factom, and to create new Factom Entries and Chains.
+factom-cli is the command line tool for using Factom. 
 
-To use factom-cli first open 2 termianal widows and run ``factomd`` and ``fctwallet``. Fctwallet is not required for reading Chain or Entry data, only for creating new Chains and Entries.
+By itself, factom-cli may be used to read data from factom.
+
+In conjunction with fctwallet, it may be used to:
+- create or import Factoid and Entry Credit Addresses
+- create and send Factoid transactions
+- create new Factom Entries and Chains
+ 
+This guide will show how to use factom-cli to read existing Chain and Entry data (does not require fctwallet), and to write new Chain and Entry data (does require fctwallet).
+
+For demonstration purposes:
+- open one terminal window and run ``factomd``
+- open another terminal window and run ``fctwallet``
 
 Reading Factom data
 ---
