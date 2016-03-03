@@ -62,7 +62,7 @@ Get the most recent Entries in a Chain.
 	Content:
 	{"APIMethod":"https://poloniex.com/public?command=returnOrderBook\u0026currencyPair=BTC_DOGE\u0026depth=4","ReturnData":"{\"asks\":[[\"0.00000058\",18923132.45473],[\"0.00000059\",14674610.350392],[\"0.00000060\",3373359.5320179],[\"0.00000061\",5314538.8908938]],\"bids\":[[\"0.00000057\",24850505.374277],[\"0.00000056\",49813613.467365],[\"0.00000055\",12240692.413305],[\"0.00000054\",9643845.2732678]],\"isFrozen\":\"0\"}","Timestamp":1457041801}
 
-Get all of the Entries in a Chain in order.
+To get all of the Entries in a Chain in order:
 
 	% factom-cli get allentries 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
 	Entry [0] {
