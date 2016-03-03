@@ -16,12 +16,12 @@ For demonstration purposes:
 - open one terminal window and run ``factomd``
 - open another terminal window and run ``fctwallet``
 
-Reading Factom data
+Reading Factom Data
 ---
 
-factom-cli may be used to read the latest data from Factom, or to get data about specific Chains.
+factom-cli may be used to read the latest data from Factom or to get data about specific Chains.
 
-Use factom-cli to get the First Entry in a Chain which, by convention, has a description of the Chain.
+To use factom-cli to get the first Entry in a Chain which, by convention, has a description of the Chain:
 
 	$ factom-cli get firstentry 3e3eb61fb20e71d8211882075d404f5929618a189d23aba8c892b22228aa0d71
 	ChainID: 3e3eb61fb20e71d8211882075d404f5929618a189d23aba8c892b22228aa0d71
@@ -34,24 +34,34 @@ Use factom-cli to get the First Entry in a Chain which, by convention, has a des
 Get the most recent Entries in a Chain.
 
 	% factom-cli get chainhead d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	4be376d36673ccd5d889cb1a951c517baa8f0996fece1144fa17e3d0224957e6
-	
-	% factom-cli get eblock 4be376d36673ccd5d889cb1a951c517baa8f0996fece1144fa17e3d0224957e6
-	BlockSequenceNumber: 13422
+	EBlock: 6c4d2b72a6efa6648702b0f6b8f5297d943955fba02d7651facbc296f9011e1c
+	BlockSequenceNumber: 14880
 	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	PrevKeyMR: 1bee04da4c4e917094d0b49053121d10b233c63ff13e36bddc2e03a07f04d9c4
-	Timestamp: 1456167000
+	PrevKeyMR: b9a89668b6fa32cf7bb3a67c1b6fc80cbf9d022104bf94628ce338c5c46fcf5a
+	Timestamp: 1457041800
 	EBEntry {
-		Timestamp 1456167060
-		EntryHash 18d242557c65f552b0e412e53892ab49bd12e53b3790a659b9672d24b33fa1b3
+		Timestamp 1457041860
+		EntryHash 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
+	}
+
+	% factom-cli get eblock 6c4d2b72a6efa6648702b0f6b8f5297d943955fba02d7651facbc296f9011e1c
+	BlockSequenceNumber: 14880
+	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
+	PrevKeyMR: b9a89668b6fa32cf7bb3a67c1b6fc80cbf9d022104bf94628ce338c5c46fcf5a
+	Timestamp: 1457041800
+	EBEntry {
+		Timestamp 1457041860
+		EntryHash 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
 	}
 	
-	% factom-cli get entry 18d242557c65f552b0e412e53892ab49bd12e53b3790a659b9672d24b33fa1b3
+	% factom-cli get entry 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
 	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	ExtID: �b7̫3k=Q���k��T�B�hڻ�32T���g���Y�<0�;c`B٬���İ��A�U;9n�
+	ExtID: ����1Ee+_5P��%�������l1
+	                            �!�v����
+	s(��Ņ�O                                    ���P�
 	Content:
-	{"APIMethod":"https://poloniex.com/public?command=returnOrderBook\u0026currencyPair=BTC_DOGE\u0026depth=4","ReturnData":"{\"asks\":[[\"0.00000064\",161838.59682339],[\"0.00000065\",16089570.921431],[\"0.00000066\",15722840.062805],[\"0.00000067\",5717468.1226597]],\"bids\":[[\"0.00000063\",19145198.508901],[\"0.00000062\",30396213.829645],[\"0.00000061\",16434823.407538],[\"0.00000060\",21044981.353868]],\"isFrozen\":\"0\"}","Timestamp":1456167002}
-	
+	{"APIMethod":"https://poloniex.com/public?command=returnOrderBook\u0026currencyPair=BTC_DOGE\u0026depth=4","ReturnData":"{\"asks\":[[\"0.00000058\",18923132.45473],[\"0.00000059\",14674610.350392],[\"0.00000060\",3373359.5320179],[\"0.00000061\",5314538.8908938]],\"bids\":[[\"0.00000057\",24850505.374277],[\"0.00000056\",49813613.467365],[\"0.00000055\",12240692.413305],[\"0.00000054\",9643845.2732678]],\"isFrozen\":\"0\"}","Timestamp":1457041801}
+
 Get all of the Entries in a Chain in order.
 
 	% factom-cli get allentries 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
