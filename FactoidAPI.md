@@ -562,10 +562,11 @@ curl -X POST http://localhost:8089/v1/factoid-get-processed-transactions/ -d "cm
 
 + Post **http://localhost:8089/v1/factoid-get-processed-transactionsj/(.*)**
 
-  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects.	
+  If pass in 'all' then all transactions are returned.  If an address, then all the transactions that use the address as an input, output, or entry credit output will be returned.  The transactions are returned as an array of JSON objects. The block range can also be optionally specified with start and end block heights.
   For example:
   ```
   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=FAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "address=<addrname>"
    curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "cmd=all"
+   curl -X POST http://localhost:8089/v1/factoid-get-processed-transactionsj/ -d "cmd=all&start=25400&end=25415"
    ```
