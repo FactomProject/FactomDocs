@@ -51,20 +51,20 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
   A call to compose-entry-submit API returns a JSON object
   
    ```
-   $ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/entrycreditaddressname
+   $ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["466972737421", "7365636F6E64"], "Content":"48656C6C6F20466163746F6D21"}' localhost:8089/v1/compose-chain-submit/entrycreditaddressname
    ```
    Returns	
 
-  {"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+  {"ChainID":"28590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610","ChainCommit":{"CommitChainMsg":"00015386f1252f4f0db4ade591a7669451540daaaa77b21fef2881989729725c94a9ab44675e6a6e26695e5aa298fa3a7454d95960336c9ecb1b9a2fb30fba95996e193e26b8cc9e9a6f90bd86564bcc453055eac484a67794714a573dd969df4526daf0a971f80b3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da2986deafdec8e0933e755e884fc16f71d52febcb3f0e6f00b1642b3332afac0f78c755b1588793cd4ce103c91031e73aed381c7cb55c5585640524123fd00e6c00"},"EntryReveal":{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b476100010000646697273742100067365636f6e6448656c6c6f20466163746f6d21"}}
    
   The return value contains both the ChainCommit and the Entry Reveal. 
   To Commit the Entry:
   
-  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"}' localhost:8088/v1/commit-chain
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitChainMsg":"00015386f1252f4f0db4ade591a7669451540daaaa77b21fef2881989729725c94a9ab44675e6a6e26695e5aa298fa3a7454d95960336c9ecb1b9a2fb30fba95996e193e26b8cc9e9a6f90bd86564bcc453055eac484a67794714a573dd969df4526daf0a971f80b3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da2986deafdec8e0933e755e884fc16f71d52febcb3f0e6f00b1642b3332afac0f78c755b1588793cd4ce103c91031e73aed381c7cb55c5585640524123fd00e6c00"}' localhost:8088/v1/commit-chain
   
   To Reveal the First Entry:
 
-  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b476100010000646697273742100067365636f6e6448656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
   
   The Chain gets committed and first entry is made.
   
@@ -83,32 +83,32 @@ This is a summary of the factomd API as pertains to trading Factoids.  We will a
   A call to compose-entry-submit API returns a JSON object
   
   ```
-  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/entrycreditaddressname
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"28590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610", "ExtIDs":["657831", "657832"], "Content":"48656C6C6F20466163746F6D21"}' localhost:8089/v1/compose-entry-submit/entrycreditaddressname
   ```
   
   Returns
 
-	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
-
+	{"EntryCommit":{"CommitEntryMsg":"000153872b030f7ad8b3722c6f72508df028d0f2563cc711e0ccd7da749160e3d385216237b065013b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29102270e0584dbe4c872980b7d6cb569d4fc35310b81219253b5b1e333d44ede92418fcddc61f9149cda737dcb6ebf3f5742327b42e9ce8bce08c697e6fdcda0b"},"EntryReveal":{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610000a0003657831000365783248656c6c6f20466163746f6d21"}}
+	
   The return value contains both the EntryCommit and the Entry Reveal. 
   To Commit the Entry:
 
-  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"}' localhost:8088/v1/commit-entry
+  $ curl -i -X POST -H 'Content-Type: application/json' -d '{"CommitEntryMsg":"000153872b030f7ad8b3722c6f72508df028d0f2563cc711e0ccd7da749160e3d385216237b065013b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29102270e0584dbe4c872980b7d6cb569d4fc35310b81219253b5b1e333d44ede92418fcddc61f9149cda737dcb6ebf3f5742327b42e9ce8bce08c697e6fdcda0b"}' localhost:8088/v1/commit-entry
 
  Then Reveal the Entry:
 
- $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
+ $ curl -i -X POST -H 'Content-Type: application/json' -d '{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610000a0003657831000365783248656c6c6f20466163746f6d21"}' localhost:8088/v1/reveal-entry
 
 The entries are made to the ChainID provided. 
 
 Note: ChainName can be provided instead of ChainID. However if the ChainID field has data, the ChainName field will be ignored.
 
 example json entry: 
-{"ChainName":["foo", "bar"], "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+{"ChainName":["466972737421", "7365636F6E64"], "ExtIDs":["657831", "657832"], "Content":"48656C6C6F20466163746F6D21"}
 
 is the same as
 
-{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d", "ExtIDs":["ex1", "ex2"], "Content":"Hello Factom!"}
+{"ChainID":"28590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610", "ExtIDs":["657831", "657832"], "Content":"48656C6C6F20466163746F6D21"}
 
 + Post **http://localhost:8088/v1/reveal-entry/?**
 
@@ -119,11 +119,7 @@ is the same as
 
   Submit transaction.  Requires the encoded transaction as part of the call.  For example, creating a transaction that sends 10 factoids from xxx to yyy might be encoded as:
   ```
-  curl -X GET http://localhost:8088/v1/factoid-submit/httpp02015023e2886901010083ddb4b3006302ac3d
-  a1a1e5eac31af88cdbb886f34470cc0415d1968d8637814cfac482f283dceb940025edb8b25808b6e6d
-  48ad5ba67d0843eaf962c40f63c9b4df91b8fe7364ae872014b776d236585f2ed658ec9d24a4a65e08e
-  f6074573f570b8b25a9d424b1d955d2caaa4d2cfe30eb8217844f8b28b8a47ce6dc3e5eecd03f30954c
-  a3f0b64a63e0687f667bc3300bb33a0638953d442db2cd6fb4d27045318ec09463542c66305
+  curl -X POST -H 'Content-Type: application/json' -d '{"Transaction":"0201538741213601000183e0d3b160646f3e8750c550e4582eca5047546ffef89c13a175985e320232bacac81cc42883dceb94003b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da2901718b5edd2914acc2e4677f336c1a32736e5e9bde13663e6413894f57ec272e2830312c70f7aafecb55846014600f08eb8fe39b97e977ade4d86e1d6a6164af9ee1bda806fbdfc04db9bcc6c1bece954cfd9ed41defadf3505c14a532191f4d09"}' http://localhost:8088/v1/factoid-submit/
   ```
   That seems like a pretty complex construction of data.  Most users will use fctwallet to construct this call.
   
@@ -252,7 +248,7 @@ This is the structure of an Entry block, broken out into JSON.
   ```
   {"Response":"1210268000","Success":true}
   ```
-  Note that, like Bitcoin, Factoids use fixed point to indicate parts of a coin.  so 12.10268000 represents 12.10268 factoids.
+  Note that, like Bitcoin, Factoids use fixed point to indicate parts of a coin.  so 1210268000 represents 12.10268 factoids.
   
 + Get **http://localhost:8088/v1/factoid-get-fee/**
   
@@ -471,21 +467,21 @@ fctwallet
 
 Create a JSON object that may be used in the factomd calls to commit-chain and reveal-chain
 
-	$ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-chain-submit/app
+	$ curl -X POST -H 'Content-Type: application/json' -d '{"ExtIDs":["466972737421", "7365636F6E64"], "Content":"48656C6C6F20466163746F6D21"}' localhost:8089/v1/compose-chain-submit/app
 	
 Returns
 	
-	{"ChainID":"92475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d","ChainCommit":{"CommitChainMsg":"0001521deb5c7891ac03adffe815c64088dc98ef281de1891c0f99a63c55369c1727dc73580cbcc309ee55fa780ce406722b7a074138c994c859e2eda619bbad59b41775b51176464cb77fc08b6ef6767dcc315b4729a871071053cfe4af5a6397f66fbe01042f0b79a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92b393f12e48b277932e9af0599071298a24be285184e03d0b79576d1d6473342e48fcb21b2ca99e41b4919ef790db9f5a526b4d150d20e1c2e25237249db2e109"},"EntryReveal":{"Entry":"0092475004e70f41b94750f4a77bf7b430551113b25d3d57169eadca5692bb043d000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
-
+	{"ChainID":"28590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610","ChainCommit":{"CommitChainMsg":"0001538758c38a4f0db4ade591a7669451540daaaa77b21fef2881989729725c94a9ab44675e6a6e26695e5aa298fa3a7454d95960336c9ecb1b9a2fb30fba95996e193e26b8cc9e9a6f90bd86564bcc453055eac484a67794714a573dd969df4526daf0a971f80b3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da292a6501852426d8ebc44b74bc0da4e99bd4a50faa383cf0c4ea6f5d7dfb4561829614c9932cec66eb588becc2cab874cc17649f6fb67f87b9b5b45aa0503db90f"},"EntryReveal":{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b476100010000646697273742100067365636f6e6448656c6c6f20466163746f6d21"}}
+	
 + Post **http://localhost:8089/v1/compose-entry-submit/([^/]+)**
 
 Create a JSON object that may be used in the factomd calls to commit-entry and reveal-entry
 
-	$ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"5c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81", "ExtIDs":["foo", "bar"], "Content":"Hello Factom!"}' localhost:8089/v1/compose-entry-submit/app
+	$ curl -i -X POST -H 'Content-Type: application/json' -d '{"ChainID":"28590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610", "ExtIDs":["657831", "657832"], "Content":"48656C6C6F20466163746F6D21"}' localhost:8089/v1/compose-entry-submit/app
 
 Returns
 
-	{"EntryCommit":{"CommitEntryMsg":"0001521dc2d47d32cbdd3fc21889e22cc408ae0b0c120662c0873331cc5ce8ebdc1b6722968ce20179a1ad273d890287e5d4f16d2669c06c523b9e48673de1bfde3ea2fda309ac92f4f4b4d52cc6b228b9b621b1b1969ab46bfa4f80379e14df15e4d48aefa72db6dd835fc7a70d2c79cc9e01eb9ca5be33875439c97c791a1b57f191df03a44008"},"EntryReveal":{"Entry":"005c337e9010600c415d2cd259ed0bf904e35666483277664d869a98189b35ca81000a0003666f6f000362617248656c6c6f20466163746f6d21"}}
+	{"EntryCommit":{"CommitEntryMsg":"000153876694327ad8b3722c6f72508df028d0f2563cc711e0ccd7da749160e3d385216237b065013b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da297a7a050663fd071f2d61c7fbdddfc5f47364a03767110cd20dfd59112d5c470f150a7a281a84e784680a7be7cc45ceee516eebb7a199a0d77cafcb9ef7fa5809"},"EntryReveal":{"Entry":"0028590424cc9dbe8957e576c492befff899274757658e2db14b3b34c646b47610000a0003657831000365783248656c6c6f20466163746f6d21"}}
 
 + Post **http://localhost:8089/v1/commit-chain/([^/]+)**
  
