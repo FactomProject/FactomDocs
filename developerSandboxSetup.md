@@ -13,14 +13,12 @@ There are three options for running a sandbox.
   * Minimal setup
   * good for quickly testing APIs
   * Better feedback metrics
-  * Golang compilation of Factom not needed (can use precompiled factomd binaries)
 
 
 2. Run a test server and client
   * Much closer to production experience
   * Needed if multiple clients are used
   * Factom setup needed on two different computers
-  * Need to install Golang and modify and recompile factomd
   
 3. Run a Dockerized Factom sandbox
   * Zero setup
@@ -48,7 +46,7 @@ Three programs are installed: factomd, fctwallet, and factom-cli.
 #### Configure Factomd for Sandbox use
 
 
-Create a folder in your user home folder. The folder should be called `.factom`. If factomd has been run on your computer before you may need to first delete the database and store that is already there: `` rm -r ~/.factom/ldb9 ~/.factom/store ``
+Create a folder in your user home folder. The folder should be called `.factom`. If factomd has been run on your computer before you may need to first rename the database that is already there: `mv ~/.factom/ldb ~/.factom/ldb_old`.
 
 In a terminal Linux and Mac: `mkdir ~/.factom`or Windows: `mkdir %HOMEDRIVE%%HOMEPATH%\.factom`
 
@@ -68,7 +66,7 @@ In a terminal window, run `factomd`. (Windows users have a desktop shortcut)
 
 In a new terminal window, run `fctwallet`. (Windows users have a desktop shortcut)
 
-In a new terminal window, run `factom-cli properties` (Windows users will have to browse to the install location of factom-cli)
+In a new terminal window, run `factom-cli properties` (Windows users may have to browse to the install location of factom-cli, or it might be in the path)
 
 If you see the various version information from the different programs, it is working.
 
@@ -79,7 +77,7 @@ For this example, we will use the ed25519 private key with 32 bytes of zeros.
 The private key is: `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG`
 The public key is: `EC2DKSYyRcNWf7RS963VFYgMExoHRYLHVeCfQ9PGPmNzwrcmgm2r`
 
-We will also use a Factoid key which has a balance of 300 in the genesis block. It has since been depleted, but can be used on sandbox systems.
+We will also use a Factoid key which has a balance of 300 in the genesis block. It has since been depleted on mainnet, but can be used on sandbox systems.
 The private key is: `Fs3E9gV6DXsYzf7Fqx1fVBQPQXV695eP3k5XbmHEZVRLkMdD9qCK`
 The public key is: `FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q`
 
@@ -152,7 +150,7 @@ You can get some diagnostic info from the control panel (which incidentally does
 ![controlpanel](/images/controlpanel.png)
 
 
-Also, browse to the .factom/data/export/ directory. It will make new folders when new Chains are created and new files when new Entries are made in a block period.
+Also, browse to the .factom/data/export/ directory. It will make new folders when new Chains are created and new files when new Entries are made in a block period.  To enable this feature, change the logLevel field in factomd.conf from info to debug and restart factomd.
 
 
 Another way is to run
@@ -178,56 +176,23 @@ Content:
 
 ### Setup a Factom Sandbox Server and Client
 
-To operate in this mode, the server can be run with the distributed binaries, but the clients must be recompiled to use the test server.  Binary installed clients will panic if they try to download blocks signed with the sandbox key.
 
 #### Setup a Factom Remote Server
 
-On a remote machine, setup a Factom server. Use the same directions as [Install Factom Binaries](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#setup-a-local-sandbox-factom-server) and [Configure Factomd for Sandbox use](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#configure-factomd-for-sandbox-use).  Run factomd.  Make sure that port 8108 is open on the server.  Only factomd needs to be running on the remote server.
+On a remote machine, setup a Factom server. Both the client and server must be run of different machines.  
+Use the same directions as [Install Factom Binaries](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#setup-a-local-sandbox-factom-server) and [Configure Factomd for Sandbox use](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#configure-factomd-for-sandbox-use).  Run factomd.  Make sure that port 8108 is open on the server.  Only factomd needs to be running on the remote server.
 
 #### Setup Client to use Sandbox Server
 
-##### Install Golang
-On the local machine, Install golang.  Here are some commands for Ubuntu:
+Create a folder in your user home folder. The folder should be called `.factom`. If factomd has been run on your computer before you may need to first rename the database that is already there: `mv ~/.factom/ldb ~/.factom/ldb_old`.  Factomd will panic if it loads blocks with the wrong keys.
 
-```
-sudo apt-get install git mercurial
+In a terminal Linux and Mac: `mkdir ~/.factom`or Windows: `mkdir %HOMEDRIVE%%HOMEPATH%\.factom`
 
-```
-Download latest version of go https://golang.org/dl/ This example uses 64 bit Linux and 1.5.2 is the latest version.
-```
-sudo tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz
-```
-Setup Paths.  Open the file `~/.profile` and add these lines to the bottom. If they are not exact, then your Linux may not be bootable.
-```
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOPATH/bin
-```
-**logout and login**.  This is the most straightforward way to run/test these changes.
+Save the configuration file [factomd.conf](https://raw.githubusercontent.com/FactomProject/FactomCode/master/factomd/factomd.conf) to your `.factom` directory.
 
-##### Install Local Factom
-
-```
-go get -v -u github.com/FactomProject/FactomCode/factomd
-go get -v -u github.com/FactomProject/fctwallet
-go get -v -u github.com/FactomProject/factom-cli
-go get -v -u github.com/FactomProject/walletapp
-```
-copy the config file
-```
-mkdir ~/.factom
-cp ~/go/src/github.com/FactomProject/FactomCode/factomd/factomd.conf ~/.factom/factomd.conf
-```
-##### Modify Local Factomd
-
-Open the file `~/go/src/github.com/FactomProject/FactomCode/common/constants.go`
-
-On the line `SERVER_PUB_KEY` replace `0426a802617848d4d16d87830fc521f4d136bb2d0c352850919c2679f189613a` with `8cee85c62a9e48039d4ac294da97943c2001be1539809ea5f54721f0c5477a0a`
-
-Recompile factomd
-```
-go install github.com/FactomProject/FactomCode/factomd
-```
+* Open `factomd.conf`
+* Change the line `ServerPubKey` from `"0426a802617848d4d16d87830fc521f4d136bb2d0c352850919c2679f189613a"` to `"8cee85c62a9e48039d4ac294da97943c2001be1539809ea5f54721f0c5477a0a"`
+  * This will make factomd recognize the sandbox public key instead of the official public key.
 
 ##### Connect Local Factomd to Sandbox Server
 
