@@ -118,6 +118,7 @@ The Entry Commit is only valid for 12 hours before and after the milliTimestamp.
 
 The number of Entry Credits is based on the Payload size. Cost is 1 EC per partial KiB. Empty Entries cost 1 EC.
 
+The Entry Commits (and Chain Commits) have two hashes associated with them.   Each hash is a single SHA256 of the data.  One is the hash of the entire Commit from the Version through the Signature. The other is the hash of the ledger fields (Version through Pubkey), which is the TXID.  The TXID is immune from transaction malleability, since it does not cover the signature. Doublespends share the same ledger hash.
 
 ### Chain Commit
 
@@ -136,9 +137,11 @@ A Chain Commit is a simultaneous payment for a specific Entry and a payment to a
 
 The Federated server will keep track of the Chain Commits based on ChainID Hash. The Federated servers keep track of the Chain Commits they receive.  When the first Entry is received, it will reveal the ChainID.  If the ChainID was a secret, then it now can be compared against all the possible Chain Commits claiming to pay for Entries of a certain ChainID. Once the ChainID is revealed, the ChainID hash and the 'Entry Hash + ChainID' fields can be compared to see if they match and form valid hashes. If they do not match, that Chain Commit is invalid.  If they do match, then the first one to be acknowledged gets accepted as the first Entry.  They maintain exclusivity for 1 hour for each ChainID hash after an acknowledgement.  The commit itself must be within 12 hours +/- of the milliTimestamp.
 
-A prudent user will not broadcast their first Entry until the Federated server acknowledges the Chain Commit.  If they do not wait, a peer on the P2P network can put their Entry as the first one in that Chain.
+A prudent user will not broadcast their first Entry until the Federated server acknowledges the Chain Commit.  If they do not wait, a malicious peer on the P2P network can put their Entry as the first one in that Chain, or stop the chain from being created for 1 hour.  This is the denial of chain attack.
 
 Chain Commits cost 10 Entry Credits to create the Chain, plus the fee per KiB of the Entry itself.
+
+The TXID of a Chain Commit shares the same form as a Entry Commit.
 
 ### Factoid Transaction
 
@@ -184,9 +187,11 @@ The transaction is protected against replay attacks because the servers do not a
 
 The signatures cover the Header, Inputs, Outputs, and Purchases.  The RCD is protected from tampering because the signed inputs specify only one possible RCD.
 
+The Factoids have two hashes associated with them.  Both are a single SHA256 of the data.  One is the hash of the entire transaction from the Header through the Signatures. The other is the hash of the ledger fields (Header through Entry Credit Purchase), which is the TXID.  The TXID is immune from transaction malleability, since it does not cover the signature (or subkeys of a multisig). Doublespends share the same ledger hash.
+
 ##### Redeem Condition Datastructure (RCD)
 
-This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 1 is defined here.  The RCD is hashed twice using SHA256d, to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
+This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 1 is defined here.  The RCD is hashed with SHA256 twice, (SHA256d), to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
 
 **RCD Type 1**:
 
