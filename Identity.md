@@ -73,7 +73,7 @@ The four keys above would result in these identity keys:
 | 3 | b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23 | id33pRgpm8ufXNGxtW7n5FgdGP6afXKjU4LfVmgfC8Yaq6LyYq2wA |
 | 4 | 12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6 | id42vYqBB63eoSz8DHozEwtCaLbEwvBTG9pWgD3D5CCaHWy1gCjF5 |
 
-A Chain Name is constructed with 7 elements. The first element is a binary string 0 signifying the version. The second element is ASCII bytes "Identity Chain".  The third element is the level 1 identity key in binary form. Elements 4-6 are levels 2-4. The 7th element is a nonce which is iterated until the first 6 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
+A Chain Name is constructed with 7 elements. The first element is a binary string 0 signifying the version. The second element is ASCII bytes "Identity Chain".  The third element is the level 1 identity key in binary form. Elements 4-6 are levels 2-4. The 7th element is a nonce which is iterated until the first 3 bytes match 0x888888. The Entry content is not defined, and does not affect the Chain Name. On a 5 year old laptop the search took about 1 minute per core.
 
 Chain Name = [00] [4964656E7469747920436861696E] [3f2b77bca02392c95149dc769a78bc758b1037b6a546011b163af0d492b1bcc0] [58190cd60b8a3dd32f3e836e8f1f0b13e9ca1afff16416806c798f8d944c2c72] [b246833125481636108cedc2961338c1368c41c73e2c6e016e224dfe41f0ac23] [12db35739303a13861c14862424e90f116a594eaee25811955423dce33e500b6] [nonce]
 
