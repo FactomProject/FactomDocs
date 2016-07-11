@@ -1,7 +1,7 @@
 Getting Started with Factom on Linux
 ===
 
-This guide is for technical userers who are interested in learning about Factom. By following this guide you will learn the basics of using Factom, and building simple applications that read and write data to and from the Factom Blockchain.
+This guide is for technical users who are interested in learning about Factom. By following this guide you will learn the basics of using Factom, and building simple applications that read and write data to and from the Factom Blockchain.
 
 In this guide you will learn how to:
 * install Factom
