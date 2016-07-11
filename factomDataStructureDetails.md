@@ -321,7 +321,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | 4 bytes | Block Count | This is the number of Entry Blocks that were updated in this block. It is a count of the ChainID:Key pairs. Inclusive of the special blocks. Big endian. |
 | **Body** |  |  |
 | 32 bytes | Admin Block ChainID | Indication the next item is the serial hash of the Admin Block. |
-| 32 bytes | Admin Block Hash | This is the serial hash of the Admin Block generated during this time period. |
+| 32 bytes | Admin Block LookupHash | This is the LookupHash of the Admin Block generated during this time period. |
 | 32 bytes | Entry Credit Block ChainID | Indication the next item belongs to the Entry Credit Block. |
 | 32 bytes | Entry Credit Block HeaderHash | This is the serial hash of the Entry Credit Block Header generated during this time period. |
 | 32 bytes | Factoid Block ChainID | Indication the next item belongs to the Factoid Block. |
@@ -335,20 +335,20 @@ Note about the Timestamp: This timestamp differs from Bitcoin, as it signifies t
 
 ### Administrative Block
 
-This is a special block which accompanies this Directory Block. It contains the signatures and organizational data needed to validate previous and future Directory Blocks.  A hash of this block is included in the DB body.  It appears there with a pair of the Admin ChainID:SHA256 of the block.
+This is a special block which accompanies this Directory Block. It contains the signatures and organizational data needed to validate previous and future Directory Blocks.  It has a LookupHash, which is a SHA256 of the entire block.  The LookupHash is included in the directory block body paired with the Admin ChainID.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | 32 bytes | Admin ChainID | The Admin ChainID is predefined as 0x000000000000000000000000000000000000000000000000000000000000000a. |
-| 32 bytes | PrevFullHash | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a PrevFullHash of 0. |
+| 32 bytes | BackReferenceHash | This is the top 256 bits of a SHA512 checksum (SHA512[:256]) of the previous Admin Block. It is calculated by hashing the previous serialized Admin block. It is included to doublecheck the previous block if SHA2 is weakened in the future.  First block has a BackReferenceHash of 0. |
 | 4 bytes | DB Height | This is the Directory Block height which this Admin Block is located in. Big endian. |
 | varInt_F | Header Expansion Size | This is the number bytes taken up by the Header Expansion area. Set at zero for now. |
 | Variable | Header Expansion Area | This is a field which can be defined and expanded in the future. It is good for things that can be derived deterministically by all the Federated servers when iterating the process lists. One planned feature to go in this field is a Chain Head Commitment. This would be a Merkle root of ChainIDs with their current heads.  This would allow a peer to demonstrate to a light client that the Chain head being offered is the current chain head as defined by the Federated servers. |
-| 4 bytes | Message Count | This is the number of Admin Messages and time delimiters that the body of this block contains.  Big endian. |
+| 4 bytes | Message Count | This is the number of Admin Messages that the body of this block contains.  Big endian. |
 | 4 bytes | Body Size | This is the number of bytes the body of this block contains.  Big endian. |
 | **Body** |  |  |
-| variable | All objects | A series of variable sized objects and timestamps arranged in chronological order.  Each object is prepended with an AdminID byte. Objects in this field (other than the minute number) have been sent over the network and were included in the process list of the Federated Server handling the Admin block for that minute. |
+| variable | All objects | A series of variable sized objects.  Each object is prepended with an AdminID byte. |
 
 
 ##### AdminID Bytes
@@ -357,7 +357,7 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 
 | Binary | Name | Data Bytes | Description |
 | ----------------- | ---------------- | ------- | --------- |
-| 0x00 | Minute Number | 1 byte | The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
+| 0x00 | Minute Number | 1 byte | (Depricated in Milestone2) The preceding data was acknowledged before the minute specified. 1 byte follows the Minute Number. |
 | 0x01 | DB Signature | 128 bytes | The following data is a signature of the preceding Directory Block header. The signature consists of the servers 32 byte identity ChainID, a 32 byte Ed25519 public key in that identity and a 64 byte signature of the previous Directory Block's header. |
 | 0x02 | Reveal Matryoshka Hash | 64 bytes | This is the latest M-hash reveal to be considered for determining server priority in subsequent blocks. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the M-hash reveal itself. |
 | 0x03 | Add/Replace Matryoshka Hash | 64 bytes | This is a command which adds or replaces the current M-hash for the specified identity with this new M-hash. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the new M-hash itself. This data is replicated from the server's identity chain. |
