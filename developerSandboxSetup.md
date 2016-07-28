@@ -33,7 +33,7 @@ Download the appropriate Factom binary package from factom.org
 
 The install directions are located [here](https://www.factom.com/howto/)
 
-Here are the binaries for [Windows](http://factom.org/downloads/factom.msi), [Mac](http://factom.org/downloads/factom.mpkg.zip), and [Linux](http://factom.org/downloads/factom.deb).
+Here are the binaries for Windows, Mac, and Linux: https://github.com/FactomProject/distribution
 
 Install the binaries like you would any other for your OS. The install directions walk you through various operating systems.  Do not run them yet, as you will be making your own fresh blockchain instead of using the public one. If you did run factomd before setup, follow the directions below for resetting the blockchain.
 
