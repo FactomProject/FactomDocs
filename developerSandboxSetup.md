@@ -31,7 +31,7 @@ There are three options for running a sandbox.
 
 Download the appropriate Factom binary package from factom.org
 
-The install directions are located [here](http://factom.org/howto)
+The install directions are located [here](https://www.factom.com/howto/)
 
 Here are the binaries for [Windows](http://factom.org/downloads/factom.msi), [Mac](http://factom.org/downloads/factom.mpkg.zip), and [Linux](http://factom.org/downloads/factom.deb).
 
