@@ -2,7 +2,7 @@ Installing Factom
 ===
 The fastest way to install Factom is to use the Factom installation package provided by [factom.org](http://factom.org). The package contains binaries for factomd, fctwallet, factom-cli, and walletapp.
 
-Download the factom [installer package](https://github.com/FactomProject/distribution/releases/download/v0.3.7.0/factom.deb) for Debian GNU/Linux.
+Download the factom [installer package](https://github.com/FactomProject/distribution) for Debian GNU/Linux.
 
 	$ wget https://github.com/FactomProject/distribution/releases/download/v0.3.7.0/factom.deb
 
