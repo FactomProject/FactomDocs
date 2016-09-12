@@ -1,163 +1,112 @@
 Using factom-cli
 ===
+factom-cli is the command line interface for interacting with the factom daemon and the factom wallet daemon. factom-cli may be used to write new data into Factom, read data from Factom, and manage Factoids and Entry Credits in the Factom Wallet.
 
-factom-cli is the command line tool for using Factom. 
-
-By itself, factom-cli may be used to read data from factom.
-
-In conjunction with fctwallet, it may be used to:
-- create or import Factoid and Entry Credit Addresses
-- create and send Factoid transactions
-- create new Factom Entries and Chains
- 
-This guide will show how to use factom-cli to read existing Chain and Entry data (does not require fctwallet), and to write new Chain and Entry data (does require fctwallet).
-
-For demonstration purposes:
-- open one terminal window and run ``factomd``
-- open another terminal window and run ``fctwallet``
-
-Reading Factom Data
+Getting Entry Credits
 ---
+Entry Credits are required to write Chains and Entries into Factom. A testing Address may be used to obtain Entry Credits when running Factom in testing mode, seperate from the true Factom Network.
 
-factom-cli may be used to read the latest data from Factom or to get data about specific Chains.
+Once factomd is running in SERVER mode and factom-walletd has been started the testing Address may be imported with its private key.
 
-To use factom-cli to get the first Entry in a Chain which, by convention, has a description of the Chain:
+	$ factom-cli importaddress Fs3E9gV6DXsYzf7Fqx1fVBQPQXV695eP3k5XbmHEZVRLkMdD9qCK
+	FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q
+	$ factom-cli listaddresses
+	FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q 300
 
-	$ factom-cli get firstentry 3e3eb61fb20e71d8211882075d404f5929618a189d23aba8c892b22228aa0d71
-	ChainID: 3e3eb61fb20e71d8211882075d404f5929618a189d23aba8c892b22228aa0d71
-	ExtID: Universal Declaration of Human Rights
-	Content:
-	The Universal Declaration of Human Rights (UDHR) is a milestone document in the history of human rights. Drafted by representatives with different legal and cultural backgrounds from all regions of the world, the Declaration was proclaimed by the United Nations General Assembly in Paris on 10 December 1948 General Assembly resolution 217 A (III) (French) (Spanish)  as a common standard of achievements for all peoples and all nations. It sets out, for the first time, fundamental human rights to be universally protected.
-	
-	source: http://www.unicode.org/udhr
+It is convinient to assign the Public Address to a Bash variable for future operations.
+	$ f1=FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q
 
-Get the most recent Entries in a Chain.
+A new Entry Credit Address may be created and stored in the wallet. Again, it is convinient to save the Entry Credit Address as a variable for later use.
+* create new ec address
+	$ factom-cli newecaddress
+	EC2jF4CQZNriM8Z78YPMNrZFBEsHGrgdfnUN2gbLBgTJwtneMFbU
+	$ e1=EC2jF4CQZNriM8Z78YPMNrZFBEsHGrgdfnUN2gbLBgTJwtneMFbU
 
-	% factom-cli get chainhead d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	EBlock: 6c4d2b72a6efa6648702b0f6b8f5297d943955fba02d7651facbc296f9011e1c
-	BlockSequenceNumber: 14880
-	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	PrevKeyMR: b9a89668b6fa32cf7bb3a67c1b6fc80cbf9d022104bf94628ce338c5c46fcf5a
-	Timestamp: 1457041800
+Entry Credits are purchased for the new Entry Credit Address using the Factoid Address that was imported before. The Public Factoid Address is used to query the wallet which returns the Private Key to factom-cli to sign the transaction that purchases Entry Credits. Factoids may only be spent with the factom-cli using Factoid Addresses that are stored in the factom-walletd database.
+
+	$ factom-cli buyec $f1 $e1 10000
+	TxID: 1b300a370573cf130e82a00bf3924d0c81ee79dac12e477bf0a4c2c44062c79f
+	$ factom-cli listaddresses
+	FA2jK2HcLnRdS94dEcU27rF3meoJfpUcZPSinpb7AwQvPRY6RL1Q 289.988
+	EC2jF4CQZNriM8Z78YPMNrZFBEsHGrgdfnUN2gbLBgTJwtneMFbU 10000
+
+Creating Chains and Entries
+---
+A new Chain can now be created using the newly aquired Entry Credits. The External IDs of the First Entry of a Chain MUST be unique among all existing First Entrys. If Factom is being run in testing mode it is unlilkely that the Chain Name will be taken, but it is good practace to include a random nonce anyway. 
+
+A new Chain is created by Writing a unique First Entry.
+
+	$ echo Hello Factom | factom-cli addchain -e Hello -e $(openssl rand -base64 10) $e1
+	Commiting Chain Transaction ID: ae4b5ec092072c54b55a5c06b9662d65a85f5683c5962abbffb7129a488dba29
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	Entryhash: 3b5d63a87f2435cc017f824cfa370cd6a9064f6721912d6dd990e429128a7ca9
+
+Getting the Chain Head will show the most recent Entry Block belongin to the Chain. If the Entry Block is the first Entry Block in the Chain the Previous Key Merkel Root will be all zeros, otherwise the Previous Key Merkel Root will be the Merkel Root of the Previous Entry Block in the Chain.
+
+	$ factom-cli get chainhead e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	EBlock: e3f876b40bd641f863a88d2c8299a58d6b749f9ea53f70327fef1659673e72e1
+	BlockSequenceNumber: 0
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	PrevKeyMR: 0000000000000000000000000000000000000000000000000000000000000000
+	Timestamp: 1472749920
+	DBHeight: 111
 	EBEntry {
-		Timestamp 1457041860
-		EntryHash 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
+		Timestamp 1472750280
+		EntryHash 3b5d63a87f2435cc017f824cfa370cd6a9064f6721912d6dd990e429128a7ca9
 	}
 
-	% factom-cli get eblock 6c4d2b72a6efa6648702b0f6b8f5297d943955fba02d7651facbc296f9011e1c
-	BlockSequenceNumber: 14880
-	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	PrevKeyMR: b9a89668b6fa32cf7bb3a67c1b6fc80cbf9d022104bf94628ce338c5c46fcf5a
-	Timestamp: 1457041800
-	EBEntry {
-		Timestamp 1457041860
-		EntryHash 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
-	}
-	
-	% factom-cli get entry 29208f81ce849291ab7fae458bd7624dbfb03c3b9f506d7f3e9e45a1339561c8
-	ChainID: d3abab36f0abe172b08df64396e6e4b4129bcaf7b0b3e1b94653414c68249386
-	ExtID: ����1Ee+_5P��%�������l1
-	                            �!�v����
-	s(��Ņ�O                                    ���P�
+More Entries can be added to the Chain once it has been created. Additional Entries into the Chain need not have a unique set of External IDs.
+
+	$ echo Hello again | factom-cli addentry -c e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5 $e1
+	Commiting Entry Transaction ID: a2fbbc9e3beb8f7d6274d761df0645d07c8c56de41045e6f8fff1292f380e3bd
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	Entryhash: d2628343f63c4cdbd0122d0563acf3f2a9331ebf56212476b02930ee863c7691
+
+Reading Factom Chains
+---
+The factom-cli can retrive the First Entry of any Chain. By convention the First Entry of a Chain may contain usefull information about the Chains purpose, and/or how the Chains Entries are to be interperated or validated.
+
+	$ factom-cli get firstentry e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	ExtID: Hello
+	ExtID: j4vLmL/jH2bflw==
 	Content:
-	{"APIMethod":"https://poloniex.com/public?command=returnOrderBook\u0026currencyPair=BTC_DOGE\u0026depth=4","ReturnData":"{\"asks\":[[\"0.00000058\",18923132.45473],[\"0.00000059\",14674610.350392],[\"0.00000060\",3373359.5320179],[\"0.00000061\",5314538.8908938]],\"bids\":[[\"0.00000057\",24850505.374277],[\"0.00000056\",49813613.467365],[\"0.00000055\",12240692.413305],[\"0.00000054\",9643845.2732678]],\"isFrozen\":\"0\"}","Timestamp":1457041801}
+	Hello Factom
 
-To get all of the Entries in a Chain in order:
+The factom-cli may also be used to get all of the Entries in an existing Chain.
 
-	% factom-cli get allentries 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
+	$ factom-cli get allentries e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
 	Entry [0] {
-	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
-	ExtID: Factom
-	ExtID: Project Gutenberg
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	ExtID: Hello
+	ExtID: j4vLmL/jH2bflw==
 	Content:
-	Project Gutenberg (http://www.gutenberg.org/) is a volunteer effort to digitize and archive cultural works, to "encourage the creation and distribution of eBooks". It was founded in 1971 by Michael S. Hart and is the oldest digital library. Most of the items in its collection are the full texts of public domain books. The project tries to make these as free as possible, in long-lasting, open formats that can be used on almost any computer.
-	
-	This chain documents the Project Gutenberg DVD (https://www.gutenberg.org/wiki/Gutenberg:The_CD_and_DVD_Project) published April 2010. Each entry in this chain represents one of the 29000+ books on the DVD, and contains sha256sum hashes of each of the .zip files associated with the book.
-	
-	b69644d2ee2fd2a886cec724e8c1b0fe0018ccbc3ccfbfe58d4575555ad31ac3  pgdvd042010.iso
-	
-	Each entry of hashes will be signed with the Factom.org Project Gutenberg PGP key.
-	
-	-----BEGIN PGP PUBLIC KEY BLOCK-----
-	Version: GnuPG v1
-	
-	mQENBFYOz0QBCAC1AVabyuMDCJwMqSuetEW1BOt2p21LxKPc0TDBmuzzVgVs/SmI
-	oGweWu+NES69zG+nALhH2pueUeedEJK8rAcjLJPUdGvcLa4JmZgHOgxtVFXs3erf
-	oqMpCsRyt/FqDWvOzvt0H6Qk3R4FZeQbvGWHbEbi6GJxn/n55S9x2usJF4kTMjfM
-	t3X8LGqTTXCay0JZsEGXGADSSWYJihdTdUxM7NH4EfF5cXxsqW/B/6X0B19xtlDw
-	VspF+pMHxMXl5s3IKvnK+McSwLIC9Jo6fpJYJlKT0l+5F3EbO9nkOv8SEsS8pcnR
-	Q9ie8OvtCD5KNI3sSl/PSTvopGiW6+nIWySNABEBAAG0SUZhY3RvbS5vcmcgKFNp
-	Z25pbmcga2V5IGZvciBQcm9qZWN0IEd1dGVuYmVyZyBlbnRyaWVzKSA8aGVsbG9A
-	ZmFjdG9tLm9yZz6JAT4EEwECACgFAlYOz0QCGwMFCQWjmoAGCwkIBwMCBhUIAgkK
-	CwQWAgMBAh4BAheAAAoJEIuOBXcCsud6nTgH/jr6H3ZM7NcpwlUTe3TcJC6+FsyO
-	bJJjvNn1NhItFYSngo1fdcUMbbtaZ54r0uPwiDmATvy57vg+605kU2ih2n7JJv18
-	Yd2U4PN8cnmtHsukgpqAdZNvE8tTPQEafFWdhRCgmfp9Ne8E7BfG7KZZETHNVUE0
-	U5bLtAsbDRYAy2XyJsUt56r+aFBraPV6IYNbskqM1i4ISrZpQHF+e8e85eY2FmpE
-	cZrlUnMWZDD0G7z6P9Fg48iejSiHuU3tL0dt6+GSxcOb741S1LftV8alaYF3ENZX
-	rzGpqJiI4oMTgNR3BC2KIYrxeeUprKGc/GrPGCNwZq5Sa+ZdOzw/7JK0kaq5AQ0E
-	Vg7PRAEIAL/gCcDHVV06wN7MiEdQJtElf12TEgc5rfcmY8KxGWpIuWFHRcce+YPi
-	AJAbPW7FOKsb3m0a1alGZuyQwZRioPRik7vDayiVaYBX4fmwawFo4XdZ0NYpo2sc
-	/bshTbMTcXsV580BJiYN42Ks+Qj6F4a4pMNTvOiQhkXaycSQNxWu6CUPcKjfJ/TZ
-	5qIL+tBJhj9sHyYNSNdeo0XoQMed6PM6k1Q0yxbQF6fgywT3LrehmMhAXlXfbQc4
-	h+NpRz0iMbfhozjfP4byui/TEIl4/0lAN9p9h9ZEEeRZZRodqG/VKcztjeFuf1Qx
-	2gweW8CSy2/iQSeUwReLzpkmgmRhNbMAEQEAAYkBJQQYAQIADwUCVg7PRAIbDAUJ
-	BaOagAAKCRCLjgV3ArLnej26B/9f4YJyEafETBmg0JVCx7I4EsPEOkNOrMkIKgzB
-	wDH3GgaHCkE6OsCSdR249DG2t7RdewoJoViix/sm4eIDunABy7J53pdCz9NmqoZb
-	ak0xBrhCmBxYJqK6zzGYkrmVaOyegmHIqbOPlaCGyD3/LMGspQ9tpQm1NqiufGcE
-	SLAXbI9T+S35b4bibio8ftbMl8c7ra6g16BJKWsHbc4aBHbcVnfJHYVhXCUmzDTB
-	BvUD/4OAtqe061roSyqH7+b9J4SidyVx6fvErS+4DTMwqY21H29dceEGt9atB1mZ
-	olnz+u+YezDu9Sn63jT+Z2JhxfOEOaWHsAezrgIk/FGvT7y/
-	=3NSj
-	-----END PGP PUBLIC KEY BLOCK-----
+	Hello Factom
 	
 	}
 	Entry [1] {
-	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
-	ExtID: Lucius Seneca
-	ExtID: Apocolocyntosis
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
 	Content:
-	-----BEGIN PGP SIGNED MESSAGE-----
-	Hash: SHA1
-	
-	6e2f37545a37b0cccf9cc0e95b17091f57b5ffd2743113e1720acbd95caf185f  10001.zip
-	-----BEGIN PGP SIGNATURE-----
-	Version: GnuPG v1
-	
-	iQEcBAEBAgAGBQJWEqhTAAoJEIuOBXcCsud6M5YH/0G0GrZYF4V0M9yYa2mO3BC+
-	1uEG81K3CMSX32SPmi6atyVkodvik+PFkYCPyzmgGk3LLUCD6DTTpJWWC837yotb
-	T7cQL/E/U4x1C+8L/MU+YuyhXSru8e/V0ltWnD+sE+BsHg3UbhpfcQ2Zu6zuGlCC
-	7+WFGosg8hFNhoQTWpTQiDl9R8ySO7jKF7qWy06DJUaXTJWtBHLAXwdSWNTbnEE7
-	Lx5VrQL9NYLOYv85BoY50wbtkAGAUOjgjxIAep14QBAjX8cDU9j0LLTrHH4WBE8R
-	HzDeFKpPwTwuvxGnrwImlSximqeY9qQgqIKBgW2CCXtmpMAJuBAmspAo1zX3tR0=
-	=u5Lp
-	-----END PGP SIGNATURE-----
+	Hello again
 	
 	}
-	Entry [2] {
-	ChainID: 00511c298668bc5032a64b76f8ede6f119add1a64482c8602966152c0b936c77
-	ExtID: William Hope Hodgson
-	ExtID: The House on the Borderland
+
+Specific Entries or Entry Blocks may also be requested using factom-cli
+
+	$ factom-cli get entry 3b5d63a87f2435cc017f824cfa370cd6a9064f6721912d6dd990e429128a7ca9
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	ExtID: Hello
+	ExtID: j4vLmL/jH2bflw==
 	Content:
-	-----BEGIN PGP SIGNED MESSAGE-----
-	Hash: SHA1
-	
-	e8398edab3e9e5785d80ce8629abc851f38408ce588deacde08419a1425aee54  10002_8.zip
-	-----BEGIN PGP SIGNATURE-----
-	Version: GnuPG v1
-	
-	iQEcBAEBAgAGBQJWEqhUAAoJEIuOBXcCsud6KJgH/3ct55S6d8QHBPMaaUNMcPth
-	PCcPI1UiuzYux7iI4x4hb9znuYir7lgjhqpfOMwppQFESy+HoznJvWYWNiEZNN0o
-	meDct/xroLN2Lndw3raStqoHR3tjkjEaZ33yEqwUL0uI1ETYq7D+d6qJpw6AEyqR
-	oSSL7RfhVQbxsE9KNxwmKMekkCbi2OtMJdRBbN3FH4QD5eFE2DT8opmELc8e3J8d
-	9PrOe5zfmC3NPdqMdf7pCt8NHFZzPqeGzwH3MCL77yadLFaFTf1pCOlF6hPnb8Y1
-	7bSDT6A2KKYa+I5iZq+sK2ZCi2Xj7m4R7D5OvoEceBbRu1vNFMjUzRlTTX2wJIU=
-	=B4K2
-	-----END PGP SIGNATURE-----
-	
+	Hello Factom
+
+	$ factom-cli get eblock e3f876b40bd641f863a88d2c8299a58d6b749f9ea53f70327fef1659673e72e1
+	BlockSequenceNumber: 0
+	ChainID: e6a766a9bd9a40a708d85b8523ca55a179fa681853f49941c3456296e605c4b5
+	PrevKeyMR: 0000000000000000000000000000000000000000000000000000000000000000
+	Timestamp: 1472749920
+	DBHeight: 111
+	EBEntry {
+		Timestamp 1472750280
+		EntryHash 3b5d63a87f2435cc017f824cfa370cd6a9064f6721912d6dd990e429128a7ca9
 	}
-	#...
-	
-
-Creating new Chains and Entries
----
-

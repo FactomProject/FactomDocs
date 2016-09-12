@@ -1,7 +1,7 @@
 Getting Started with Factom
 ===
 
-This guide is for developers and technical userers who are interested in learning about building Factom applications and scripts. By following this guide you will learn the basics of using Factom to build simple applications that read and write data to and from the Factom Blockchain.
+This guide is for developers and technical user who are interested in learning about building Factom applications and scripts. By following this guide you will learn the basics of using Factom to build simple applications that read and write data to and from the Factom Blockchain.
 
 In this guide you will learn how to:
 * install Factom
