@@ -60,7 +60,7 @@ Save the configuration file [factomd.conf](https://raw.githubusercontent.com/Fac
 * Optionally adjust `DirectoryBlockInSeconds`.  600 gives 10 minute blocks, which is more realistic
   * The default is for 1 minute blocks (60) which is much easier to develop with.  Shorter times have not been tested.
 
-For easier debugging, change the `logLevel` to  `info`.  This exports pointers to data which is added into factom to the ~/.factom/data/export/ directory.  Adding new entries will add new files to the directory with the specified ChainID.
+For easier debugging, change the `logLevel` to  `debug`.  This exports pointers to data which is added into factom to the ~/.factom/data/export/ directory.  Adding new entries will add new files to the directory with the specified ChainID.
 
 
 #### Run Factomd
