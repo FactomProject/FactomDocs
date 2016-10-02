@@ -21,7 +21,7 @@ To protect all Koinify asset's private keys, the secret words should not be ente
 - unzip and run `sudo python setup.py install` in terminal for bip32utils
 - Download [ecdsa](https://pypi.python.org/packages/source/e/ecdsa/ecdsa-0.13.tar.gz#md5=1f60eda9cb5c46722856db41a3ae6670)
 - unzip and run `sudo python setup.py install` in terminal for ecdsa
-- Download [ec25519](https://pypi.python.org/packages/source/e/ed25519/ed25519-1.3.tar.gz#md5=3e025286669b71158e7811e665952b56)
+- Download [ed25519](https://pypi.python.org/packages/d5/d6/cd19a64022dc7557d245aad6a943eed7693189b48c58a9adf3bc00ceedc5/ed25519-1.4.tar.gz#md5=7c9401afca45dcb3fdefdc8a5990bab3)
 - in terminal run `sudo apt-get install python-dev`
 - unzip and run `sudo python setup.py install` in terminal for ed25519
 
