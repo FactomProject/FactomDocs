@@ -25,7 +25,7 @@ To protect all Koinify asset's private keys, the secret words should not be ente
 - in terminal run `sudo apt-get install python-dev`
 - unzip and run `sudo python setup.py install` in terminal for ed25519
 
-- Download [words_to_factoid_purchase.py](https://github.com/FactomProject/FactomDocs/raw/master/token_sale/words_to_factoid_purchase.py)
+- Download [words_to_factoid_purchase.py](https://raw.githubusercontent.com/FactomProject/FactomDocs/master/wallet_info/token_sale/words_to_factoid_purchase.py)
 - in terminal run `python words_to_factoid_purchase.py`.  If working it should output `data encoded in OP_RETURN is: 464143544f4d303023f0e67ac88d0e39d6f3a894570efee943cd1c326f1d866647151194a8e01e21`
 
 ## Run the test
