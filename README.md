@@ -4,7 +4,7 @@ Factom
 Overview
 --------
 
-Factom is a extension to the Bitcoin blockchain that solves the three core problems of all Bitcoin 2.0 applications: Speed, Cost, and Bloat.
+Factom is an extension to the Bitcoin blockchain that solves the three core problems of all Bitcoin 2.0 applications: Speed, Cost, and Bloat.
 
 The Bitcoin blockchain is a trustless, permanent system of record for Bitcoin transactions, secured by 10,000+ nodes across the world. Factom is a simple way to extend this technology to support Bitcoin 2.0, or applications that need such a system of record, but whose transactions do not primarily involve Bitcoin.  These applications often encode their information into Bitcoin transactions, which may be slower, more expensive, and add many transactions to the Bitcoin blockchain that are not actually Bitcoin transactions (something many call "blockchain bloat"). 
 
