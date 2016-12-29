@@ -21,11 +21,11 @@ To protect all Koinify asset's private keys, the secret words should not be ente
 - unzip and run `sudo python setup.py install` in terminal for bip32utils
 - Download [ecdsa](https://pypi.python.org/packages/source/e/ecdsa/ecdsa-0.13.tar.gz#md5=1f60eda9cb5c46722856db41a3ae6670)
 - unzip and run `sudo python setup.py install` in terminal for ecdsa
-- Download [ec25519](https://pypi.python.org/packages/source/e/ed25519/ed25519-1.3.tar.gz#md5=3e025286669b71158e7811e665952b56)
+- Download [ed25519](https://pypi.python.org/packages/d5/d6/cd19a64022dc7557d245aad6a943eed7693189b48c58a9adf3bc00ceedc5/ed25519-1.4.tar.gz#md5=7c9401afca45dcb3fdefdc8a5990bab3)
 - in terminal run `sudo apt-get install python-dev`
 - unzip and run `sudo python setup.py install` in terminal for ed25519
 
-- Download [words_to_factoid_purchase.py](https://github.com/FactomProject/FactomDocs/raw/master/token_sale/words_to_factoid_purchase.py)
+- Download [words_to_factoid_purchase.py](https://raw.githubusercontent.com/FactomProject/FactomDocs/master/wallet_info/token_sale/words_to_factoid_purchase.py)
 - in terminal run `python words_to_factoid_purchase.py`.  If working it should output `data encoded in OP_RETURN is: 464143544f4d303023f0e67ac88d0e39d6f3a894570efee943cd1c326f1d866647151194a8e01e21`
 
 ## Run the test

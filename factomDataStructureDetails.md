@@ -312,7 +312,7 @@ A Directory Block consists of a header and a body. The body is a series of pairs
 | ----------------- | ---------------- | --------- |
 | **Header** |  |  |
 | varInt_F | Version | Describes the protocol version that this block is made under.  Only valid value is 0. Can safely be coded using 1 byte for the first 127 versions. |
-| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for Directory Blocks is 0xFA92E5A1. |
+| 4 bytes | NetworkID | This is a magic number identifying the main Factom network.  The value for MainNet Directory Blocks is 0xFA92E5A2. TestNet is 0xFA92E5A3. |
 | 32 bytes | BodyMR | This is the Merkle root of the body data which accompanies this block.  It is calculated with SHA256. |
 | 32 bytes | PrevKeyMR | Key Merkle root of previous block.  It is the value which is used as a key into databases holding the Directory Block. It is calculated with SHA256. |
 | 32 bytes | PrevFullHash | This is a SHA256 checksum of the previous Directory Block. It is calculated by hashing the serialized block from the beginning of the header through the end of the body. It is included to allow simplified client verification without building a Merkle tree and to doublecheck the previous block if SHA2 is weakened in the future. |
