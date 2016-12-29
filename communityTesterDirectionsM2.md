@@ -52,13 +52,52 @@ export PATH=$PATH:$GOPATH/bin
 
 ### Install Factom
 
-Currently, the blog post [here](https://factom.com/blog/factom-launches-federated-testnet) is the best walkthrough of Factom Federation (M2).
+Currently, the blog post [here](https://factom.com/blog/factom-launches-federated-testnet) has some screenshots of what to expect Factom Federation (M2) to look like.
+
+These steps will get factom installed onto a linux machine. The steps should be similar for mac.
+
+```
+# install glide, the package dependency manager
+go get -u github.com/Masterminds/glide
+# download the code
+git clone https://github.com/FactomProject/factomd $GOPATH/src/github.com/FactomProject/factomd
+git clone https://github.com/FactomProject/factom-cli $GOPATH/src/github.com/FactomProject/factom-cli
+git clone https://github.com/FactomProject/factom-walletd $GOPATH/src/github.com/FactomProject/factom-walletd
+
+# switch to the develop branch of the factom programs
+cd ~/go/src/github.com/FactomProject/factomd
+git checkout develop
+cd ~/go/src/github.com/FactomProject/factom-cli
+git checkout develop
+cd ~/go/src/github.com/FactomProject/factom-walletd
+git checkout develop
+
+# get the dependencies and build each factom program
+glide cc
+cd ~/go/src/github.com/FactomProject/factomd
+glide install
+go install -v
+cd ~/go/src/github.com/FactomProject/factom-cli
+glide install
+go install -v
+cd ~/go/src/github.com/FactomProject/factom-walletd
+glide install
+go install -v
+
+# done.  factomd should be installed
+# you can optionally use a config file to run in a non-standard mode
+# mkdir -p ~/.factom/m2/
+# cp ~/go/src/github.com/FactomProject/factomd/factomd.conf ~/.factom/m2/
+```
+
+
+### Testing Factom
 
 You can run a local version of factomd to get greater flexibility by running it like this:
 
 `factomd -network=LOCAL`
 
-This will make a new blockchain without worrying about other's data interfering with your testing.  You can use the key `factom-cli importaddress Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` to get local Factoids.
+This will make a new blockchain without worrying about other's data interfering with your testing.  You can use the key `factom-cli importaddress Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` to get local Factoids after starting factom-walletd.
 
 For issues with the software, please post [here](https://github.com/FactomProject/factomd/issues).
 
