@@ -76,13 +76,14 @@ git checkout develop
 glide cc
 cd ~/go/src/github.com/FactomProject/factomd
 glide install
-go install -v
+go install -v -ldflags "-X github.com/FactomProject/factomd/engine.Build=`git rev-parse HEAD`"
 cd ~/go/src/github.com/FactomProject/factom-cli
 glide install
 go install -v
 cd ~/go/src/github.com/FactomProject/factom-walletd
 glide install
 go install -v
+cd ~/go/src/github.com/FactomProject/factomd
 
 # done.  factomd should be installed
 # you can optionally use a config file to run in a non-standard mode
