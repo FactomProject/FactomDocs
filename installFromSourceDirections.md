@@ -121,7 +121,7 @@ In most cases factomd will need to be restarted after synching to the latest blo
 
 Most users will want to run either the API wallet factom-walletd or the GUI wallet enterprise-wallet. Directions for those are located here: https://docs.factom.com/wallet#run-the-factom-foundation-wallet
 
-Although the factomd API is backwards compatible, the API extended by the old API wallet fctwallet is not supported by factom-walletd.
+Although the factomd API is backwards compatible, the API extended by the old API wallet, fctwallet, is not supported by factom-walletd. The entire wallet from M1 can be imported into factom-walletd using the -i flag and an empty ~/.factom/wallet directory.
 
 Some users will want to use the old fctwallet with the new factomd. Follow the directions [here](communityTesterDirections.md) to compile the old programs.
 
