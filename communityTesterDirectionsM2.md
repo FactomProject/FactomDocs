@@ -28,9 +28,9 @@ https://confluence.atlassian.com/pages/viewpage.action?pageId=269981802
 
 ###### Install Golang
 
-Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.7.3 is the latest version.
+Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.7.4 is the latest version.
 ```
-sudo tar -C /usr/local -xzf go1.7.3.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.7.4.linux-amd64.tar.gz
 ```
 
 On Mac, installing go this way should work:
@@ -63,14 +63,19 @@ go get -u github.com/Masterminds/glide
 git clone https://github.com/FactomProject/factomd $GOPATH/src/github.com/FactomProject/factomd
 git clone https://github.com/FactomProject/factom-cli $GOPATH/src/github.com/FactomProject/factom-cli
 git clone https://github.com/FactomProject/factom-walletd $GOPATH/src/github.com/FactomProject/factom-walletd
+git clone https://github.com/FactomProject/enterprise-wallet $GOPATH/src/github.com/FactomProject/enterprise-wallet
 
-# switch to the develop branch of the factom programs
+# To use the unstable development branch, uncomment these lines
+# This is primarily for developers who are updating factom itself
+# Leave alone to get the tested, released version.
 cd ~/go/src/github.com/FactomProject/factomd
-git checkout develop
+# git checkout develop
 cd ~/go/src/github.com/FactomProject/factom-cli
-git checkout develop
+# git checkout develop
 cd ~/go/src/github.com/FactomProject/factom-walletd
-git checkout develop
+# git checkout develop
+cd ~/go/src/github.com/FactomProject/enterprise-wallet
+# git checkout develop
 
 # get the dependencies and build each factom program
 glide cc
@@ -83,6 +88,9 @@ go install -v
 cd ~/go/src/github.com/FactomProject/factom-walletd
 glide install
 go install -v
+cd ~/go/src/github.com/FactomProject/enterprise-wallet
+glide install
+go install -v
 cd ~/go/src/github.com/FactomProject/factomd
 
 # done.  factomd should be installed
@@ -90,6 +98,32 @@ cd ~/go/src/github.com/FactomProject/factomd
 # mkdir -p ~/.factom/m2/
 # cp ~/go/src/github.com/FactomProject/factomd/factomd.conf ~/.factom/m2/
 ```
+
+
+### Starting Factom
+
+Factom takes a while to download the blockchain. It can be expidited by downloading the first 70k blocks via HTTP. Factomd still checks the blockchain on each bootup, so it will check for inconsistencies in the download.
+
+Note: currently factomd uses a lot of drive accesses when running. It is reccomended to hold the blockchain on a solid state drive. Running factomd on a spinning hard drive will be arduously slow. Since factomd currently scans the entire blockchain each time it is started, bootup takes a while (~30 min on an SSD).  You can watch the progress on the [Control Panel](http://localhost:8090/).
+
+Download the blockchain here: https://www.factom.com/assets/site/factom_bootstrap.zip
+SHA256: 2d4d256c337cdabc8f75aa71180c72129f807c365c78356471350ac1e0a4faed
+
+Extract the zip file to your home directory. It will create files in the location: ~/.factom/m2/main-database/ldb/MAIN/factoid_level.db/
+
+Compressed the blockchain is currently about 5 GB and uncompressed is over 9 GB.
+
+After factomd boots and downloads the remaining blocks, it likely is not keeping up with minutes. To see if it is, on the control panel click the "More Detailed Node Information" button. Towards the right of the top line there will be a field "-/ 0". If the 0 number does not increase after a minute, then it is not keeping up with minutes.
+
+In most cases factomd will need to be restarted after synching to the latest blockchain.
+
+### Factom Wallets
+
+Most users will want to run either the API wallet factom-walletd or the GUI wallet enterprise-wallet. Directions for those are located here: https://docs.factom.com/wallet#run-the-factom-foundation-wallet
+
+Although the factomd API is backwards compatible, the API extended by the old API wallet fctwallet is not supported by factom-walletd.
+
+Some users will want to use the old fctwallet with the new factomd. Follow the directions [here](communityTesterDirections.md) to compile the old programs.
 
 
 ### Testing Factom
