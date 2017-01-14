@@ -1,6 +1,23 @@
 Factom Community Tester Install Guide
 ==========
 
+
+
+
+
+
+
+**Note: These are outdated instructions. Please see the new instructions located [here](installFromSourceDirections.md).**
+
+
+
+
+
+
+
+
+
+
 To see how factom is doing, go to http://factomstatus.com/
 
 To examine your local factomd status, point your browser to: http://localhost:8090/controlpanel

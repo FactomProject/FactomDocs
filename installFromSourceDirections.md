@@ -68,35 +68,35 @@ git clone https://github.com/FactomProject/enterprise-wallet $GOPATH/src/github.
 # To use the unstable development branch, uncomment these lines
 # This is primarily for developers who are updating factom itself
 # Leave alone to get the tested, released version.
-cd ~/go/src/github.com/FactomProject/factomd
+cd $GOPATH/src/github.com/FactomProject/factomd
 # git checkout develop
-cd ~/go/src/github.com/FactomProject/factom-cli
+cd $GOPATH/src/github.com/FactomProject/factom-cli
 # git checkout develop
-cd ~/go/src/github.com/FactomProject/factom-walletd
+cd $GOPATH/src/github.com/FactomProject/factom-walletd
 # git checkout develop
-cd ~/go/src/github.com/FactomProject/enterprise-wallet
+cd $GOPATH/src/github.com/FactomProject/enterprise-wallet
 # git checkout develop
 
 # get the dependencies and build each factom program
 glide cc
-cd ~/go/src/github.com/FactomProject/factomd
+cd $GOPATH/src/github.com/FactomProject/factomd
 glide install
 go install -v -ldflags "-X github.com/FactomProject/factomd/engine.Build=`git rev-parse HEAD`"
-cd ~/go/src/github.com/FactomProject/factom-cli
+cd $GOPATH/src/github.com/FactomProject/factom-cli
 glide install
 go install -v
-cd ~/go/src/github.com/FactomProject/factom-walletd
+cd $GOPATH/src/github.com/FactomProject/factom-walletd
 glide install
 go install -v
-cd ~/go/src/github.com/FactomProject/enterprise-wallet
+cd $GOPATH/src/github.com/FactomProject/enterprise-wallet
 glide install
 go install -v
-cd ~/go/src/github.com/FactomProject/factomd
+cd $GOPATH/src/github.com/FactomProject/factomd
 
 # done.  factomd should be installed
 # you can optionally use a config file to run in a non-standard mode
 # mkdir -p ~/.factom/m2/
-# cp ~/go/src/github.com/FactomProject/factomd/factomd.conf ~/.factom/m2/
+# cp $GOPATH/src/github.com/FactomProject/factomd/factomd.conf ~/.factom/m2/
 ```
 
 
@@ -123,7 +123,7 @@ Most users will want to run either the API wallet factom-walletd or the GUI wall
 
 Although the factomd API is backwards compatible, the API extended by the old API wallet, fctwallet, is not supported by factom-walletd. The entire wallet from M1 can be imported into factom-walletd using the -i flag and an empty ~/.factom/wallet directory.
 
-Some users will want to use the old fctwallet with the new factomd. Follow the directions [here](communityTesterDirections.md) to compile the old programs.
+Some users will want to use the old fctwallet with the new factomd. Follow the directions [here](legacyWallets.md) to compile the old programs.
 
 
 ### Testing Factom
