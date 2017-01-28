@@ -362,10 +362,11 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 | 0x02 | Reveal Matryoshka Hash | 64 bytes | This is the latest M-hash reveal to be considered for determining server priority in subsequent blocks. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the M-hash reveal itself. |
 | 0x03 | Add/Replace Matryoshka Hash | 64 bytes | This is a command which adds or replaces the current M-hash for the specified identity with this new M-hash. Following this byte are 32 bytes specifying the identity ChainID and 32 bytes for the new M-hash itself. This data is replicated from the server's identity chain. |
 | 0x04 | Increase Server Count | 1 byte | The server count is incremented by the amount encoded in a following single byte. |
-| 0x05 | Add Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is added to the pool. |
-| 0x06 | Remove Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
-| 0x07 | Add Federated Server Signing Key | 64 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next 32 bytes are the public key itself.  If the specified key for this server already exists, this replaces the old one. |
-| 0x08 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
+| 0x05 | Add Federated Server | 36 bytes | The first 32 bytes are the ChainID of the Federated server which is added to the pool. The next 4 are the Directory Block height that it takes effect. |
+| 0x06 | Add Audit Server | 36 bytes | The first 32 bytes are the ChainID of the Audit server which is added to the pool. The next 4 are the Directory Block height that it takes effect. |
+| 0x07 | Remove Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
+| 0x08 | Add Federated Server Signing Key | 64 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next 32 bytes are the public key itself.  If the specified key for this server already exists, this replaces the old one. |
+| 0x09 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
 
 
 ### Entry Credit Block
