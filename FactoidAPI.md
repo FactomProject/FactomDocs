@@ -1,6 +1,9 @@
 Factoid API
 ===========
 
+Note: This documentation is outdated.  The latest documentation is located here: https://docs.factom.com/api
+
+
 This document does a quick summary of the API for Factoids and the Factoid wallet.   At this point in time
 the wallet is a commandline driven program, intended to demonstrate the API more than to be a viable 
 commerical wallet solution.
