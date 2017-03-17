@@ -70,12 +70,12 @@ In a new terminal window, run `factom-walletd`. (Windows users have a desktop sh
 In a new terminal window, run `factom-cli properties` (Windows users may have to browse to the install location of factom-cli, or it might be in the path)
 
 ```
-	% factom-cli properties
-	CLI Version: 0.2.0.2
-	Factomd Version: 0.4.0.2
-	Factomd API Version: 2.0
-	Wallet Version: 0.2.0.2
-	Wallet API Version: 2.0
+% factom-cli properties
+CLI Version: 0.2.0.2
+Factomd Version: 0.4.0.2
+Factomd API Version: 2.0
+Wallet Version: 0.2.0.2
+Wallet API Version: 2.0
 ```
 
 Once factomd is running you can use an internet browser and navigate to [](http://localhost:8090) to view the factomd Control Panel.
@@ -252,7 +252,7 @@ run factomd this way, but use the remote factom server's IP address.
 factomd -network=CUSTOM -customnet="mycustomnet" -exclusive=true -peers="serverip:8110" -prefix="notaserver"
 ```
 
-The rest of the steps with [fctwallet and factom-cli](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#run-factomd) should work on the local machine.
+The rest of the steps with [factom-walletd and factom-cli](https://github.com/FactomProject/FactomDocs/blob/master/developerSandboxSetup.md#run-factomd) should work on the local machine.
 
 ### Run a Dockerized Factom sandbox
 
