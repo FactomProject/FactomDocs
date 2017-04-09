@@ -350,6 +350,14 @@ This is a special block which accompanies this Directory Block. It contains the 
 | **Body** |  |  |
 | variable | All objects | A series of variable sized objects.  Each object is prepended with an AdminID byte. |
 
+##### Header Expansion Area
+
+There can be several distinct items in the expansion area.  They are identified by a type byte.  The length of the serialized data is also specified.  This allows older versions of software to skip data types they don't understand.  The length descriptor is a varInt_F.
+
+| Type Byte | Name | Data Bytes | Description |
+| ----------------- | ---------------- | ------- | --------- |
+| 0x01 | Balances Hash | 32 bytes | This is a 32 byte hash of the serialized sorted FCT and EC balances in the previous block. |
+
 
 ##### AdminID Bytes
 
