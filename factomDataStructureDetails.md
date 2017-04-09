@@ -356,8 +356,13 @@ There can be several distinct items in the expansion area.  They are identified 
 
 | Type Byte | Name | Data Bytes | Description |
 | ----------------- | ---------------- | ------- | --------- |
-| 0x01 | Balances Hash | 32 bytes | This is a 32 byte hash of the serialized sorted FCT and EC balances in the previous block. |
+| 0x01 | Balances Hash | 32 bytes | The Balances Hash (BH) is a 32 byte hash of the serialized sorted FCT and EC balances in the previous block. |
 
+Here is a serialization example:
+
+... | Header Expansion Size varInt_F | BH type byte | Length of BH | 32 bytes of BH | Future type byte | length of Future object | Future object (8 bytes for example) | ...
+
+... 2C 01 20 c76c73de94826eefa4e485469922ee3d98f8f3aec8ddb45b101a2012772a9cad 02 08 0123456789ABCDEF ...
 
 ##### AdminID Bytes
 
@@ -375,6 +380,7 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 | 0x07 | Remove Federated Server | 32 bytes | The following 32 bytes are the ChainID of the Federated server which is removed from the pool. All public keys associated with it are removed as well. |
 | 0x08 | Add Federated Server Signing Key | 64 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next 32 bytes are the public key itself.  If the specified key for this server already exists, this replaces the old one. |
 | 0x09 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
+| > 0x09 | Forward Compatible Type | unspecified | All types above 0x09 are prefixed with a Varint_F specifying how many of the following bytes are part of this message. | 
 
 
 ### Entry Credit Block
