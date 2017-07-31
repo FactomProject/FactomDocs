@@ -118,7 +118,7 @@ The Entry Commit is only valid for 12 hours before and after the milliTimestamp.
 
 The number of Entry Credits is based on the Payload size. Cost is 1 EC per partial KiB. Empty Entries cost 1 EC.
 
-The Entry Commits (and Chain Commits) have two hashes associated with them.   Each hash is a single SHA256 of the data.  One is the hash of the entire Commit from the Version through the Signature. The other is the hash of the ledger fields (Version through Pubkey), which is the TXID.  The TXID is immune from transaction malleability, since it does not cover the signature. Doublespends share the same ledger hash.
+The Entry Commits (and Chain Commits) have two hashes associated with them.   Each hash is a single SHA256 of the data.  One is the hash of the entire Commit from the Version through the Signature. The other is the hash of the ledger fields (Version through Number of Entry Credits), which is the TXID.  The TXID is immune from transaction malleability, since it does not cover the signature. Doublespends share the same ledger hash.
 
 ### Chain Commit
 
