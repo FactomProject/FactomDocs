@@ -81,13 +81,13 @@ cd $GOPATH/src/github.com/FactomProject/enterprise-wallet
 glide cc
 cd $GOPATH/src/github.com/FactomProject/factomd
 glide install
-go install -v -ldflags "-X github.com/FactomProject/factomd/engine.Build=`git rev-parse HEAD`"
+go install -ldflags "-X github.com/FactomProject/factomd/engine.Build=`git rev-parse HEAD` -X github.com/FactomProject/factomd/engine.FactomdVersion=`cat VERSION`" -v
 cd $GOPATH/src/github.com/FactomProject/factom-cli
 glide install
-go install -v
+go install -ldflags "-X main.FactomcliVersion=`cat VERSION`" -v
 cd $GOPATH/src/github.com/FactomProject/factom-walletd
 glide install
-go install -v
+go install -ldflags "-X github.com/FactomProject/factom-walletd/vendor/github.com/FactomProject/factom/wallet.WalletVersion=`cat ./vendor/github.com/FactomProject/factom/wallet/VERSION`" -v
 cd $GOPATH/src/github.com/FactomProject/enterprise-wallet
 glide install
 go install -v
