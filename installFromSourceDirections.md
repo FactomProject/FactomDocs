@@ -28,9 +28,9 @@ https://confluence.atlassian.com/pages/viewpage.action?pageId=269981802
 
 ###### Install Golang
 
-Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.7.4 is the latest version.
+Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.9 is the latest version.
 ```
-sudo tar -C /usr/local -xzf go1.7.4.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.9.linux-amd64.tar.gz
 ```
 
 On Mac, installing go this way should work:
