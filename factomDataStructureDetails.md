@@ -179,9 +179,9 @@ Factoids are balanced based and have all the value combined to a single amount. 
 | 32 bytes | EC Pubkey | (Purchase X) This is Entry Credit public key that will have its balance increased. |
 | **Redeem Condition Datastructure (RCD) Reveal / Signature Section** | | |
 | variable | RCD 0 | First RCD.  It hashes to input 0. The length is dependent on the RCD type, which is in the first byte. There are as many RCDs as there are inputs. |
-| variable | Signaure 0 | This is the data needed to satisfy RCD 0. It is a singature for type 1, but might be other types of data for later RCD types.  Its length is dependent on the RCD type. |
+| variable | Signature 0 | This is the data needed to satisfy RCD 0. It is a singature for type 1, but might be other types of data for later RCD types.  Its length is dependent on the RCD type. |
 | variable | RCD X | Xth RCD.  It hashes to input X. |
-| variable | Signaure X | This is the data needed to satisfy RCD X. |
+| variable | Signature X | This is the data needed to satisfy RCD X. |
 
 The transaction is protected against replay attacks because the servers do not allow duplicate transactions with the same timestamp if they share the same inputs and outputs.  Changing any of those fields would also break the signature.
 
