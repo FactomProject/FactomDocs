@@ -220,7 +220,9 @@ A minimal transaction buying Entry Credits or sending Factoids to one address fr
 
 #### Coinbase Factoid Transaction
 
-The coinbase transaction, like in Bitcoin, is how the servers are paid for their services.  These are new Factoids created by the protocol.  The outputs are allocated in a deterministic fashion based upon the results from the election and which of the Federated servers participated in generating the blocks in the past.
+The coinbase transaction is how new Factoids come into the system to reward network participants.  These are new Factoids created by the protocol.  The outputs are determined by the Coinbase Descriptor which is included in the Admin block 600 blocks prior.
+
+In M1 and M2, coinbase transactions were included in each factoid block. All but the genesis block coinbase tx had 0 inputs and 0 outputs. In M3, the coinbase tx will be included at 25 block intervals, following 600 blocks after the Coinbase Descriptor.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
@@ -381,7 +383,25 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 | 0x08 | Add Federated Server Signing Key | 64 bytes | This adds an Ed25519 public key to the authority set.  First 32 bytes are the server's identity ChainID.  Next 32 bytes are the public key itself.  If the specified key for this server already exists, this replaces the old one. |
 | 0x09 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
 | 0x0A | Server Fault Handoff | | This holds a rollup of all the messages which were sent out by the federated servers which authorize the removal of one server and the promotion of another server. This is not currently serialized into the blockchain. |
-| > 0x0A | Forward Compatible Type | unspecified | All types above 0x0A are prefixed with a Varint_F specifying how many of the following bytes are part of this message. | 
+| 0x0B | Coinbase Descriptor | 10230 bytes max | This is a field which is used to specify a future genesis transaction.  This field is only present every 25 blocks, on blocks divisible by 25. The coinbase transation which is created by the info in this transaction included 600 blocks after this admin block. This delay is to allow 4 days to respond to software bugs. See the **Coinbase Descriptor** section for more details. |
+| > 0x0B | Forward Compatible Type | unspecified | All types above 0x0A are prefixed with a Varint_F specifying how many of the following bytes are part of this message. | 
+
+##### Coinbase Descriptor
+The coinbase descriptor is an entry in the Admin block which specifies a number of factoid output addresses and amounts. These outputs are used to deterministically generate a coinbase transaction 600 blocks (about 4 days) later. It is included in each block height that is divisible by 25. 
+
+The Coinbase Descriptor cannot be larger than 10231 bytes (10 KiB max FCT tx - 10 header bytes of coinbase + 1 AdminID byte)
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------------- |
+| 1 byte | AdminID byte | is 0x0B for this type |
+| varInt_F | Value | (Output 0) This is how much the Output 0 Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output 0) This is an RCD hash which will have its balance increased. |
+| varInt_F | Value | (Output X) This is how much the Output X Factoshi balance will be increased by. |
+| 32 bytes | Factoid Address | (Output X) This is an RCD hash which will have its balance increased. |
+
+
+
+
 
 
 ### Entry Credit Block

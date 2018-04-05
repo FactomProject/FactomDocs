@@ -134,7 +134,7 @@ The message is a Factom Entry with several extIDs holding the various parts.  Th
 
 ### Add New Bitcoin Key
 
-Factom uses the Bitcoin blockchain as a sibyl resistant communication channel, as well as a method to detect alterations to history.  The bitcoin keys are published in the identity's server management subchain.  When the server is promoted, or when a new key is added, the new Bitcoin key is published in the Admin block.  If a Federated server publishes an update to its chain, the Federated servers place it in the next Admin block.
+Factom uses the Bitcoin blockchain as a sibyl resistant communication channel, as well as a method to detect alterations to history.  The bitcoin keys are published in the identity's server management subchain.  When the server is promoted, or when a new key is added, the new Bitcoin key is published in the Admin block.  If a Federated server publishes an update to its chain, the Federated servers place it in the next Admin block. Factom doesn't use this in M2 or on the launch of M3, although these are present in the blockchain.
 
 Like the identity keys, there are multiple levels of authority for the Bitcoin keys.  This allows servers to have an out of band backup signaling method when Bitcoin keys are stolen.  Anchors placed by higher level keys will alert clients that the lower level Bitcoin key(s) are considered compromised, and not to trust anchors from lower level keys.
 
@@ -152,7 +152,7 @@ The message is an entry with multiple extIDs.  It has a version, a text string s
 
 ### Add New Matryoshka Hash
 
-Factom gets a set of randomness from a series of revealed SHA256 hash preimages.  To enforce these to be hash preimages, the last hash in a long hash chain is published.  A server will reveal sequential preimages, which are called Matryoshka hashes or M-hashes.  This message publishes the outermost hash, which is placed in the Admin block when the server is promoted.
+Factom gets a set of randomness from a series of revealed SHA256 hash preimages.  To enforce these to be hash preimages, the last hash in a long hash chain is published.  A server will reveal sequential preimages, which are called Matryoshka hashes or M-hashes.  This message publishes the outermost hash, which is placed in the Admin block when the server is promoted. Factom doesn't use this in M2 or on the launch of M3, although these are present in the blockchain.
 
 The new M-hash message has the same timing and priority level rules at the block signing key message.
 
