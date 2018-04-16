@@ -220,9 +220,9 @@ A minimal transaction buying Entry Credits or sending Factoids to one address fr
 
 #### Coinbase Factoid Transaction
 
-The coinbase transaction is how new Factoids come into the system to reward network participants.  These are new Factoids created by the protocol.  The outputs are determined by the Coinbase Descriptor which is included in the Admin block 600 blocks prior.
+The coinbase transaction is how new Factoids come into the system to reward network participants.  These are new Factoids created by the protocol.  The outputs are determined by the Coinbase Descriptor which is included in the Admin block 1000 blocks prior (approx 1 week).
 
-In M1 and M2, coinbase transactions were included in each factoid block. All but the genesis block coinbase tx had 0 inputs and 0 outputs. In M3, the coinbase tx will be included at 25 block intervals, following 600 blocks after the Coinbase Descriptor.
+In M1 and M2, coinbase transactions were included in each factoid block. All but the genesis block coinbase tx had 0 inputs and 0 outputs. In M3, the coinbase tx will similarly be 0 inputs and 0 outputs except for coinbases included at 25 block intervals.  A non-zero coinbase output will be on Factoid blocks following 1000 blocks after a Coinbase Descriptor in the Admin block.
 
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |

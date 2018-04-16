@@ -83,7 +83,7 @@ After iterating and finding a nonce 0000000000c512c7 we have a chainID 888888d02
 
 ### Factom Identity Registration
 
-In order for Factom to pay attention to any individual identity, the identity must register itself.  The registration should occur after the chain creation to prevent a 12 hour long denial-of-chain attack (detailed elsewhere).  For the registration to take effect, the corresponding identity chain must be created within 144 blocks (normally 24 hours).  Any updates to the identity (such as adding EC keys or updating keys) must occur during or after the block it was registered in.  This prevents events being reinterpreted retroactively.  Most people will only need to link an EC key and lend support in the server election process.
+In order for Factom to pay attention to any individual identity, the identity must register itself.  The registration should occur after the chain creation to prevent a 12 hour long denial-of-chain attack (detailed elsewhere).  For the registration to take effect, the corresponding identity chain must be created within 144 blocks (normally 24 hours).  Any updates to the identity (such as adding EC keys or updating keys) must occur during or after the block it was registered in.  This prevents events being reinterpreted retroactively.  
 
 An identity only needs to be registered once, and cannot be unregistered.
 
@@ -96,6 +96,16 @@ The entry would consist of only ExtIDs and look like this:
 [00] [526567697374657220466163746F6D204964656E74697479] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [764974ae61de0d57507b80da61a809382e699cf0e31be44a5d357bd6c93d12fa6746b29c80f7184bd3c715eb910035d4dac2d8ecb1c4b731692e68631c69a503]
 
 The identity registration chainID is 888888001750ede0eff4b05f0c3f557890b256450cabbb84cada937f9c258327 with a chain name of "Factom Identity Registration Chain" and "44079090249".
+
+
+### Coinbase Address
+
+When an identity desires to receive a reward from the protocol, they need to provide an address for any Factoids that they receive. 
+
+This Entry goes into the Root Factom Identity Chain.
+
+
+
 
 #### Server Management Subchain
 
@@ -164,25 +174,23 @@ It starts with the version and the text "New Matryoshka Hash".  Next is the root
 
 
 
+### Add Server Efficiency
+
+The Factom Authority servers are rewarded with new Factoids as part of their service to the protocol. They are each rewarded up to 6.4 Factoids every 25 blocks. As part of being good stewards of the protocol, Authority Servers can run a more efficient operation. They can opt to yeild some percentage of their reward to the Grant Pool. They would define that efficiency with this message. A 100% efficiency leaves all the Factoids in the protocol, while 0% puts the entire reward into the coinbase.
+
+This message needs to be in the server management subchain.  If it is not, the default is 100% efficiency. If the message specifies >100% efficiency, the coinbase descriptor defaults to 100% efficiency.  Later Server Efficiency messages update older messages.  To prevent replay attacks, a timestamp is included.  To be valid, the efficiency update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.  If a higher level key signs a Server Efficiency message, no new messages will be allowed by lower level keys until the lower level keys are replaced in the root identity chain.
+
+The efficiency is serialized as a 16 bit unsigned integer.  The percentage is in fixed point format with 2 decimals, so the maximum efficiency of 100% = 10000. An efficency of 49.52% = 4952 = 0x1358.
+
+With a 49.52% efficiency almost half of the 6.4 Factoid Authority reward is yeilded to the Grant Pool. The coinbase would have an output of 3.23072 Factoids for this server. The Grant Pool would increase by 3.16928 FCT from this server.
+
+The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Server Efficiency".  The third is the root identity ChainID.  Forth is the new efficiency being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage.  7th is the signature of the serialized version, text, chainID, new efficiency, and the timestamp.
+
+[0 (version)] [Server Efficiency] [identity ChainID] [new efficiency] [timestamp] [identity key preimage] [signature of version through timestamp]
+
+[00] [53657276657220456666696369656E6379] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [1358] [00000000495EAA80] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [4A014BD9150BB2CAB290B276C350821620EDB432DDFBCEED3896E87E591A412712B7DB6D8DAD46616B655369676E6174757265FE1D84D558B8A78EF7746F480D]
 
 
 
 
 
-
-
-### For Voting in Milestone3
-
-## Link Entry Credit Key to Identity
-
-Factom identities exist largely to organize and direct votes (Entry Credit purchases) to elect particular Federated servers.  The users can publish messages in their identity chain to switch votes from one server to another.  The Entry Credits the user buys can be linked to an identity. The votes garnered can be delegated multiple times until they are eventually come to rest at a Candidate server's identity.
-
-To begin the vote collecting process, the EC keys need to be linked to an identity.  EC keys can only ever be linked to one identity, and subsequent link messages are ignored.  If there are multiple conflicting link messages but are in different minutes, the earlier message takes precedence.  Since the system has 1 minute resolution, if there are multiple conflicting registrations in the same minute, the one with the lower ChainID takes precedence.  Lower by example means chain 1234xxxx...xxxx takes precedence over FEDCxxxx...xxxx.
-
-The link message would consist of 5 extIDs.  The first is the version, with a single byte of 0.  The second is 21 bytes of ASCII text "Link Entry Credit Key". The third is the identity ChainID.  The 4th is the Entry Credit public key doing the signing, which should be linked to the specified identity.  The 5th is the signature of the first, second, and third ExtIDs serialized together.
-
-[0 (version)] [Link Entry Credit Key] [identity ChainID] [Entry Credit public key] [signature of version through ChainID]
-
-[00] [526567697374657220466163746F6D204964656E74697479] [888888d00082a172e4f0c8d03a83d327b4197e68bcc36e88eeefb00b6cec7936] [01] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [aab1cbbd72c8b7db32f45cb89e511793f8d47e0551665679a25ef8444248e045f858701351e0cc17aeb74e4f6aa425ee71663d3a4ca6abfe6fac88d66e0c2c01]
-
-This message must be added to the identity chain specified in order to be counted.
