@@ -100,10 +100,15 @@ The identity registration chainID is 888888001750ede0eff4b05f0c3f557890b256450ca
 
 ### Coinbase Address
 
-When an identity desires to receive a reward from the protocol, they need to provide an address for any Factoids that they receive. 
+When an identity desires to receive a reward from the protocol, they need to provide an address for any Factoids that they receive. This example registers a factoid address with all zeros as the private key.
 
 This Entry goes into the Root Factom Identity Chain.
 
+The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Server Efficiency".  The third is the root identity ChainID.  Forth is the new efficiency being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage of the lowest level identity key (id1).  7th is the signature of the serialized version, text, chainID, new factoid address, and the timestamp.
+
+[0 (version)] [Coinbase Address] [identity ChainID] [new factoid address] [timestamp] [identity key preimage] [signature of version through timestamp]
+
+[00] [436F696E626173652041646472657373] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [031cce24bcc43b596af105167de2c03603c20ada3314a7cfb47befcad4883e6f] [00000000495EAA80] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [e08f8c763b1512d05bb6a6cf503e884a24ea6b7af0d30df1dff30444a9b9ba2db20d40555afddfcd5e03f737afaa7be78b6129787d9a561417531d263eaabb04]
 
 
 
@@ -129,11 +134,11 @@ It is very similar to the Factom identity registration message.
 
 [00] [526567697374657220536572766572204D616E6167656D656E74] [8888881d59de393d9acc2b89116bc5a2dd0d0377af7a5e04bc7394149a6dbe23] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [fcb3b9dd3cc9f09b61a07e859d13a569d481508f0d5e672f9412080255ee398428fb2c488e0c3d291218f573612badf84efa63439bbcdd3ca265a31074107e04]
 
-This message is then placed into the root identity chain.  Only one server management subchain is allowed.  In the case of multiple messages, the valid one is the first message that also has a Chain which exists.  For example, if there are two messages registering Chain B and A in that order, but Chain A is created first, then Chain A is considered the valid one.  The chain must be created within 144 blocks (normally 24 hours) of being registered.
+This message is then placed into the root identity chain.  Only one server management subchain is allowed.  In the case of multiple messages, the valid one is the first message that also has a Chain which exists.  For example, if there are two messages registering Chain B and A in that order, but Chain A is created first, then Chain A is considered the valid one.  The chain must be created within 144 blocks (normally 24 hours) of being registered.  In case of a tie (both chains created in the same block, the first entry in the registration chain will be the winning subchain.)
 
 ### Add New Block Signing Key
 
-The Factom blockchain is signed with a key by each server.  This key signs the Directory blocks, and those signatures are held in the Admin blocks.  They are associated with the identity, but do not sign things other than the blocks.  The public key is added to the Admin block by the Federated servers as part of the server promotion process.  Before promotion, the key needs to be published to the server management subchain.  Keys are not removed, but new keys replace older keys.  To prevent replay attacks, a timestamp is included.  To be valid, the key update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.  (note: backup block signing key authorizations can be presigned offline in advance.  Only 365 pre-prepared, signed messages would need to be held ready for broadcast to cover a year.)  If a higher level key signs a New Block Signing Key message, no new messages will be allowed by lower level keys until the lower level keys are replaced in the root identity chain.
+The Factom blockchain is signed with a key by each server.  This key signs the Directory blocks, and those signatures are held in the Admin blocks.  They are associated with the identity, but do not sign things other than the blocks.  The public key is added to the Admin block by the Federated servers as part of the server promotion process.  Before promotion, the key needs to be published to the server management subchain.  Keys are not removed, but new keys replace older keys.  To prevent replay attacks, a timestamp is included.  To be valid, the key update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.  (note: backup block signing key authorizations can be presigned offline in advance.  Only 365 pre-prepared, signed messages would need to be held ready for broadcast to cover a year.)
 
 The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "New Block Signing Key".  The third is the root identity ChainID.  Forth is the new public key being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage.  7th is the signature of the serialized version, text, chainID, new key, and the timestamp.
 
@@ -178,17 +183,17 @@ It starts with the version and the text "New Matryoshka Hash".  Next is the root
 
 The Factom Authority servers are rewarded with new Factoids as part of their service to the protocol. They are each rewarded up to 6.4 Factoids every 25 blocks. As part of being good stewards of the protocol, Authority Servers can run a more efficient operation. They can opt to yeild some percentage of their reward to the Grant Pool. They would define that efficiency with this message. A 100% efficiency leaves all the Factoids in the protocol, while 0% puts the entire reward into the coinbase.
 
-This message needs to be in the server management subchain.  If it is not, the default is 100% efficiency. If the message specifies >100% efficiency, the coinbase descriptor defaults to 100% efficiency.  Later Server Efficiency messages update older messages.  To prevent replay attacks, a timestamp is included.  To be valid, the efficiency update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.  If a higher level key signs a Server Efficiency message, no new messages will be allowed by lower level keys until the lower level keys are replaced in the root identity chain.
+This message needs to be in the server management subchain.  If it is not, the default is 100% efficiency. If the message specifies >100% efficiency, the coinbase descriptor defaults to 100% efficiency.  Later Server Efficiency messages update older messages.  To prevent replay attacks, a timestamp is included.  To be valid, the efficiency update must be the latest one seen.  It also needs to be included in the blockchain between 12 hours +- of the message timestamp.
 
 The efficiency is serialized as a 16 bit unsigned integer.  The percentage is in fixed point format with 2 decimals, so the maximum efficiency of 100% = 10000. An efficency of 49.52% = 4952 = 0x1358.
 
 With a 49.52% efficiency almost half of the 6.4 Factoid Authority reward is yeilded to the Grant Pool. The coinbase would have an output of 3.23072 Factoids for this server. The Grant Pool would increase by 3.16928 FCT from this server.
 
-The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Server Efficiency".  The third is the root identity ChainID.  Forth is the new efficiency being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage.  7th is the signature of the serialized version, text, chainID, new efficiency, and the timestamp.
+The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Server Efficiency".  The third is the root identity ChainID.  Forth is the new efficiency being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage of the lowest level identity key (id1).  7th is the signature of the serialized version, text, chainID, new efficiency, and the timestamp.
 
 [0 (version)] [Server Efficiency] [identity ChainID] [new efficiency] [timestamp] [identity key preimage] [signature of version through timestamp]
 
-[00] [53657276657220456666696369656E6379] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [1358] [00000000495EAA80] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [4A014BD9150BB2CAB290B276C350821620EDB432DDFBCEED3896E87E591A412712B7DB6D8DAD46616B655369676E6174757265FE1D84D558B8A78EF7746F480D]
+[00] [53657276657220456666696369656E6379] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [1358] [00000000495EAA80] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [2954c40f889d49a561d0ac419741f7efd11e145a99b67485fb8f7c3e3c42d3c698d50866beffbc09032243ab3d375b4c962745c09d1a184d91e5ba69762b4e09]
 
 
 
