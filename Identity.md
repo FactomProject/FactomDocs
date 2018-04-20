@@ -100,7 +100,7 @@ The identity registration chainID is 888888001750ede0eff4b05f0c3f557890b256450ca
 
 ### Coinbase Address
 
-When an identity desires to receive a reward from the protocol, they need to provide an address for any Factoids that they receive. This example registers a factoid address with all zeros as the private key.
+When an identity desires to receive a reward from the protocol, they need to provide an address for any Factoids that they receive. This example registers a factoid address with all zeros as the private key.  The Factoid address being registered is an RCD hash.
 
 This Entry goes into the Root Factom Identity Chain.
 
