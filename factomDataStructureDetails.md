@@ -397,7 +397,7 @@ The Coinbase Descriptor cannot be larger than 10233 bytes (1 AdminID byte + 2 va
 | data | Field Name | Description |
 | ----------------- | ---------------- | --------------- |
 | 1 byte | AdminID byte | is 0x0B for this type |
-| varInt_F | Message Size | This value specifies how many of the following bytes relate to this message. |
+| varInt_F | AdminID Message Size | This value specifies how many of the following bytes relate to this Admin message. |
 | varInt_F | Value | (Output 0) This is how much the Output 0 Factoshi balance will be increased by. |
 | 32 bytes | Factoid Address | (Output 0) This is an RCD hash which will have its balance increased. |
 | varInt_F | Value | (Output X) This is how much the Output X Factoshi balance will be increased by. |
