@@ -104,7 +104,7 @@ When an identity desires to receive a reward from the protocol, they need to pro
 
 This Entry goes into the Root Factom Identity Chain.
 
-The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Server Efficiency".  The third is the root identity ChainID.  Forth is the new efficiency being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage of the lowest level identity key (id1).  7th is the signature of the serialized version, text, chainID, new factoid address, and the timestamp.
+The message is a Factom Entry with several extIDs holding the various parts.  The first part is a version binary string 0.  The second is the ASCII string "Coinbase Address".  The third is the root identity ChainID.  Forth is the new Factoid address being asserted.  5th is the timestamp with an 8 byte epoch time.  Next is the identity key preimage of the lowest level identity key (id1).  7th is the signature of the serialized version, text, chainID, new factoid address, and the timestamp.
 
 [0 (version)] [Coinbase Address] [identity ChainID] [new factoid address] [timestamp] [identity key preimage] [signature of version through timestamp]
 
