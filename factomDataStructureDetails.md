@@ -384,13 +384,13 @@ Administrative Identifier (AdminID) bytes are single bytes which specify how to 
 | 0x09 | Add Federated Server Bitcoin Anchor Key | 66 bytes | This adds a Bitcoin public key hash to the authority set.  First 32 bytes are the server's identity ChainID.  Next byte is the key priority. Next byte is 0=P2PKH 1=P2SH. Next 20 bytes are the HASH160 of ECDSA public key.  If the specified priority for the server already exists, this replaces the old one. |
 | 0x0A | Server Fault Handoff | | This holds a rollup of all the messages which were sent out by the federated servers which authorize the removal of one server and the promotion of another server. This is not currently serialized into the blockchain. |
 | 0x0B | Coinbase Descriptor | 10232 bytes max | This is a field which is used to specify a future genesis transaction.  This field is only present every 25 blocks, on blocks divisible by 25. The coinbase transation which is created by the info in this transaction included 1000 blocks after this Admin block. This delay is to allow 7 days to respond to software bugs, etc. See the **Coinbase Descriptor** section for more details. |
-| 0x0C | Coinbase Descriptor Cancel |  bytes | This cancels a specific output index in a coinbase descriptor.  It is only effective in a block between when the Coinbase Descriptor is created and when the coinbase is included in the Factoid block. |
+| 0x0C | Coinbase Descriptor Cancel | 8 bytes max | This cancels a specific output index in an earlier Coinbase Descriptor.  It is only effective in a block between when the Coinbase Descriptor is created and when the coinbase is included in the Factoid block (non-inclusive). See the **Coinbase Descriptor Cancel** section for more details. |
 | 0x0D | Add Authority Factoid Address | 65 bytes | This sets a Factoid address to be used in the Coinbase Descriptor.  The first byte is a length descriptor varint (always 64). The next 32 bytes are the server's identity ChainID.  Next 32 bytes are the Factoid address (RCD Hash).  If the specified address for this identity already exists, this replaces the old one. |
 | 0x0E | Add Authority Efficiency | 35 bytes | This sets what percentage of the Factoid rewards for the specified server are yeilded to the Grant Pool. The first byte is a length descriptor varint (always 34). next 32 bytes are the server's identity ChainID.  Next 2 bytes a big endian representation of the percentage with 2 fixed decimals.  This overrides the previous efficiency settings for this identity. |
 | > 0x0E | Forward Compatible Type | unspecified | All types above 0x09 are prefixed with a Varint_F specifying how many of the following bytes are part of this message. | 
 
 ##### Coinbase Descriptor
-The coinbase descriptor is an entry in the Admin block which specifies a number of factoid output addresses and amounts. These outputs are used to deterministically generate a coinbase transaction 1000 blocks (about 7 days) later. It is included in each block height that is divisible by 25.
+The coinbase descriptor is an entry in the Admin block which specifies a number of factoid output addresses and amounts. These outputs are used to deterministically generate a coinbase transaction 1000 blocks (about 7 days) later. It is included in each block height that is divisible by 25.  There can only be one per Admin block.
 
 The Coinbase Descriptor cannot be larger than 10233 bytes (1 AdminID byte + 2 varint length bytes + (10 KiB max FCT tx - 10 header bytes of coinbase))
 
@@ -403,6 +403,18 @@ The Coinbase Descriptor cannot be larger than 10233 bytes (1 AdminID byte + 2 va
 | varInt_F | Value | (Output X) This is how much the Output X Factoshi balance will be increased by. |
 | 32 bytes | Factoid Address | (Output X) This is an RCD hash which will have its balance increased. |
 
+
+##### Coinbase Descriptor Cancel
+The Coinbase Descriptor Cancel (CDC) is an entry in the Admin block which reverses an output in a Coinbase Descriptor.  When a coinbase is made in the future, any outputs that have a CDC pointed at them will be missing. The output will not appear in the coinbase, and there will be fewer outputs in the coinbase than in the Coinbase Descriptor.  The Factoids which aren't created will be retained as potential Factoids in the Grant Pool.  This allows the grant process to correct an accident that was prevented by the CDC.
+
+The Coinbase Descriptor cannot be larger than 8 bytes (on a 100 year timeline) (1 AdminID byte + 1 varint length byte + 4 bytes for height + 2 bytes for max index)
+
+| data | Field Name | Description |
+| ----------------- | ---------------- | --------------- |
+| 1 byte | AdminID byte | is 0x0C for this type |
+| varInt_F | AdminID Message Size | This value specifies how many of the following bytes relate to this Admin message. |
+| varInt_F | Descriptor Height | An output the Descriptor at this height will not be created. |
+| varInt_F | Descriptor Index | This index into the specified descriptor will not be created. |
 
 
 ### Entry Credit Block
