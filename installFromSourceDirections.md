@@ -28,9 +28,9 @@ https://confluence.atlassian.com/pages/viewpage.action?pageId=269981802
 
 ###### Install Golang
 
-Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.10.1 is the latest tested version.
+Download latest version of go https://golang.org/dl/  This example uses 64 bit Linux and 1.10.2 is the latest tested version.
 ```
-sudo tar -C /usr/local -xzf go1.10.1.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.10.2.linux-amd64.tar.gz
 ```
 
 On Mac, installing go this way should work:
@@ -102,20 +102,7 @@ cd $GOPATH/src/github.com/FactomProject/factomd
 
 ### Starting Factom
 
-Factom takes a while to download the blockchain. It can be expidited by downloading the first 70k blocks via HTTP. Factomd still checks the blockchain on each bootup, so it will check for inconsistencies in the download.
-
-Note: currently factomd uses a lot of drive accesses when running. It is reccomended to hold the blockchain on a solid state drive. Running factomd on a spinning hard drive will be arduously slow. Since factomd currently scans the entire blockchain each time it is started, bootup takes a while (~30 min on an SSD).  You can watch the progress on the [Control Panel](http://localhost:8090/).
-
-Download the blockchain here: https://www.factom.com/assets/site/factom_bootstrap.zip
-SHA256: 2d4d256c337cdabc8f75aa71180c72129f807c365c78356471350ac1e0a4faed
-
-Extract the zip file to your home directory. It will create files in the location: ~/.factom/m2/main-database/ldb/MAIN/factoid_level.db/
-
-Compressed the blockchain is currently about 5 GB and uncompressed is over 9 GB.
-
-After factomd boots and downloads the remaining blocks, it likely is not keeping up with minutes. To see if it is, on the control panel click the "More Detailed Node Information" button. Towards the right of the top line there will be a field "-/ 0". If the 0 number does not increase after a minute, then it is not keeping up with minutes.
-
-In most cases factomd will need to be restarted after synching to the latest blockchain.
+Note: currently factomd uses a lot of drive accesses when running. It is reccomended to hold the blockchain on a solid state drive. Running factomd on a spinning hard drive will be arduously slow. Factomd currently scans the entire blockchain the first time it is started after if downloads the blockchain, bootup takes a while the first two times, but it is faster after is downloads and is restarted once.  You can watch the progress on the [Control Panel](http://localhost:8090/).
 
 ### Factom Wallets
 
