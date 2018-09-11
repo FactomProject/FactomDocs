@@ -268,7 +268,7 @@ To convert a 32 byte RCD Hash to a Factoid address follow these steps:
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
   * `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu`
 
-Factoid addresses will range between `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu` and `FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq` representing all zeros and all ones.
+Factoid addresses will range between `FA1y5ZGuHSLmf2TqNf6hVMkPiNGyQpQDTFJvDLRkKQaoPo4bmbgu` and `FA3upjWMKHmStAHR5ZgKVK4zVHPb8U74L2wzKaaSDQEonHajiLeq` representing all zeros and all f-characters (hex).
 
 #### Entry Credit Address
 
@@ -283,7 +283,7 @@ To convert a 32 byte pubkey to an Entry Credit address follow these steps:
 3. Convert the above value from base 256 to base 58.  Use standard Bitcoin base58 encoding to display the number.
   * `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa`
 
-Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK` representing all zeros and all ones.
+Entry Credit addresses will range between `EC1m9mouvUQeEidmqpUYpYtXg8fvTYi6GNHaKg8KMLbdMBrFfmUa` and `EC3htx3MxKqKTrTMYj4ApWD8T3nYBCQw99veRvH1FLFdjgN6GuNK` representing all zeros and all f-characters (hex).
 
 
 #### Private Keys
@@ -294,13 +294,13 @@ Private keys for Factoids and Entry Credits follow a similar pattern.  They star
 
 Single signature private keys are represented in human readable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Factoid private key prefix is `0x6478`.
 
-Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk` representing all zeros and all ones.
+Human readable Factoid private keys will range between `Fs1KWJrpLdfucvmYwN2nWrwepLn8ercpMbzXshd1g8zyhKXLVLWj` and `Fs3GFV6GNV6ar4b8eGcQWpGFbFtkNWKfEPdbywmha8ez5p7XMJyk` representing all zeros and all f-characters (hex).
 
 ##### Entry Credit Private Keys
 
 Single signature private keys are represented in human readable form using the same base58check as the public keys.  The only difference is the prefix bytes.  The Entry Credit private key prefix is `0x5db6`.
 
-Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc` representing all zeros and all ones.
+Human readable Entry Credit private keys will range between `Es2Rf7iM6PdsqfYCo3D1tnAR65SkLENyWJG1deUzpRMQmbh9F3eG` and `Es4NQHwo8F4Z4oMnVwndtjV1rzZN3t5pP5u5jtdgiR1RA6FH4Tmc` representing all zeros and all f-characters (hex).
  
 ## Block Elements
 
