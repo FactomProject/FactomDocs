@@ -206,9 +206,9 @@ The process begins with an Authority node discovering that a coinbase descriptor
 The message is only valid when it appears in an entry block after the block that the coinbase descriptor appears in and the block just before the coinbase.
 
 
-The message is a Factom Entry with several extIDs holding the various parts. The first part is a version binary string 0. The second is the ASCII string "Coinbase Cancel". The third is the root identity ChainID. Fourth is the Coinbase Descriptor Height with a cancelation. 5th is the index into the Coinbase Descriptor. Next is the identity key preimage of the lowest level identity key (id1). 7th is the signature of the serialized version, text, chainID, Coinbase Descriptor height, and the index into the Coinbase Desciptor.
+The message is a Factom Entry with several extIDs holding the various parts. The first part is a version binary string 0. The second is the ASCII string "Coinbase Cancel". The third is the root identity ChainID. Fourth is the Coinbase Descriptor Height with a cancelation. 5th is the index into the Coinbase Descriptor. Next is the identity key preimage of the lowest level identity key (id1). 7th is the signature of the serialized version, text, chainID, Coinbase Descriptor height, and the index into the Coinbase Descriptor.
 
-[0 (version)] [Coinbase Cancel] [identity ChainID] [Descriptor height] [Desciptor index] [identity key preimage] [signature of version through timestamp]
+[0 (version)] [Coinbase Cancel] [identity ChainID] [Descriptor height] [Descriptor index] [identity key preimage] [signature of version through timestamp]
 
 [00] [436f696e626173652043616e63656c] [888888d027c59579fc47a6fc6c4a5c0409c7c39bc38a86cb5fc0069978493762] [00030d40] [00000005] [0125b0e7fd5e68b4dec40ca0cd2db66be84c02fe6404b696c396e3909079820f61] [68c06b195771f801ff216c0ba98de485e54410c0765d662118aac389e319dcfdee12d11915206ab7d35f6f028584406156840fc30219111750bb1b0bc2b06106]
 
