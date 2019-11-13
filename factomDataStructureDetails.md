@@ -191,7 +191,7 @@ The Factoids have two hashes associated with them.  Both are a single SHA256 of 
 
 ##### Redeem Condition Datastructure (RCD)
 
-This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 1 is defined here.  The RCD is hashed with SHA256 twice, (SHA256d), to prevent potential length extension attacks. Multisignature RCDs are planned for release soon.
+This can be considered equivalent to a Bitcoin redeem script behind a P2SH transaction. The first version will only support single signature addresses.  Type 1 is defined here.  The RCD is hashed with SHA256 twice, (SHA256d), to prevent potential length extension attacks. Multisignature RCDs are planned for release soon. RCD Type 0x0e has been reserved for an Ethereum compatible style, detailed [here](https://github.com/pegnet/pegnetd/blob/eth_gateway/addresses.md).
 
 **RCD Type 1**:
 
